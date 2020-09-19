@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "shutter",
+  "version": "${version}",
+
+  "name": "Shutter",
+  "description": "Yes.",
+
+  "authors": [
+    "Nicolas \"Vatuu\" Adamoglou"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "All Rights Reserved",
+  "icon": "assets/shutter/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": ["studio.archetype.shutter.Shutter"],
+    "client": ["studio.archetype.shutter.client.ShutterClient"]
+  },
+  "mixins": [
+    "shutter.client.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}

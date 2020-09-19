@@ -1,0 +1,10 @@
+{
+  "category.shutter.keybinds": "Shutter Controls",
+
+  "key.shutter.cam.roll_left": "Roll Left",
+  "key.shutter.cam.roll_right": "Roll Right",
+  "key.shutter.cam.roll_reset": "Reset Roll",
+  "key.shutter.cam.zoom_in": "Zoom in",
+  "key.shutter.cam.zoom_out": "Zoom out",
+  "key.shutter.cam.zoom_reset": "Reset Zoom"
+}
