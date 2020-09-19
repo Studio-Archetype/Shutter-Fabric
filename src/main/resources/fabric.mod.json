@@ -14,7 +14,7 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
 
-  "license": "All Rights Reserved",
+  "license": "MIT",
   "icon": "assets/shutter/icon.png",
 
   "environment": "*",
