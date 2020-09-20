@@ -6,5 +6,7 @@
   "key.shutter.cam.roll_reset": "Reset Roll",
   "key.shutter.cam.zoom_in": "Zoom in",
   "key.shutter.cam.zoom_out": "Zoom out",
-  "key.shutter.cam.zoom_reset": "Reset Zoom"
+  "key.shutter.cam.zoom_reset": "Reset Zoom",
+  "key.shutter.cam.create_node": "Create Path Node",
+  "key.shutter.cam.visualize_path": "Show Current Path"
 }

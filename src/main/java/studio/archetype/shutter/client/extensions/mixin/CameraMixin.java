@@ -1,7 +1,9 @@
 package studio.archetype.shutter.client.extensions.mixin;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,9 +48,7 @@ public abstract class CameraMixin implements CameraExt {
 
     @Unique @Override
     public void setRoll(float roll) {
-        this.roll = roll;
-        if(this.roll > 360 || this.roll < -360)
-            this.roll = this.roll % 360;
+        this.roll = MathHelper.wrapDegrees(roll);
         setRotation(this.yaw, this.pitch);
     }
 }

@@ -20,11 +20,17 @@
   "environment": "*",
   "entrypoints": {
     "main": ["studio.archetype.shutter.Shutter"],
-    "client": ["studio.archetype.shutter.client.ShutterClient"]
+    "client": ["studio.archetype.shutter.client.ShutterClient"],
+    "cardinal-components-world": ["studio.archetype.shutter.components.Components"]
   },
+
   "mixins": [
     "shutter.client.mixins.json"
   ],
+
+  "custom": {
+    "cardinal-components": ["shutter:path"]
+  },
 
   "depends": {
     "fabricloader": ">=0.4.0",
