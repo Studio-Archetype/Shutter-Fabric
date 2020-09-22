@@ -8,6 +8,7 @@ import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.ShutterToast;
+import studio.archetype.shutter.entities.CameraPointEntity;
 import studio.archetype.shutter.pathing.PathNode;
 
 public class InputHandler {
@@ -49,7 +50,6 @@ public class InputHandler {
                 GLFW.GLFW_KEY_KP_8,
                 "category.shutter.keybinds"
         ));
-
         zoomOut = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.shutter.cam.zoom_out",
                 InputUtil.Type.KEYSYM,
@@ -96,7 +96,8 @@ public class InputHandler {
             if(createNode.wasPressed()) {
                 Camera cam = c.gameRenderer.getCamera();
                 PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(), (float)c.options.fov);
-                //ClientNetworkHandler.sendCreateNode(node, null);
+                ClientNetworkHandler.sendCreateNode(node, null);
+
                 c.getToastManager().add(new ShutterToast(ShutterToast.ToastBackgrounds.NEGATIVE,
                         "Path Node created!",
                         String.format("X: %.1f | Y: %.1f | Z: %.1f",

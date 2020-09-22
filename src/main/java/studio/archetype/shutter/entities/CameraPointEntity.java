@@ -2,6 +2,8 @@ package studio.archetype.shutter.entities;
 
 import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
@@ -9,6 +11,7 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import studio.archetype.shutter.Shutter;
+import studio.archetype.shutter.networking.PacketS2CSpawnNodeVisualization;
 import studio.archetype.shutter.pathing.PathNode;
 
 public class CameraPointEntity extends Entity {
@@ -32,6 +35,16 @@ public class CameraPointEntity extends Entity {
     }
 
     @Override
+    public boolean collides() {
+        return false;
+    }
+
+    @Override
+    protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return dimensions.height / 2.0F;
+    }
+
+    @Override
     protected void initDataTracker() { }
 
     @Override
@@ -42,6 +55,6 @@ public class CameraPointEntity extends Entity {
 
     @Override
     public Packet<?> createSpawnPacket() {
-        return new EntitySpawnS2CPacket();
+        return PacketS2CSpawnNodeVisualization.sendPacket(this);
     }
 }

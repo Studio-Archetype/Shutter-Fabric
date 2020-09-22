@@ -2,18 +2,17 @@ package studio.archetype.shutter.client;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.NetworkHandler;
 import studio.archetype.shutter.Shutter;
-import studio.archetype.shutter.pathing.CameraPath;
+import studio.archetype.shutter.networking.PacketS2CSpawnNodeVisualization;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
 
 import java.util.UUID;
 
-public final class ClientNetworkHandler {
+public class ClientNetworkHandler {
 
     public static final Identifier PACKET_ENTITY_SPAWN_NODE = Shutter.id("spawn_node");
 
@@ -33,13 +32,6 @@ public final class ClientNetworkHandler {
     }
 
     public static void register() {
-        ClientSidePacketRegistry.INSTANCE.register(PACKET_ENTITY_SPAWN_NODE, (ctx, data) -> {
-            UUID uuid = data.readUuid();
-            int entityId = data.readVarInt();
-            double x = data.readDouble(); double y = data.readDouble(); double z = data.readDouble();
-            float pitch = data.readFloat(); float yaw = data.readFloat(); float roll = data.readFloat();
-            ctx.getTaskQueue().execute(() -> {
-            });
-        });
+        ClientSidePacketRegistry.INSTANCE.register(PacketS2CSpawnNodeVisualization.ID, PacketS2CSpawnNodeVisualization::onReceive);
     }
 }

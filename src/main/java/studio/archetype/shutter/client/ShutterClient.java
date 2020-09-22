@@ -1,6 +1,7 @@
 package studio.archetype.shutter.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import studio.archetype.shutter.client.entityrenderer.EntityRenderers;
 
 public class ShutterClient implements ClientModInitializer {
@@ -13,6 +14,7 @@ public class ShutterClient implements ClientModInitializer {
     public void onInitializeClient() {
         INSTANCE = this;
         EntityRenderers.register();
+        ClientNetworkHandler.register();
         this.inputHandler = new InputHandler();
     }
 }

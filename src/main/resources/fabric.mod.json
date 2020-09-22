@@ -21,7 +21,7 @@
   "entrypoints": {
     "main": ["studio.archetype.shutter.Shutter"],
     "client": ["studio.archetype.shutter.client.ShutterClient"],
-    "cardinal-components-world": ["studio.archetype.shutter.components.Components"]
+    "cardinal-components-world": ["studio.archetype.shutter.Shutter"]
   },
 
   "mixins": [
@@ -29,7 +29,7 @@
   ],
 
   "custom": {
-    "cardinal-components": ["shutter:path"]
+    "cardinal-components": ["shutter:path_manager"]
   },
 
   "depends": {

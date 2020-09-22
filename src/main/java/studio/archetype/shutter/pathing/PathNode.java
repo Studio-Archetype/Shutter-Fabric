@@ -3,6 +3,7 @@ package studio.archetype.shutter.pathing;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import studio.archetype.shutter.entities.Entities;
 
 public class PathNode {
 
@@ -11,7 +12,7 @@ public class PathNode {
     private final float zoom;
 
     public PathNode(Vec3d pos, float pitch, float yaw, float roll, float zoom) {
-        this.position = pos;
+        this.position = pos.add(0, -(Entities.ENTITY_CAMERA_POINT.getHeight() / 4.0F), 0);
         this.pitch = pitch;
         this.yaw = yaw;
         this.roll = roll;

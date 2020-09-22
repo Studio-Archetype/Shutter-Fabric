@@ -1,7 +1,6 @@
 package studio.archetype.shutter.client.entityrenderer;
 
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import studio.archetype.shutter.entities.CameraPointEntity;
 import studio.archetype.shutter.entities.Entities;
 
 public class EntityRenderers {

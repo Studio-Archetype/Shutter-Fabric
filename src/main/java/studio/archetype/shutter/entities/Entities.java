@@ -17,7 +17,7 @@ public final class Entities {
                 CameraPointEntity.ENTITY_ID,
                 FabricEntityTypeBuilder
                         .<CameraPointEntity>create(SpawnGroup.MISC, CameraPointEntity::new)
-                        .dimensions(EntityDimensions.fixed(0.75F, 0.75F))
+                        .dimensions(EntityDimensions.fixed(.5F, .5F))
                         .spawnableFarFromPlayer()
                         .disableSaving()
                         .disableSummon()

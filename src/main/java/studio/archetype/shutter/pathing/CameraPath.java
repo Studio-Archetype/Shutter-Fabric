@@ -1,7 +1,9 @@
 package studio.archetype.shutter.pathing;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.entities.CameraPointEntity;
 
@@ -35,6 +37,16 @@ public class CameraPath {
     }
 
     public void createVisualizeEntities(PlayerEntity e) {
+        getNodes().forEach(n -> {
+            CameraPointEntity entity = new CameraPointEntity(e.getEntityWorld());
+            entity.applyNodeData(n);
+            visualizeEntities.add(entity);
+            e.getEntityWorld().spawnEntity(entity);
+        });
+    }
 
+    public void destroyVisualizeEntities() {
+        this.visualizeEntities.forEach(Entity::kill);
+        this.visualizeEntities.clear();
     }
 }

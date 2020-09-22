@@ -24,6 +24,7 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Quaternion;
 import org.jetbrains.annotations.Nullable;
 import studio.archetype.shutter.entities.CameraPointEntity;
 
@@ -45,12 +46,8 @@ public class CameraPointEntityRenderer extends EntityRenderer<CameraPointEntity>
     public void render(CameraPointEntity entity, float yaw, float tickDelta, MatrixStack matrix, VertexConsumerProvider vertexConsumers, int light) {
         matrix.push();
 
-        matrix.translate(0.5D, 0.5D, 0.5D);
         matrix.scale(-1.0F, -1.0F, 1.0F);
-
-        matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(entity.roll));
-        matrix.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.pitch));
-        matrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(entity.yaw));
+        matrix.multiply(new Quaternion(entity.pitch, entity.yaw, entity.roll, true));
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(getSkull(getSkullGameprofile(CAMERA_UUID, "CameraHead", CAMERA_TEX)));
         model.render(matrix, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
