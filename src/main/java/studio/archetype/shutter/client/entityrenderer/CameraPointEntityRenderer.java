@@ -16,6 +16,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
+import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.entities.CameraPointEntity;
 
 import java.util.Map;
@@ -42,8 +44,13 @@ public class CameraPointEntityRenderer extends EntityRenderer<CameraPointEntity>
         rotateCenterPoint(matrix, entity.pitch, entity.yaw, entity.roll);
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(getSkull(getSkullGameprofile(CAMERA_UUID, "CameraHead", CAMERA_TEX)));
-        model.render(matrix, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, .25F);
+        model.render(matrix, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, ClientConfigManager.CLIENT_CONFIG.pathSettings.nodeTransparency);
         matrix.pop();
+    }
+
+    private void drawCurve(Vec3d position) {
+        Vec3d point1 = position.add(0, 4, 0);
+        Vec3d point2 = position.add(1, 8, 2);
     }
 
     private void rotateCenterPoint(MatrixStack stack, float pitch, float yaw, float roll) {

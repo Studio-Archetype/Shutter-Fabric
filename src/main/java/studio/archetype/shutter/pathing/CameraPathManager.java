@@ -12,8 +12,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import studio.archetype.shutter.Shutter;
-import studio.archetype.shutter.entities.CameraPointEntity;
-import studio.archetype.shutter.entities.Entities;
 
 import java.util.*;
 
@@ -98,5 +96,6 @@ public class CameraPathManager implements ComponentV3 {
             path.put("nodes", nodes);
             list.add(path);
         });
+        tag.put("paths", list);
     }
 }

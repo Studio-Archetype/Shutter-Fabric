@@ -15,6 +15,8 @@ repositories {
         name = "Ladysnake Libs"
         url = "https://dl.bintray.com/ladysnake/libs"
     }
+
+    jcenter()
 }
 
 dependencies {
@@ -25,8 +27,11 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "io.github.onyxstudios:Cardinal-Components-API:${project.cc_version}"
-    include "io.github.onyxstudios:Cardinal-Components-API:${project.cc_version}"
+    implementation(include("me.zeroeightsix:fiber:${project.fiber_version}"))
+    modImplementation(include("io.github.onyxstudios:Cardinal-Components-API:${project.cc_version}"))
+    modImplementation(include("me.shedaniel.cloth:config-2:${project.cloth_version}"))
+    modImplementation(include("me.shedaniel.cloth:fiber2cloth:${project.fiber2cloth_version}")) {transitive false}
+    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") {transitive false}
 }
 
 processResources {

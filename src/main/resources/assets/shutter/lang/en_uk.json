@@ -8,5 +8,18 @@
   "key.shutter.cam.zoom_out": "Zoom out",
   "key.shutter.cam.zoom_reset": "Reset Zoom",
   "key.shutter.cam.create_node": "Create Path Node",
-  "key.shutter.cam.visualize_path": "Show Current Path"
+  "key.shutter.cam.visualize_path": "Show Current Path",
+
+  "config.shutter.title": "Shutter Configuration",
+  "config.shutter.pathSettings": "Visualization",
+  "config.shutter.tooltip.pathSettings": "Settings regarding the Camera Path Visualization.",
+  "config.shutter.nodeTransparency": "Node Transparency",
+  "config.shutter.tooltip.nodeTransparency": "Set the transparency of Path Nodes.",
+  "config.shutter.showNodeDirectionalBeam": "Show Node Directional Beam",
+  "config.shutter.tooltip.showDirectionalBeam": "Set whether or not to render a additional line with Path Nodes, indicating direction.",
+  "config.shutter.pathStyle": "Path Render Style",
+  "config.shutter.pathStyle.line": "Lines",
+  "config.shutter.pathStyle.cubes": "Cubes",
+  "config.shutter.pathStyle.none": "None",
+  "config.shutter.tooltip.pathStyle": "Set the style in which the path between nodes is rendered during visualization."
 }

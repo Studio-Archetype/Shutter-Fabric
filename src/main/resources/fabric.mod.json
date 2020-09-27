@@ -21,7 +21,8 @@
   "entrypoints": {
     "main": ["studio.archetype.shutter.Shutter"],
     "client": ["studio.archetype.shutter.client.ShutterClient"],
-    "cardinal-components-world": ["studio.archetype.shutter.Shutter"]
+    "cardinal-components-world": ["studio.archetype.shutter.Shutter"],
+    "modmenu": ["studio.archetype.shutter.client.config.ClientConfigManager"]
   },
 
   "mixins": [

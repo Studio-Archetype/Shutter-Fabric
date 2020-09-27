@@ -97,20 +97,6 @@ public class InputHandler {
                 Camera cam = c.gameRenderer.getCamera();
                 PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(), (float)c.options.fov);
                 ClientNetworkHandler.sendCreateNode(node, null);
-
-                c.getToastManager().add(new ShutterToast(ShutterToast.ToastBackgrounds.NEGATIVE,
-                        "Path Node created!",
-                        String.format("X: %.1f | Y: %.1f | Z: %.1f",
-                                node.getPosition().getX(),
-                                node.getPosition().getY(),
-                                node.getPosition().getZ()),
-                        String.format("P: %.1f | Y: %.1f | R: %.1f | Z: %.1f",
-                                node.getPitch(),
-                                node.getYaw(),
-                                node.getRoll(),
-                                node.getZoom()
-                        )
-                ));
             }
             if(visualizePath.wasPressed()) {
                 ClientNetworkHandler.sendShowPath(null);
