@@ -23,6 +23,6 @@ public abstract class GameRendererMixin {
                     shift = At.Shift.AFTER,
                     target = "Lnet/minecraft/client/render/Camera;update(Lnet/minecraft/world/BlockView;Lnet/minecraft/entity/Entity;ZZF)V"))
     public void addRollMatrixMult(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo info) {
-        matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(((CameraExt)getCamera()).getRoll()));
+        matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(((CameraExt)getCamera()).getRoll(tickDelta)));
     }
 }

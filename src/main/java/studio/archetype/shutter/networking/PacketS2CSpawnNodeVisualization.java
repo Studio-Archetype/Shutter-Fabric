@@ -6,12 +6,9 @@ import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.entities.CameraPointEntity;
 import studio.archetype.shutter.entities.Entities;
@@ -21,10 +18,10 @@ import java.util.UUID;
 
 public class PacketS2CSpawnNodeVisualization extends AbstractPacket {
 
-    public static final Identifier ID = Shutter.id("node_create");
+    public static final Identifier ID = Shutter.id("node_show");
 
     public static Packet<?> sendPacket(CameraPointEntity entity) {
-        PacketByteBuf buf = getBadChest();
+        PacketByteBuf buf = getBuffer();
         buf.writeUuid(entity.getUuid());
         buf.writeVarInt(entity.getEntityId());
         buf.writeDouble(entity.getX());

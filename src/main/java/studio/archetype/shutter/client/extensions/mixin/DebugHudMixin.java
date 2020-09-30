@@ -23,7 +23,7 @@ public abstract class DebugHudMixin {
         for (int i = 0; i < strings.size(); i++) {
             if(strings.get(i).startsWith("Facing:")) {
                 StringBuilder builder = new StringBuilder(strings.get(i));
-                builder.insert(builder.length() - 1, String.format(" / %.1f", ((CameraExt)this.client.gameRenderer.getCamera()).getRoll()));
+                builder.insert(builder.length() - 1, String.format(" / %.1f", ((CameraExt)this.client.gameRenderer.getCamera()).getRoll(client.getTickDelta())));
                 strings.set(i, builder.toString());
                 break;
             }

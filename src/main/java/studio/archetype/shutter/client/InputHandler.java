@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.ShutterToast;
@@ -14,8 +15,8 @@ import studio.archetype.shutter.pathing.PathNode;
 public class InputHandler {
 
     private static final float ROT_FACTOR = .5F;
-    private static final float ZOOM_FACTOR = .1F;
-    private static final float DEFAULT_FOV = 70;
+    private static final double ZOOM_FACTOR = .1F;
+    private static final double DEFAULT_FOV = 70;
 
     private static KeyBinding rollLeft, rollRight, rollReset;
     private static KeyBinding zoomIn, zoomOut, zoomReset;
@@ -76,30 +77,25 @@ public class InputHandler {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
-            while(rollLeft.wasPressed())
+            if(rollLeft.isPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
-            while(rollRight.wasPressed())
+            if(rollRight.isPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
-            while(zoomIn.wasPressed()) {
-                double n = c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1);
-                if(n <= 0)
-                    c.options.fov = 0;
-            }
-            while(zoomOut.wasPressed())
-                c.options.fov += ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1);
+            if(zoomIn.isPressed())
+                c.options.fov = MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9);
+            if(zoomOut.isPressed())
+                c.options.fov = MathHelper.clamp(c.options.fov + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9);
             if(rollReset.wasPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).setRoll(0);
-            if(zoomReset.wasPressed()) {
+            if(zoomReset.wasPressed())
                 c.options.fov = DEFAULT_FOV;
-            }
+            if(visualizePath.wasPressed())
+                ClientNetworkHandler.sendShowPath(null);
 
             if(createNode.wasPressed()) {
                 Camera cam = c.gameRenderer.getCamera();
-                PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(), (float)c.options.fov);
+                PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)c.options.fov);
                 ClientNetworkHandler.sendCreateNode(node, null);
-            }
-            if(visualizePath.wasPressed()) {
-                ClientNetworkHandler.sendShowPath(null);
             }
         });
     }

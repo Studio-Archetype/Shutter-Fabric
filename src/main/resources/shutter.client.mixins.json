@@ -6,6 +6,7 @@
   "client": [
     "CameraMixin",
     "GameRendererMixin",
+    "WorldRendererMixin",
     "DebugHudMixin"
   ],
   "injectors": {

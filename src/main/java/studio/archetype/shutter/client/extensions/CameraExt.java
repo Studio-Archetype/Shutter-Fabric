@@ -4,5 +4,5 @@ public interface CameraExt {
 
     void setRoll(float roll);
     void addRoll(float roll);
-    float getRoll();
+    float getRoll(float tickDelta);
 }

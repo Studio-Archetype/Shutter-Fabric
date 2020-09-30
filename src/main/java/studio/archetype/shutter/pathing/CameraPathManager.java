@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -12,6 +13,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import studio.archetype.shutter.Shutter;
+import studio.archetype.shutter.networking.PacketS2CPathVisualization;
 
 import java.util.*;
 
@@ -44,10 +46,16 @@ public class CameraPathManager implements ComponentV3 {
         if(path == null)
             return;
 
+        if(path.getNodes().size() < 2) {
+            e.sendMessage(new LiteralText("Not enough nodes, minimum 2."), true);
+            return;
+        }
+
         if((cameraVisualization.containsKey(playerUUID) && cameraVisualization.get(playerUUID).contains(id))) {
             path.destroyVisualizeEntities();
             cameraVisualization.remove(playerUUID, id);
             e.sendMessage(new LiteralText("Visualization for " + id.toString() + "destroyed."), true);
+            ServerSidePacketRegistry.INSTANCE.sendToPlayer(e, PacketS2CPathVisualization.sendPacket(null));
         } else {
             path.createVisualizeEntities(e);
             cameraVisualization.put(playerUUID, id);

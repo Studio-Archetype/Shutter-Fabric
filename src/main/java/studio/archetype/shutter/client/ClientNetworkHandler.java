@@ -6,6 +6,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.NetworkHandler;
 import studio.archetype.shutter.Shutter;
+import studio.archetype.shutter.networking.PacketS2CPathVisualization;
 import studio.archetype.shutter.networking.PacketS2CSpawnNodeVisualization;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
@@ -33,5 +34,6 @@ public class ClientNetworkHandler {
 
     public static void register() {
         ClientSidePacketRegistry.INSTANCE.register(PacketS2CSpawnNodeVisualization.ID, PacketS2CSpawnNodeVisualization::onReceive);
+        ClientSidePacketRegistry.INSTANCE.register(PacketS2CPathVisualization.ID, PacketS2CPathVisualization::onReceive);
     }
 }

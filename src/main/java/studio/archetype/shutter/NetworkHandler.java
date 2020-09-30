@@ -9,7 +9,7 @@ import studio.archetype.shutter.pathing.PathNode;
 public class NetworkHandler {
 
     public static final Identifier PACKET_KEY_NODE_CREATE = Shutter.id("node_create");
-    public static final Identifier PACKET_KEY_PATH_SHOW = Shutter.id("path_show");
+    public static final Identifier PACKET_KEY_PATH_SHOW = Shutter.id("path_visualize");
 
     public static void register() {
         ServerSidePacketRegistry.INSTANCE.register(PACKET_KEY_NODE_CREATE, (ctx, data) -> {

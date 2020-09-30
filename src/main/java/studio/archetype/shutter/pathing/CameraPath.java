@@ -1,16 +1,15 @@
 package studio.archetype.shutter.pathing;
 
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.entities.CameraPointEntity;
+import studio.archetype.shutter.networking.PacketS2CPathVisualization;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 public class CameraPath {
 
@@ -43,6 +42,7 @@ public class CameraPath {
             visualizeEntities.add(entity);
             e.getEntityWorld().spawnEntity(entity);
         });
+        ServerSidePacketRegistry.INSTANCE.sendToPlayer(e, PacketS2CPathVisualization.sendPacket(nodes));
     }
 
     public void destroyVisualizeEntities() {

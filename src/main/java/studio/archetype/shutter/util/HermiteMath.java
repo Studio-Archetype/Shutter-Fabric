@@ -1,4 +1,4 @@
-package studio.archetype.shutter;
+package studio.archetype.shutter.util;
 
 public final class HermiteMath {
 
@@ -20,14 +20,5 @@ public final class HermiteMath {
         a3 = -2 * mu3 + 3 * mu2;
 
         return (a0 * points[1] + a1 * m0 + a2 * m1 + a3 * points[2]);
-    }
-
-    public static double[] hermiteToBezier(double[] hermite) {
-        double[] bezier = new double[4];
-        bezier[0] = hermite[0];
-        bezier[1] = hermite[0] + hermite[2] / 3;
-        bezier[2] = hermite[1] - hermite[3] / 3;
-        bezier[3] = hermite[1];
-        return bezier;
     }
 }
