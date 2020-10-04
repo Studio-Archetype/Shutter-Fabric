@@ -1,48 +1,40 @@
 package studio.archetype.shutter.pathing;
 
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Vec3d;
-import studio.archetype.shutter.entities.Entities;
 
 public class PathNode {
 
-    private final Vec3d position;
-    private final float pitch, yaw, roll;
-    private final float zoom;
+    private Vec3d position;
+    private float pitch, yaw, roll;
+    private float zoom;
+
+    public PathNode(CompoundTag tag) {
+        deserialize(tag);
+    }
 
     public PathNode(Vec3d pos, float pitch, float yaw, float roll, float zoom) {
-        this.position = pos.add(0, -(Entities.ENTITY_CAMERA_POINT.getHeight() / 4.0F), 0);
+        this.position = pos;
         this.pitch = pitch;
         this.yaw = yaw;
         this.roll = roll;
         this.zoom = zoom;
     }
 
-    public void serialize(PacketByteBuf buf, Identifier path) {
-        buf.writeBoolean(path != null);
-        if(path != null)
-            buf.writeString(path.toString());
-
-        buf.writeDouble(position.getX());
-        buf.writeDouble(position.getY());
-        buf.writeDouble(position.getZ());
-
-        buf.writeFloat(pitch);
-        buf.writeFloat(yaw);
-        buf.writeFloat(roll);
-
-        buf.writeDouble(zoom);
+    public void serialize(CompoundTag tag) {
+        tag.putDouble("x", this.getPosition().getX()); tag.putDouble("y", this.getPosition().getY()); tag.putDouble("z", this.getPosition().getZ());
+        tag.putFloat("pitch", this.getPitch());
+        tag.putFloat("yaw", this.getYaw());
+        tag.putFloat("roll", this.getRoll());
+        tag.putFloat("zoom", this.getZoom());
     }
 
-    public static PathNode deserialize(PacketByteBuf buf) {
-        Vec3d pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-        float pitch = buf.readFloat();
-        float yaw = buf.readFloat();
-        float roll = buf.readFloat();
-        float zoom = (float)buf.readDouble();
-
-        return new PathNode(pos, pitch, yaw, roll, zoom);
+    private void deserialize(CompoundTag tag) {
+        this.position = new Vec3d(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z"));
+        this.pitch = tag.getFloat("pitch");
+        this.yaw = tag.getFloat("yaw");
+        this.roll = tag.getFloat("roll");
+        this.zoom = tag.getFloat("zoom");
     }
 
     public Vec3d getPosition() {

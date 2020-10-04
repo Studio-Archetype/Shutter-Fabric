@@ -8,8 +8,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import studio.archetype.shutter.client.extensions.CameraExt;
-import studio.archetype.shutter.client.ui.ShutterToast;
-import studio.archetype.shutter.entities.CameraPointEntity;
+import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
 
 public class InputHandler {
@@ -77,6 +76,9 @@ public class InputHandler {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
+            if(c.player == null)
+                return;
+
             if(rollLeft.isPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
             if(rollRight.isPressed())
@@ -90,12 +92,12 @@ public class InputHandler {
             if(zoomReset.wasPressed())
                 c.options.fov = DEFAULT_FOV;
             if(visualizePath.wasPressed())
-                ClientNetworkHandler.sendShowPath(null);
+                ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(c.player, CameraPathManager.DEFAULT_PATH);
 
             if(createNode.wasPressed()) {
                 Camera cam = c.gameRenderer.getCamera();
                 PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)c.options.fov);
-                ClientNetworkHandler.sendCreateNode(node, null);
+                ShutterClient.INSTANCE.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
             }
         });
     }
