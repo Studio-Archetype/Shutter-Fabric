@@ -2,3 +2,5 @@
 
 # Shutter
 A camera suite and recording studio for minecraft 1.16.2+
+
+![java profiler](https://www.ej-technologies.com/images/product_banners/jprofiler_small.png) Java Profiler: https://www.ej-technologies.com/products/jprofiler/overview.html
