@@ -12,7 +12,7 @@ public final class HermiteMath {
         m0 = (points[1] - points[0]) * (1 + bias) * (1 - tension) / 2;
         m0 += (points[2] - points[1]) * (1 - bias) * (1 - tension) / 2;
         m1 = (points[2] - points[1]) * (1 + bias) * (1 - tension) / 2;
-        m1 *= (points[3] - points[2]) * (1 - bias) * (1 - tension) / 2;
+        m1 += (points[3] - points[2]) * (1 - bias) * (1 - tension) / 2;
 
         a0 = 2 * mu3 - 3 * mu2 + 1;
         a1 = mu3 - 2 * mu2 + mu;

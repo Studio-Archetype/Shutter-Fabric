@@ -8,6 +8,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import studio.archetype.shutter.client.extensions.CameraExt;
+import studio.archetype.shutter.client.ui.PathListScreen;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
 
@@ -19,7 +20,8 @@ public class InputHandler {
 
     private static KeyBinding rollLeft, rollRight, rollReset;
     private static KeyBinding zoomIn, zoomOut, zoomReset;
-    private static KeyBinding createNode, visualizePath;
+    private static KeyBinding createNode, visualizePath, startPath;
+    private static KeyBinding openScreen;
 
     public InputHandler() {
         setupKeybinds();
@@ -74,6 +76,18 @@ public class InputHandler {
                 GLFW.GLFW_KEY_KP_0,
                 "category.shutter.keybinds"
         ));
+        startPath = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.shutter.cam.start_path",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_KP_ENTER,
+                "category.shutter.keybinds"
+        ));
+        openScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.shutter.cam.open_screen",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_KP_DECIMAL,
+                "category.shutter.keybinds"
+        ));
 
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
             if(c.player == null)
@@ -93,11 +107,17 @@ public class InputHandler {
                 c.options.fov = DEFAULT_FOV;
             if(visualizePath.wasPressed())
                 ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(c.player, CameraPathManager.DEFAULT_PATH);
+            if(openScreen.wasPressed())
+                c.openScreen(new PathListScreen(c.world));
 
             if(createNode.wasPressed()) {
                 Camera cam = c.gameRenderer.getCamera();
                 PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)c.options.fov);
                 ShutterClient.INSTANCE.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
+            }
+
+            if(startPath.wasPressed()) {
+                ShutterClient.INSTANCE.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH);
             }
         });
     }

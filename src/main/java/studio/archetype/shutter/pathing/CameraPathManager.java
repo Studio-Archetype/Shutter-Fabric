@@ -3,18 +3,14 @@ package studio.archetype.shutter.pathing;
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import studio.archetype.shutter.Shutter;
+import studio.archetype.shutter.client.PathFollower;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.ui.ShutterMessageToast;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CameraPathManager {
 
@@ -22,6 +18,10 @@ public class CameraPathManager {
 
     private final Map<Identifier, CameraPath> cameraPaths = new HashMap<>();
     private Identifier currentVisualization;
+
+    public CameraPathManager() {
+        cameraPaths.put(DEFAULT_PATH, new CameraPath(DEFAULT_PATH));
+    }
 
     public List<CameraPath> getPaths() {
         return Lists.newArrayList(cameraPaths.values());
@@ -38,6 +38,23 @@ public class CameraPathManager {
         ));
     }
 
+    public void startCameraPath(Identifier id) {
+        CameraPath path = cameraPaths.computeIfAbsent(id, CameraPath::new);
+
+        if(path.getNodes().size() < 2 || MinecraftClient.getInstance().player == null) {
+            MinecraftClient.getInstance().player.sendMessage(new LiteralText("Needs more than 2 nodes."), true);
+            return;
+        }
+
+        PathFollower follower = ShutterClient.INSTANCE.getPathFollower();
+
+        if(follower.isFollowing()) {
+            follower.end();
+            return;
+        }
+        follower.start(ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).getPaths().get(0));
+    }
+
     public void togglePathVisualization(PlayerEntity e, Identifier id) {
         CameraPath path = cameraPaths.computeIfAbsent(id, CameraPath::new);
 
@@ -48,14 +65,14 @@ public class CameraPathManager {
 
         if(currentVisualization != null) {
             currentVisualization = null;
-            ShutterClient.INSTANCE.getNodeRenderer().resetCameraPath();
-            ShutterClient.INSTANCE.getPathRenderer().resetPoints();
+            ShutterClient.INSTANCE.getNodeRenderer().disable();
+            ShutterClient.INSTANCE.getPathRenderer().disable();
             e.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
 
         } else {
             currentVisualization = id;
-            ShutterClient.INSTANCE.getPathRenderer().setPoints(new LinkedList<>(path.getNodes().stream().map(PathNode::getPosition).collect(Collectors.toList())));
-            ShutterClient.INSTANCE.getNodeRenderer().setCameraPath(path);
+            ShutterClient.INSTANCE.getPathRenderer().setPath(path);
+            ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
             e.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
         }
     }

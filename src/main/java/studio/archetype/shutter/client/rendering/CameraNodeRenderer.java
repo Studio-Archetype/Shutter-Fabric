@@ -30,11 +30,11 @@ public class CameraNodeRenderer {
 
     private CameraPath path;
 
-    public void setCameraPath(CameraPath path) {
+    public void setPath(CameraPath path) {
         this.path = path;
     }
 
-    public void resetCameraPath() {
+    public void disable() {
         this.path = null;
     }
 
@@ -47,42 +47,32 @@ public class CameraNodeRenderer {
 
         path.getNodes().forEach(node -> {
             stack.push();
-            stack.translate(-cam.getX(), -cam.getY(), -cam.getZ());
+
             stack.translate(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
-            drawHead(stack, node, provider, light);
+            stack.translate(cam.getX(), cam.getY(), cam.getZ());
+
+            stack.translate(0, -4F / 16, 0);
+            stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(node.getRoll()));
+            stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(node.getYaw() + 180));
+            stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(node.getPitch()));
+            stack.translate(0, 4F / 16, 0);
+
+            VertexConsumer vertexConsumer = provider.getBuffer(getSkull());
+            model.render(stack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, ClientConfigManager.CLIENT_CONFIG.pathSettings.nodeTransparency);
+
             stack.pop();
         });
 
         stack.pop();
     }
 
-    private void drawHead(MatrixStack matrix, PathNode node, VertexConsumerProvider.Immediate vertexConsumers, int light) {
-        matrix.push();
-        rotateCenterPoint(matrix, node.getPitch(), node.getYaw(), node.getRoll());
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(getSkull(getSkullGameprofile(CAMERA_UUID, "CameraHead", CAMERA_TEX)));
-        model.render(matrix, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, ClientConfigManager.CLIENT_CONFIG.pathSettings.nodeTransparency);
-        matrix.pop();
-    }
-
-    private void rotateCenterPoint(MatrixStack stack, float pitch, float yaw, float roll) {
-        stack.translate(0, -4F / 16, 0);
-        stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(roll));
-        stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(yaw + 180));
-        stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
-        stack.translate(0, 4F / 16, 0);
-    }
-
-    private RenderLayer getSkull(GameProfile gameProfile) {
+    private RenderLayer getSkull() {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraftClient.getSkinProvider().getTextures(gameProfile);
+        GameProfile profile = new GameProfile(CAMERA_UUID, "CameraHead");
+        profile.getProperties().put("textures", new Property("textures", CAMERA_TEX));
+        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraftClient.getSkinProvider().getTextures(profile);
         return map.containsKey(MinecraftProfileTexture.Type.SKIN)
                 ? RenderLayer.getEntityTranslucent(minecraftClient.getSkinProvider().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN))
-                : RenderLayer.getEntityCutoutNoCull(DefaultSkinHelper.getTexture(PlayerEntity.getUuidFromProfile(gameProfile)));
-    }
-
-    public GameProfile getSkullGameprofile(UUID uuid, String name, String texture) {
-        GameProfile profile = new GameProfile(uuid, name);
-        profile.getProperties().put("textures", new Property("textures", texture));
-        return profile;
+                : RenderLayer.getEntityCutoutNoCull(DefaultSkinHelper.getTexture(PlayerEntity.getUuidFromProfile(profile)));
     }
 }

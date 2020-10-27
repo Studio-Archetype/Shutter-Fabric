@@ -1,38 +1,40 @@
 package studio.archetype.shutter.client.config;
 
-import io.github.fablabsmc.fablabs.api.fiber.v1.annotation.Setting;
-import io.github.fablabsmc.fablabs.api.fiber.v1.annotation.Settings;
-import me.shedaniel.fiber2cloth.api.ClothSetting;
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.resource.language.I18n;
+import studio.archetype.shutter.Shutter;
 
-@Settings
-@ClothSetting
-public class ClientConfig {
+@Config(name = Shutter.MOD_ID)
+public class ClientConfig implements ConfigData {
 
-    @Setting.Group
-    @ClothSetting.CollapsibleObject
-    @ClothSetting.Tooltip("config.shutter.tooltip.pathSettings")
+    public float curveDetail = 0.1F;
+    public int nodeTime = 100;
+
+    @ConfigEntry.Gui.CollapsibleObject
     public final CameraPathSettings pathSettings = new CameraPathSettings();
 
     public static class CameraPathSettings {
 
-        @ClothSetting.Slider
-        @ClothSetting.Tooltip("config.shutter.tooltip.nodeTransparency")
-        @Setting.Constrain.Range(min = 0, max = 100, step = 1)
+        @ConfigEntry.BoundedDiscrete(max = 100, min = 0)
         public int nodeTransparency = 50;
 
-        @ClothSetting.Tooltip("config.shutter.tooltip.showDirectionalBeam")
         public boolean showNodeDirectionalBeam = false;
 
-        @ClothSetting.EnumHandler(ClothSetting.EnumHandler.EnumDisplayOption.DROPDOWN)
-        @ClothSetting.Tooltip("config.shutter.tooltip.pathStyle")
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public PathStyle pathStyle = PathStyle.LINE;
+
+        @ConfigEntry.ColorPicker
+        public int pathColour = 0;
     }
 
     public enum PathStyle {
         LINE("config.shutter.pathStyle.line"),
         CUBES("config.shutter.pathStyle.cubes"),
-        NONE("config.shutter.pathStyle.none");
+        NONE("config.shutter.pathStyle.none"),
+        DEBUG("config.shutter.pathStyle.debug");
 
         String key;
 

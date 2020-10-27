@@ -18,24 +18,26 @@ public class ShutterClient implements ClientModInitializer {
     private CameraPathRenderer pathRenderer;
     private CameraNodeRenderer nodeRenderer;
 
+    private PathFollower follower;
+
     private Map<World, CameraPathManager> pathManagers;
 
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
-        ClientConfigManager.loadConfig();
+        ClientConfigManager.register();
         this.inputHandler = new InputHandler();
         this.pathRenderer = new CameraPathRenderer();
         this.nodeRenderer = new CameraNodeRenderer();
         this.pathManagers = new HashMap<>();
+        this.follower = new PathFollower();
     }
 
     public CameraPathManager getPathManager(World w) {
         return pathManagers.computeIfAbsent(w, world -> new CameraPathManager());
     }
 
-    public CameraPathRenderer getPathRenderer() {
-        return pathRenderer;
-    }
+    public CameraPathRenderer getPathRenderer() { return pathRenderer; }
     public CameraNodeRenderer getNodeRenderer() { return nodeRenderer; }
+    public PathFollower getPathFollower() { return follower; }
 }
