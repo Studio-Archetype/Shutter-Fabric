@@ -1,5 +1,7 @@
 package studio.archetype.shutter.client;
 
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.options.KeyBinding;
@@ -7,6 +9,8 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
+import studio.archetype.shutter.Shutter;
+import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.PathListScreen;
 import studio.archetype.shutter.pathing.CameraPathManager;
@@ -21,7 +25,7 @@ public class InputHandler {
     private static KeyBinding rollLeft, rollRight, rollReset;
     private static KeyBinding zoomIn, zoomOut, zoomReset;
     private static KeyBinding createNode, visualizePath, startPath;
-    private static KeyBinding openScreen;
+    private static KeyBinding openScreen, openConfig;
 
     public InputHandler() {
         setupKeybinds();
@@ -89,6 +93,13 @@ public class InputHandler {
                 "category.shutter.keybinds"
         ));
 
+        openConfig = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.shutter.cam.open_screen",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_KP_SUBTRACT,
+                "category.shutter.keybinds"
+        ));
+
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
             if(c.player == null)
                 return;
@@ -109,6 +120,11 @@ public class InputHandler {
                 ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(c.player, CameraPathManager.DEFAULT_PATH);
             if(openScreen.wasPressed())
                 c.openScreen(new PathListScreen(c.world));
+            if(openConfig.wasPressed()) {
+                ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, c.currentScreen);
+                provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());
+                c.openScreen(provider.get());
+            }
 
             if(createNode.wasPressed()) {
                 Camera cam = c.gameRenderer.getCamera();

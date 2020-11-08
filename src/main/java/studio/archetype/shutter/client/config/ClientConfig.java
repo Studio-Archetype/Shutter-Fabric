@@ -11,7 +11,7 @@ import studio.archetype.shutter.Shutter;
 public class ClientConfig implements ConfigData {
 
     public float curveDetail = 0.1F;
-    public int nodeTime = 100;
+    public int pathTime = 100;
 
     @ConfigEntry.Gui.CollapsibleObject
     public final CameraPathSettings pathSettings = new CameraPathSettings();

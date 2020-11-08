@@ -21,7 +21,7 @@
   "entrypoints": {
     "main": ["studio.archetype.shutter.Shutter"],
     "client": ["studio.archetype.shutter.client.ShutterClient"],
-    "modmenu": ["studio.archetype.shutter.client.config.ClientConfigManager"]
+    "modmenu": ["studio.archetype.shutter.client.config.ModMenuEntryPoint"]
   },
 
   "mixins": [

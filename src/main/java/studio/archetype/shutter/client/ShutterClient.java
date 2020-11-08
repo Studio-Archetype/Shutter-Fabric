@@ -16,7 +16,6 @@ public class ShutterClient implements ClientModInitializer {
 
     private InputHandler inputHandler;
     private CameraPathRenderer pathRenderer;
-    private CameraNodeRenderer nodeRenderer;
 
     private PathFollower follower;
 
@@ -28,7 +27,6 @@ public class ShutterClient implements ClientModInitializer {
         ClientConfigManager.register();
         this.inputHandler = new InputHandler();
         this.pathRenderer = new CameraPathRenderer();
-        this.nodeRenderer = new CameraNodeRenderer();
         this.pathManagers = new HashMap<>();
         this.follower = new PathFollower();
     }
@@ -38,6 +36,5 @@ public class ShutterClient implements ClientModInitializer {
     }
 
     public CameraPathRenderer getPathRenderer() { return pathRenderer; }
-    public CameraNodeRenderer getNodeRenderer() { return nodeRenderer; }
     public PathFollower getPathFollower() { return follower; }
 }

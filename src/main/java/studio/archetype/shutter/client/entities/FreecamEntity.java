@@ -1,8 +1,6 @@
-package studio.archetype.shutter.client;
+package studio.archetype.shutter.client.entities;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;

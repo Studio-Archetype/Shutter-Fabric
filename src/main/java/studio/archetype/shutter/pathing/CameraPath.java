@@ -1,9 +1,11 @@
 package studio.archetype.shutter.pathing;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.util.HermiteMath;
 
@@ -38,6 +40,12 @@ public class CameraPath {
         if(needsInterpolationRebuilt)
             calculatePath();
         return interpolation;
+    }
+
+    public void clear() {
+        nodes.clear();
+        interpolation.clear();
+        needsInterpolationRebuilt = false;
     }
 
     public Identifier readFromNbt(CompoundTag compoundTag) {

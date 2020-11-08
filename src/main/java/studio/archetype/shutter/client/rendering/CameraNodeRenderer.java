@@ -8,20 +8,24 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.model.SkullOverlayEntityModel;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.entities.PathNodeEntity;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.PathNode;
 
 import java.util.Map;
 import java.util.UUID;
 
-public class CameraNodeRenderer {
+public class CameraNodeRenderer extends EntityRenderer<PathNodeEntity> {
 
     public static final UUID CAMERA_UUID = UUID.fromString("bda14eb8-3246-4637-947f-d550e2f32387");
     public static final String CAMERA_TEX = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmZiNWVlZTQwYzNkZDY2ODNjZWM4ZGQxYzZjM2ZjMWIxZjAxMzcxNzg2NjNkNzYxMDljZmUxMmVkN2JmMjc4ZSJ9fX0=";
@@ -29,6 +33,10 @@ public class CameraNodeRenderer {
     private static final SkullOverlayEntityModel model = new SkullOverlayEntityModel();
 
     private CameraPath path;
+
+    protected CameraNodeRenderer(EntityRenderDispatcher dispatcher) {
+        super(dispatcher);
+    }
 
     public void setPath(CameraPath path) {
         this.path = path;
@@ -74,5 +82,10 @@ public class CameraNodeRenderer {
         return map.containsKey(MinecraftProfileTexture.Type.SKIN)
                 ? RenderLayer.getEntityTranslucent(minecraftClient.getSkinProvider().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN))
                 : RenderLayer.getEntityCutoutNoCull(DefaultSkinHelper.getTexture(PlayerEntity.getUuidFromProfile(profile)));
+    }
+
+    @Override
+    public Identifier getTexture(PathNodeEntity entity) {
+        return null;
     }
 }

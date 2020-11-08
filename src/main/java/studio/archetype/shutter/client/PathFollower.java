@@ -6,6 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.PathNode;
 
@@ -18,7 +19,6 @@ public class PathFollower {
     private FreecamEntity entity;
 
     private PathNode currentNode;
-    private Vec3d lastPos;
     private LinkedList<Vec3d> currentSegmentData = new LinkedList<>();
     private int nodeIndex, segmentIndex, rotTickCounter, tickCounter;
     private int segmentTime, nodeTime;
@@ -47,9 +47,8 @@ public class PathFollower {
         segmentIndex = 1;
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData().get(currentNode);
-        lastPos = currentNode.getPosition();
-        segmentTime = ClientConfigManager.CLIENT_CONFIG.nodeTime / currentSegmentData.size();
-        nodeTime = ClientConfigManager.CLIENT_CONFIG.nodeTime / path.getNodes().size();
+        nodeTime = ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size();
+        segmentTime = (ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
         c.interactionManager.setGameMode(GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
@@ -69,21 +68,24 @@ public class PathFollower {
     }
 
     public void tick() {
-        double delta = Math.min(tickCounter / segmentTime, 1);
-        float rotDelta = Math.min(rotTickCounter / nodeTime, 1);
+        double delta = Math.min((float)tickCounter / segmentTime, 1);
+        float rotDelta = Math.min((float)rotTickCounter / nodeTime, 1);
         Vec3d segPos = currentSegmentData.get(segmentIndex);
+        Vec3d prevPos = currentSegmentData.get(segmentIndex - 1);
+
+        System.out.printf("TickCounter: %s/%s | RotCounter: %s/%s%n", tickCounter, segmentTime, rotTickCounter, nodeTime);
 
         Vec3d target = new Vec3d(
-                MathHelper.lerp(delta, lastPos.getX(), segPos.getX()),
-                MathHelper.lerp(delta, lastPos.getY(), segPos.getY()),
-                MathHelper.lerp(delta, lastPos.getZ(), segPos.getZ()));
+                MathHelper.lerp(delta, prevPos.getX(), segPos.getX()),
+                MathHelper.lerp(delta, prevPos.getY(), segPos.getY()),
+                MathHelper.lerp(delta, prevPos.getZ(), segPos.getZ()));
         float pitch = MathHelper.lerp(rotDelta, currentNode.getPitch(), path.getNodes().get(nodeIndex + 1).getPitch());
         float yaw = MathHelper.lerp(rotDelta, currentNode.getYaw(), path.getNodes().get(nodeIndex + 1).getYaw());
         float roll = MathHelper.lerp(rotDelta, currentNode.getRoll(), path.getNodes().get(nodeIndex + 1).getRoll());
 
         entity.prevX = entity.getX();
         entity.prevY = entity.getY();
-        entity.prevZ = target.getZ();
+        entity.prevZ = entity.getZ();
         entity.prevPitch = entity.pitch;
         entity.prevYaw = entity.yaw;
         entity.setPos(target.x, target.y, target.z);
@@ -92,7 +94,6 @@ public class PathFollower {
         if(delta >= 1) {
             tickCounter = 0;
             segmentIndex++;
-            lastPos = segPos;
             if(segmentIndex >= currentSegmentData.size()) {
                 segmentIndex = 1;
                 nodeIndex++;

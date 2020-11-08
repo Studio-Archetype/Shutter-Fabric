@@ -55,6 +55,21 @@ public class CameraPathManager {
         follower.start(ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).getPaths().get(0));
     }
 
+    public void clearPath(Identifier id) {
+        CameraPath path = cameraPaths.computeIfAbsent(id, CameraPath::new);
+        if(path.getNodes().isEmpty()) {
+            MinecraftClient.getInstance().player.sendMessage(new LiteralText("Path is empty already."), true);
+            return;
+        }
+
+        if(ShutterClient.INSTANCE.getPathFollower().isFollowing())
+            ShutterClient.INSTANCE.getPathFollower().end();
+        if(currentVisualization != null)
+            togglePathVisualization(MinecraftClient.getInstance().player, id);
+
+        path.clear();
+    }
+
     public void togglePathVisualization(PlayerEntity e, Identifier id) {
         CameraPath path = cameraPaths.computeIfAbsent(id, CameraPath::new);
 
@@ -65,14 +80,14 @@ public class CameraPathManager {
 
         if(currentVisualization != null) {
             currentVisualization = null;
-            ShutterClient.INSTANCE.getNodeRenderer().disable();
+            //ShutterClient.INSTANCE.getNodeRenderer().disable();
             ShutterClient.INSTANCE.getPathRenderer().disable();
             e.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
 
         } else {
             currentVisualization = id;
             ShutterClient.INSTANCE.getPathRenderer().setPath(path);
-            ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
+            //ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
             e.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
         }
     }
