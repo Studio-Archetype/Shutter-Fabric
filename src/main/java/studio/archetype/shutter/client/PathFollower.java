@@ -70,6 +70,8 @@ public class PathFollower {
         c.setCameraEntity(null);
         c.player.setPos(oldPos.getX(), oldPos.getY(), oldPos.getZ());
         c.interactionManager.setGameMode(oldGamemode);
+        c.options.fov = oldFov;
+        ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
     }
 
     public void tick() {

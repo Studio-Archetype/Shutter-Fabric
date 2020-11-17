@@ -27,6 +27,14 @@ public class CameraPathManager {
         return Lists.newArrayList(cameraPaths.values());
     }
 
+    public CameraPath getPath(Identifier id) {
+        return cameraPaths.computeIfAbsent(id, CameraPath::new);
+    }
+
+    public boolean isVisualized(Identifier id) {
+        return id.equals(currentVisualization);
+    }
+
     public void addNode(Identifier cameraPathId, PathNode node) {
         CameraPath path = cameraPaths.computeIfAbsent(cameraPathId, CameraPath::new);
         path.addNode(node);

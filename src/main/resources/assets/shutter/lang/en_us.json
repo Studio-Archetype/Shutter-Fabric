@@ -10,14 +10,17 @@
   "key.shutter.cam.create_node": "Create Path Node",
   "key.shutter.cam.visualize_path": "Show Current Path",
   "key.shutter.cam.open_screen": "Open Path Overview",
+  "key.shutter.cam.open_config": "Open Config",
+  "key.shutter.cam.start_path": "Start/Stop Path",
 
   "ui.shutter.pathList.entry": "Camera Path #%s",
   "ui.shutter.pathList.entryName": "Camera Path Name",
   "ui.shutter.pathList.none": "No Paths available.",
 
   "text.autoconfig.shutter.title": "Shutter Configuration",
-  "config.shutter.pathSettings": "Visualization",
+  "config.shutter.pathTime": "Path Time",
   "config.shutter.curveDetail": "Curve Segment Length",
+  "config.shutter.pathSettings": "Visualization",
   "config.shutter.tooltip.pathSettings.pathSettings": "Settings regarding the Camera Path Visualization.",
   "config.shutter.pathSettings.nodeTransparency": "Node Transparency",
   "config.shutter.tooltip.pathSettings.nodeTransparency": "Set the transparency of Path Nodes.",
@@ -30,5 +33,5 @@
   "config.shutter.pathStyle.line": "Lines",
   "config.shutter.pathStyle.cubes": "Cubes",
   "config.shutter.pathStyle.none": "None",
-  "config.shutter.pathStyle.debug": "Debug"
+  "config.shutter.pathStyle.debug": "Advanced"
 }

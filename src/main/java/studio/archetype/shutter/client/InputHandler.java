@@ -109,9 +109,9 @@ public class InputHandler {
             if(rollRight.isPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
             if(zoomIn.isPressed())
-                ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
-            if(zoomOut.isPressed())
                 ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
+            if(zoomOut.isPressed())
+                ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
             if(rollReset.wasPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).setRoll(0);
             if(zoomReset.wasPressed())

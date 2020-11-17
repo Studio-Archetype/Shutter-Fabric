@@ -1,6 +1,5 @@
 package studio.archetype.shutter.client.extensions.mixin;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.MathHelper;
