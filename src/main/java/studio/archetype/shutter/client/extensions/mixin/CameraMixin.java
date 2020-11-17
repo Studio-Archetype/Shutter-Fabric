@@ -17,8 +17,7 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 @Mixin(Camera.class)
 public abstract class CameraMixin implements CameraExt {
 
-    @Unique private float targetRoll;
-    @Unique private float roll;
+    @Unique public float roll, prevRoll;
 
     @Shadow @Final private Quaternion rotation;
     @Shadow private float yaw;
@@ -35,23 +34,28 @@ public abstract class CameraMixin implements CameraExt {
                     target = "Lnet/minecraft/util/math/Quaternion;hamiltonProduct(Lnet/minecraft/util/math/Quaternion;)V"))
     public void injectRoll(float yaw, float pitch, CallbackInfo info) {
         this.rotation.hamiltonProduct(Vector3f.POSITIVE_Z.getDegreesQuaternion(this.roll));
-        //FIXME pls no
-        this.roll = MathHelper.lerpAngleDegrees(0.5F, roll, targetRoll) % 360;
     }
 
     @Unique @Override
     public void addRoll(float roll) {
-        this.targetRoll = (this.targetRoll + roll) % 360;
+        this.prevRoll = this.roll;
+        this.roll = (this.roll + roll) % 360;
     }
 
     @Unique @Override
     public float getRoll(float tickDelta) {
-        return MathHelper.lerpAngleDegrees(tickDelta, roll, targetRoll);
+        return tickDelta == 1.0F ? this.roll : MathHelper.lerpAngleDegrees(tickDelta, prevRoll, roll);
     }
 
     @Unique @Override
     public void setRoll(float roll) {
-        this.roll = targetRoll = roll % 360;
+        this.prevRoll = this.roll;
+        this.roll = roll % 360;
         setRotation(this.yaw, this.pitch);
+    }
+
+    @Unique @Override
+    public void setPreviousRoll(float roll) {
+        this.prevRoll = roll;
     }
 }

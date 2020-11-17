@@ -7,6 +7,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.entities.FreecamEntity;
+import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.PathNode;
 
@@ -25,6 +26,8 @@ public class PathFollower {
 
     private GameMode oldGamemode;
     private Vec3d oldPos;
+    private double oldFov;
+    private float oldRoll;
 
     public PathFollower() {
         ClientTickEvents.END_CLIENT_TICK.register((e) -> {
@@ -42,6 +45,8 @@ public class PathFollower {
 
         this.oldGamemode = c.interactionManager.getCurrentGameMode();
         this.oldPos = c.player.getPos();
+        this.oldFov = c.options.fov;
+        this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
 
         nodeIndex = tickCounter = rotTickCounter = 0;
         segmentIndex = 1;
@@ -82,12 +87,14 @@ public class PathFollower {
         float pitch = MathHelper.lerp(rotDelta, currentNode.getPitch(), path.getNodes().get(nodeIndex + 1).getPitch());
         float yaw = MathHelper.lerp(rotDelta, currentNode.getYaw(), path.getNodes().get(nodeIndex + 1).getYaw());
         float roll = MathHelper.lerp(rotDelta, currentNode.getRoll(), path.getNodes().get(nodeIndex + 1).getRoll());
+        double zoom = MathHelper.lerp(rotDelta, currentNode.getZoom(), path.getNodes().get(nodeIndex + 1).getZoom());
 
         entity.prevX = entity.getX();
         entity.prevY = entity.getY();
         entity.prevZ = entity.getZ();
         entity.prevPitch = entity.pitch;
         entity.prevYaw = entity.yaw;
+        ShutterClient.INSTANCE.setZoom(zoom);
         entity.setPos(target.x, target.y, target.z);
         entity.setRotation(pitch, yaw, roll);
 

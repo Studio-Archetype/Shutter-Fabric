@@ -94,7 +94,7 @@ public class InputHandler {
         ));
 
         openConfig = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.shutter.cam.open_screen",
+                "key.shutter.cam.open_config",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_SUBTRACT,
                 "category.shutter.keybinds"
@@ -109,13 +109,13 @@ public class InputHandler {
             if(rollRight.isPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
             if(zoomIn.isPressed())
-                c.options.fov = MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9);
+                ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
             if(zoomOut.isPressed())
-                c.options.fov = MathHelper.clamp(c.options.fov + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9);
+                ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
             if(rollReset.wasPressed())
                 ((CameraExt)c.gameRenderer.getCamera()).setRoll(0);
             if(zoomReset.wasPressed())
-                c.options.fov = DEFAULT_FOV;
+                ShutterClient.INSTANCE.setZoom(DEFAULT_FOV);
             if(visualizePath.wasPressed())
                 ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(c.player, CameraPathManager.DEFAULT_PATH);
             if(openScreen.wasPressed())

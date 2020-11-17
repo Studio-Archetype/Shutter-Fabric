@@ -1,6 +1,8 @@
 package studio.archetype.shutter.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
@@ -21,6 +23,8 @@ public class ShutterClient implements ClientModInitializer {
 
     private Map<World, CameraPathManager> pathManagers;
 
+    private double zoom, prevZoom;
+
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
@@ -29,6 +33,7 @@ public class ShutterClient implements ClientModInitializer {
         this.pathRenderer = new CameraPathRenderer();
         this.pathManagers = new HashMap<>();
         this.follower = new PathFollower();
+
     }
 
     public CameraPathManager getPathManager(World w) {
@@ -37,4 +42,19 @@ public class ShutterClient implements ClientModInitializer {
 
     public CameraPathRenderer getPathRenderer() { return pathRenderer; }
     public PathFollower getPathFollower() { return follower; }
+
+    public double getZoom(float delta) {
+        if(zoom == 0 || prevZoom == 0)
+            this.zoom = this.prevZoom = MinecraftClient.getInstance().options.fov;
+        return MathHelper.lerp(delta, prevZoom, zoom);
+    }
+
+    public void setZoom(double zoom) {
+        prevZoom = MinecraftClient.getInstance().options.fov;
+        this.zoom = zoom;
+    }
+
+    public void setPreviousZoom(double prev) {
+        this.prevZoom = prev;
+    }
 }
