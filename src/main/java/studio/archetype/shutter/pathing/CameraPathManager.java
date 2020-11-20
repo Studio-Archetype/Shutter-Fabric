@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.PathFollower;
@@ -40,9 +41,13 @@ public class CameraPathManager {
         path.addNode(node);
         MinecraftClient.getInstance().getToastManager().add(new ShutterMessageToast(
                 ShutterMessageToast.Type.POSITIVE,
-                new LiteralText("Node created!"),
-                new LiteralText("Yes"),
-                new LiteralText("no")
+                new LiteralText("Node Created @"),
+                new LiteralText("x").formatted(Formatting.DARK_RED)
+                        .append(new LiteralText(String.format("%.3f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
+                        .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
+                        .append(new LiteralText(String.format("%.3f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
+                        .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
+                        .append(new LiteralText(String.format("%.3f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE))
         ));
     }
 
