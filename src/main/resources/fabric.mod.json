@@ -24,6 +24,10 @@
     "modmenu": ["studio.archetype.shutter.client.config.ModMenuEntryPoint"]
   },
 
+  "custom": {
+    "modmenu:clientsideOnly": true
+  },
+
   "mixins": [
     "shutter.client.mixins.json"
   ],
