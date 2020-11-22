@@ -2,6 +2,8 @@ package studio.archetype.shutter.pathing;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
@@ -93,14 +95,13 @@ public class CameraPathManager {
 
         if(currentVisualization != null) {
             currentVisualization = null;
-            //ShutterClient.INSTANCE.getNodeRenderer().disable();
             ShutterClient.INSTANCE.getPathRenderer().disable();
+            ShutterClient.INSTANCE.getNodeRenderer().setPath(null);
             e.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
-
         } else {
             currentVisualization = id;
             ShutterClient.INSTANCE.getPathRenderer().setPath(path);
-            //ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
+            ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
             e.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
         }
     }
