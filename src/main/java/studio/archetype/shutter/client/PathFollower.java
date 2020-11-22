@@ -33,7 +33,6 @@ public class PathFollower {
         ClientTickEvents.END_CLIENT_TICK.register((e) -> {
             if(path == null)
                 return;
-
             tick();
         });
     }
@@ -52,8 +51,8 @@ public class PathFollower {
         segmentIndex = 1;
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData().get(currentNode);
-        nodeTime = ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size();
         segmentTime = (ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
+        nodeTime = segmentTime * (int)(1 / ClientConfigManager.CLIENT_CONFIG.curveDetail);
         c.interactionManager.setGameMode(GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
