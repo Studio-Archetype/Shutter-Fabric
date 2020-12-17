@@ -21,6 +21,7 @@ public class ShutterClient implements ClientModInitializer {
     private CameraNodeRenderer nodeRenderer;
 
     private PathFollower follower;
+    private PathIterator iterator;
 
     private Map<World, CameraPathManager> pathManagers;
 
@@ -36,6 +37,7 @@ public class ShutterClient implements ClientModInitializer {
         this.nodeRenderer = new CameraNodeRenderer();
         this.pathManagers = new HashMap<>();
         this.follower = new PathFollower();
+        this.iterator = new PathIterator();
     }
 
     public CameraPathManager getPathManager(World w) {
@@ -45,6 +47,7 @@ public class ShutterClient implements ClientModInitializer {
     public CameraPathRenderer getPathRenderer() { return pathRenderer; }
     public CameraNodeRenderer getNodeRenderer() { return nodeRenderer; }
     public PathFollower getPathFollower() { return follower; }
+    public PathIterator getPathIterator() { return iterator; }
 
     public double getZoom(float delta) {
         if(zoom == 0 || prevZoom == 0)

@@ -1,13 +1,11 @@
 package studio.archetype.shutter.pathing;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
-import studio.archetype.shutter.util.HermiteMath;
+import studio.archetype.shutter.util.InterpolationMath;
 
 import java.util.*;
 
@@ -81,12 +79,22 @@ public class CameraPath {
             LinkedList<Vec3d> splinePoints = new LinkedList<>();
 
             for(float j = 0; j <= 1; j += ClientConfigManager.CLIENT_CONFIG.curveDetail) {
-                double x = HermiteMath.interpolate(new double[] {p1.getX(), p2.getX(), p3.getX(), p4.getX()}, j, 0, 1);
-                double y = HermiteMath.interpolate(new double[] {p1.getY(), p2.getY(), p3.getY(), p4.getY()}, j, 0, 1);
-                double z = HermiteMath.interpolate(new double[] {p1.getZ(), p2.getZ(), p3.getZ(), p4.getZ()}, j, 0, 1);
+                Vec3d spline;
 
-                Vec3d splineP = new Vec3d(x, y, z);
-                splinePoints.add(splineP);
+                if(nodes.size() == 2)
+                    spline = new Vec3d(
+                            InterpolationMath.interpolateLinear(p2.getX(), p3.getX(), j),
+                            InterpolationMath.interpolateLinear(p2.getY(), p3.getY(), j),
+                            InterpolationMath.interpolateLinear(p2.getZ(), p3.getZ(), j)
+                    );
+                else
+                    spline = new Vec3d(
+                            InterpolationMath.interpolateHermite(new double[] {p1.getX(), p2.getX(), p3.getX(), p4.getX()}, j, 0, 1),
+                            InterpolationMath.interpolateHermite(new double[] {p1.getY(), p2.getY(), p3.getY(), p4.getY()}, j, 0, 1),
+                            InterpolationMath.interpolateHermite(new double[] {p1.getZ(), p2.getZ(), p3.getZ(), p4.getZ()}, j, 0, 1)
+                    );
+
+                splinePoints.add(spline);
             }
 
             splinePoints.add(p3);

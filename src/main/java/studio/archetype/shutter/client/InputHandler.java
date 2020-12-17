@@ -26,6 +26,7 @@ public class InputHandler {
     private static KeyBinding zoomIn, zoomOut, zoomReset;
     private static KeyBinding createNode, visualizePath, startPath;
     private static KeyBinding openScreen, openConfig;
+    private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
 
     public InputHandler() {
         setupKeybinds();
@@ -100,22 +101,49 @@ public class InputHandler {
                 "category.shutter.keybinds"
         ));
 
-        ClientTickEvents.END_CLIENT_TICK.register(c -> {
-            if(c.player == null)
-                return;
+        movePreviousNode = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.stutter.cam.previous_node",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_KP_1,
+                "category.shutter.keybinds"
+        ));
+        moveNextNode = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.stutter.cam.next_node",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_KP_3,
+                "category.shutter.keybinds"
+        ));
+        toggleIterationMode = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.stutter.cam.toggle_iteration",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_KP_ADD,
+                "category.shutter.keybinds"
+        ));
 
-            if(rollLeft.isPressed())
-                ((CameraExt)c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
-            if(rollRight.isPressed())
-                ((CameraExt)c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
-            if(zoomIn.isPressed())
-                ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
-            if(zoomOut.isPressed())
-                ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
-            if(rollReset.wasPressed())
-                ((CameraExt)c.gameRenderer.getCamera()).setRoll(0);
-            if(zoomReset.wasPressed())
-                ShutterClient.INSTANCE.setZoom(DEFAULT_FOV);
+
+        ClientTickEvents.END_CLIENT_TICK.register(c -> {
+            if (c.player == null)
+                return;
+            if(!ShutterClient.INSTANCE.getPathFollower().isFollowing() && !ShutterClient.INSTANCE.getPathIterator().isIterating()) {
+                if (rollLeft.isPressed())
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
+                if (rollRight.isPressed())
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
+                if (zoomIn.isPressed())
+                    ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
+                if (zoomOut.isPressed())
+                    ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
+                if (rollReset.wasPressed())
+                (   (CameraExt) c.gameRenderer.getCamera()).setRoll(0);
+                if (zoomReset.wasPressed())
+                    ShutterClient.INSTANCE.setZoom(DEFAULT_FOV);
+                if(createNode.wasPressed()) {
+                    Camera cam = c.gameRenderer.getCamera();
+                    PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)c.options.fov);
+                    ShutterClient.INSTANCE.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
+                }
+            }
+
             if(visualizePath.wasPressed())
                 ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(c.player, CameraPathManager.DEFAULT_PATH);
             if(openScreen.wasPressed())
@@ -126,14 +154,15 @@ public class InputHandler {
                 c.openScreen(provider.get());
             }
 
-            if(createNode.wasPressed()) {
-                Camera cam = c.gameRenderer.getCamera();
-                PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)c.options.fov);
-                ShutterClient.INSTANCE.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
+            if(startPath.wasPressed() && !ShutterClient.INSTANCE.getPathIterator().isIterating()) {
+                ShutterClient.INSTANCE.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH);
             }
 
-            if(startPath.wasPressed()) {
-                ShutterClient.INSTANCE.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH);
+            if(toggleIterationMode.wasPressed() && !ShutterClient.INSTANCE.getPathFollower().isFollowing()) {
+                if(ShutterClient.INSTANCE.getPathIterator().isIterating())
+                    ShutterClient.INSTANCE.getPathIterator().end();
+                else
+                    ShutterClient.INSTANCE.getPathIterator().begin(ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH));
             }
         });
     }

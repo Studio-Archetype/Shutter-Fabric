@@ -1,8 +1,12 @@
 package studio.archetype.shutter.util;
 
-public final class HermiteMath {
+public final class InterpolationMath {
 
-    public static double interpolate(double[] points, double mu, double tension, double bias) {
+    public static double interpolateLinear(double start, double end, double mu) {
+        return (start * (1 - mu) + end * mu);
+    }
+
+    public static double interpolateHermite(double[] points, double mu, double tension, double bias) {
         double m0, m1, mu2, mu3;
         double a0, a1, a2, a3;
 
