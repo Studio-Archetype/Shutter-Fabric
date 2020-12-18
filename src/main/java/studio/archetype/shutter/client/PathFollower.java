@@ -9,6 +9,7 @@ import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.pathing.CameraPath;
+import studio.archetype.shutter.pathing.InterpolationData;
 import studio.archetype.shutter.pathing.PathNode;
 
 import java.util.LinkedList;
@@ -20,9 +21,9 @@ public class PathFollower {
     private FreecamEntity entity;
 
     private PathNode currentNode;
-    private LinkedList<Vec3d> currentSegmentData = new LinkedList<>();
-    private int nodeIndex, segmentIndex, rotTickCounter, tickCounter;
-    private int segmentTime, nodeTime;
+    private LinkedList<InterpolationData> currentSegmentData = new LinkedList<>();
+    private int nodeIndex, segmentIndex, tickCounter;
+    private int segmentTime;
 
     private GameMode oldGamemode;
     private Vec3d oldPos;
@@ -47,12 +48,11 @@ public class PathFollower {
         this.oldFov = c.options.fov;
         this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
 
-        nodeIndex = tickCounter = rotTickCounter = 0;
+        nodeIndex = tickCounter = 0;
         segmentIndex = 1;
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData().get(currentNode);
         segmentTime = (ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
-        nodeTime = segmentTime * (int)(1 / ClientConfigManager.CLIENT_CONFIG.curveDetail);
         c.interactionManager.setGameMode(GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
@@ -66,7 +66,7 @@ public class PathFollower {
         this.entity.kill();
 
         MinecraftClient c = MinecraftClient.getInstance();
-        c.setCameraEntity(null);
+        c.setCameraEntity(c.player);
         c.player.setPos(oldPos.getX(), oldPos.getY(), oldPos.getZ());
         c.interactionManager.setGameMode(oldGamemode);
         c.options.fov = oldFov;
@@ -75,20 +75,19 @@ public class PathFollower {
 
     public void tick() {
         double delta = Math.min((float)tickCounter / segmentTime, 1);
-        float rotDelta = Math.min((float)rotTickCounter / nodeTime, 1);
-        Vec3d segPos = currentSegmentData.get(segmentIndex);
-        Vec3d prevPos = currentSegmentData.get(segmentIndex - 1);
-
-        System.out.printf("TickCounter: %s/%s | RotCounter: %s/%s%n", tickCounter, segmentTime, rotTickCounter, nodeTime);
+        InterpolationData cur = currentSegmentData.get(segmentIndex);
+        InterpolationData prev = currentSegmentData.get(segmentIndex - 1);
 
         Vec3d target = new Vec3d(
-                MathHelper.lerp(delta, prevPos.getX(), segPos.getX()),
-                MathHelper.lerp(delta, prevPos.getY(), segPos.getY()),
-                MathHelper.lerp(delta, prevPos.getZ(), segPos.getZ()));
-        float pitch = MathHelper.lerp(rotDelta, currentNode.getPitch(), path.getNodes().get(nodeIndex + 1).getPitch());
-        float yaw = MathHelper.lerp(rotDelta, currentNode.getYaw(), path.getNodes().get(nodeIndex + 1).getYaw());
-        float roll = MathHelper.lerp(rotDelta, currentNode.getRoll(), path.getNodes().get(nodeIndex + 1).getRoll());
-        double zoom = MathHelper.lerp(rotDelta, currentNode.getZoom(), path.getNodes().get(nodeIndex + 1).getZoom());
+                MathHelper.lerp(delta, prev.getPosition().getX(), cur.getPosition().getX()),
+                MathHelper.lerp(delta, prev.getPosition().getY(), cur.getPosition().getY()),
+                MathHelper.lerp(delta, prev.getPosition().getZ(), cur.getPosition().getZ()));
+        float pitch = (float)MathHelper.lerp(delta, prev.getRotation().getX(), cur.getRotation().getX());
+        float yaw = (float)MathHelper.lerp(delta, prev.getRotation().getY(), cur.getRotation().getY());
+        float roll = (float)MathHelper.lerp(delta, prev.getRotation().getZ(), cur.getRotation().getZ());
+        double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
+
+        System.out.printf("TickCounter: %s/%s P %.2f Y%.2f R%.2f D%.2f\n", tickCounter, segmentTime, pitch, yaw, roll, delta);
 
         entity.prevX = entity.getX();
         entity.prevY = entity.getY();
@@ -111,13 +110,11 @@ public class PathFollower {
                 } else {
                     currentNode = path.getNodes().get(nodeIndex);
                     currentSegmentData = path.getInterpolatedData().get(currentNode);
-                    rotTickCounter = 0;
                 }
             }
         }
 
         tickCounter++;
-        rotTickCounter++;
     }
 
     public boolean isFollowing() {

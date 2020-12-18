@@ -2,7 +2,7 @@ package studio.archetype.shutter.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import studio.archetype.shutter.client.entities.FreecamEntity;
@@ -27,9 +27,28 @@ public class PathIterator {
     }
 
     public void begin(CameraPath path) {
+        if(path.getNodes().size() < 2 || MinecraftClient.getInstance().player == null) {
+            MinecraftClient.getInstance().player.sendMessage(new LiteralText("Needs more than 2 nodes."), true);
+            return;
+        }
+
         this.currentPath = path;
         this.index = 0;
-        setCameraToNode(this.currentPath.getNodes().get(index));
+
+        MinecraftClient c = MinecraftClient.getInstance();
+        PlayerEntity p = c.player;
+        assert p != null;
+
+        PathNode node = this.currentPath.getNodes().get(index);
+        this.entity = new FreecamEntity(node.getPosition(), node.getPitch(), node.getYaw(), node.getRoll(), c.world);
+        this.oldGamemode = c.interactionManager.getCurrentGameMode();
+        this.oldPos = p.getPos();
+        this.oldFov = c.options.fov;
+        this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
+
+        c.interactionManager.setGameMode(GameMode.SPECTATOR);
+        c.setCameraEntity(entity);
+        setCameraToNode(node);
     }
 
     public void next() {
@@ -43,41 +62,27 @@ public class PathIterator {
     }
 
     public void end() {
-        if(entity == null)
-            return;
-
         this.entity.kill();
-        this.entity = null;
+        this.currentPath = null;
 
         MinecraftClient c = MinecraftClient.getInstance();
         PlayerEntity p = c.player;
 
         p.teleport(oldPos.getX(), oldPos.getY(), oldPos.getZ());
         c.options.fov = oldFov;
+        c.setCameraEntity(p);
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
         c.interactionManager.setGameMode(oldGamemode);
     }
 
     private void setCameraToNode(PathNode node) {
-
         MinecraftClient c = MinecraftClient.getInstance();
         PlayerEntity p = c.player;
         assert p != null;
 
-        if(entity == null) {
-            this.entity = new FreecamEntity(node.getPosition(), node.getPitch(), node.getYaw(), node.getRoll(), c.world);
-            this.oldGamemode = c.interactionManager.getCurrentGameMode();
-            this.oldPos = p.getPos();
-            this.oldFov = c.options.fov;
-            this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
-
-            c.interactionManager.setGameMode(GameMode.SPECTATOR);
-            c.setCameraEntity(entity);
-        } else {
-            entity.setPos(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
-            entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
-            c.options.fov = node.getZoom();
-        }
+        entity.setPos(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
+        entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
+        c.options.fov = node.getZoom();
 
         p.teleport(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
     }
