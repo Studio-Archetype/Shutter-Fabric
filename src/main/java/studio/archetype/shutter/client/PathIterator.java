@@ -52,18 +52,23 @@ public class PathIterator {
     }
 
     public void next() {
-        this.index = (index + 1) % currentPath.getNodes().size();
+        this.index++;
+        if(this.index > this.currentPath.getNodes().size() - 1)
+            this.index = 0;
         setCameraToNode(this.currentPath.getNodes().get(index));
     }
 
     public void previous() {
-        this.index = (index - 1) % currentPath.getNodes().size();
+        this.index--;
+        if(index < 0)
+            this.index = currentPath.getNodes().size() - 1;
         setCameraToNode(this.currentPath.getNodes().get(index));
     }
 
     public void end() {
         this.entity.kill();
         this.currentPath = null;
+        this.index = 0;
 
         MinecraftClient c = MinecraftClient.getInstance();
         PlayerEntity p = c.player;
@@ -80,9 +85,14 @@ public class PathIterator {
         PlayerEntity p = c.player;
         assert p != null;
 
+        entity.prevX = entity.getX();
+        entity.prevY = entity.getY();
+        entity.prevZ = entity.getZ();
+        entity.prevPitch = entity.pitch;
+        entity.prevYaw = entity.yaw;
+        ShutterClient.INSTANCE.setZoom(node.getZoom());
         entity.setPos(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
         entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
-        c.options.fov = node.getZoom();
 
         p.teleport(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
     }

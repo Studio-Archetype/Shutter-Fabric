@@ -164,6 +164,13 @@ public class InputHandler {
                 else
                     ShutterClient.INSTANCE.getPathIterator().begin(ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH));
             }
+
+            if(ShutterClient.INSTANCE.getPathIterator().isIterating()) {
+                if(moveNextNode.wasPressed())
+                    ShutterClient.INSTANCE.getPathIterator().next();
+                if(movePreviousNode.wasPressed())
+                    ShutterClient.INSTANCE.getPathIterator().previous();
+            }
         });
     }
 }

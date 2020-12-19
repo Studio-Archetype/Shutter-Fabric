@@ -12,6 +12,9 @@
   "key.shutter.cam.open_screen": "Open Path Overview",
   "key.shutter.cam.open_config": "Open Config",
   "key.shutter.cam.start_path": "Start/Stop Path",
+  "key.stutter.cam.toggle_iteration": "Toggle Iteration Mode",
+  "key.stutter.cam.next_node": "Next Iteration Node",
+  "key.stutter.cam.previous_node": "Previous Iteration Node",
 
   "ui.shutter.pathList.entry": "Camera Path #%s",
   "ui.shutter.pathList.entryName": "Camera Path Name",
@@ -33,5 +36,10 @@
   "config.shutter.pathStyle.line": "Lines",
   "config.shutter.pathStyle.cubes": "Cubes",
   "config.shutter.pathStyle.none": "None",
-  "config.shutter.pathStyle.debug": "Advanced"
+  "config.shutter.pathStyle.debug": "Advanced",
+  "config.shutter.pathDetail.ultra_low": "Ultra Low",
+  "config.shutter.pathDetail.low": "Low",
+  "config.shutter.pathDetail.medium": "Medium",
+  "config.shutter.pathDetail.high": "High",
+  "config.shutter.pathDetail.absurd": "Absurd"
 }
