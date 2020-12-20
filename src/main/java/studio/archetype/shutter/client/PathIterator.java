@@ -40,15 +40,16 @@ public class PathIterator {
         assert p != null;
 
         PathNode node = this.currentPath.getNodes().get(index);
-        this.entity = new FreecamEntity(node.getPosition(), node.getPitch(), node.getYaw(), node.getRoll(), c.world);
         this.oldGamemode = c.interactionManager.getCurrentGameMode();
         this.oldPos = p.getPos();
         this.oldFov = c.options.fov;
         this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
 
+        entity = new FreecamEntity(node.getPosition(), node.getPitch(), node.getYaw(), node.getRoll(), c.world);
+        ShutterClient.INSTANCE.setZoom(node.getZoom());
+
         c.interactionManager.setGameMode(GameMode.SPECTATOR);
         c.setCameraEntity(entity);
-        setCameraToNode(node);
     }
 
     public void next() {
@@ -85,14 +86,19 @@ public class PathIterator {
         PlayerEntity p = c.player;
         assert p != null;
 
-        entity.prevX = entity.getX();
-        entity.prevY = entity.getY();
-        entity.prevZ = entity.getZ();
-        entity.prevPitch = entity.pitch;
-        entity.prevYaw = entity.yaw;
-        ShutterClient.INSTANCE.setZoom(node.getZoom());
+        System.out.println("Prev Y " + entity.getY() + " | New Y " + node.getYaw());
+
         entity.setPos(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
         entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
+        entity.prevX = node.getPosition().getX();
+        entity.prevY = node.getPosition().getY();
+        entity.prevZ = node.getPosition().getZ();
+        entity.lastRenderX = node.getPosition().getX();
+        entity.lastRenderY = node.getPosition().getY();
+        entity.lastRenderZ = node.getPosition().getZ();
+        entity.prevPitch = node.getPitch();
+        entity.prevYaw = node.getYaw();
+        ShutterClient.INSTANCE.setZoom(node.getZoom());
 
         p.teleport(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
     }

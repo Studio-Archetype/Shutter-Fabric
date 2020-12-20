@@ -39,7 +39,6 @@ public class PathFollower {
     }
 
     public void start(CameraPath path) {
-        System.out.println("Starting path");
         MinecraftClient c = MinecraftClient.getInstance();
         this.path = path;
 
@@ -61,7 +60,6 @@ public class PathFollower {
     }
 
     public void end() {
-        System.out.println("Ending path");
         this.path = null;
         this.entity.kill();
 
@@ -86,8 +84,6 @@ public class PathFollower {
         float yaw = (float)MathHelper.lerp(delta, prev.getRotation().getY(), cur.getRotation().getY());
         float roll = (float)MathHelper.lerp(delta, prev.getRotation().getZ(), cur.getRotation().getZ());
         double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
-
-        System.out.printf("TickCounter: %s/%s P %.2f Y%.2f R%.2f D%.2f\n", tickCounter, segmentTime, pitch, yaw, roll, delta);
 
         entity.prevX = entity.getX();
         entity.prevY = entity.getY();

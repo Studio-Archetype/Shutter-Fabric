@@ -24,7 +24,7 @@
   "config.shutter.pathTime": "Path Time",
   "config.shutter.curveDetail": "Curve Segment Length",
   "config.shutter.pathSettings": "Visualization",
-  "config.shutter.tooltip.pathSettings.pathSettings": "Settings regarding the Camera Path Visualization.",
+  "config.shutter.tooltip.pathSettings": "Settings regarding the Camera Path Visualization.",
   "config.shutter.pathSettings.nodeTransparency": "Node Transparency",
   "config.shutter.tooltip.pathSettings.nodeTransparency": "Set the transparency of Path Nodes.",
   "config.shutter.pathSettings.showNodeDirectionalBeam": "Show Node Directional Beam",

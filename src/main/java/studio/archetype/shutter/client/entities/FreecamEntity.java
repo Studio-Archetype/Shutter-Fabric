@@ -46,6 +46,8 @@ public class FreecamEntity extends Entity {
         this.lastRenderX = this.getX();
         this.lastRenderY = this.getY();
         this.lastRenderZ = this.getZ();
+        this.prevPitch = this.pitch;
+        this.prevYaw = this.yaw;
     }
 
     public void setRotation(float pitch, float yaw, float roll) {

@@ -79,6 +79,8 @@ public class CameraPathManager {
 
         if(ShutterClient.INSTANCE.getPathFollower().isFollowing())
             ShutterClient.INSTANCE.getPathFollower().end();
+        if(ShutterClient.INSTANCE.getPathIterator().isIterating())
+            ShutterClient.INSTANCE.getPathIterator().end();
         if(currentVisualization != null)
             togglePathVisualization(MinecraftClient.getInstance().player, id);
 

@@ -1,7 +1,6 @@
 package studio.archetype.shutter.client.extensions.mixin;
 
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Matrix4f;
