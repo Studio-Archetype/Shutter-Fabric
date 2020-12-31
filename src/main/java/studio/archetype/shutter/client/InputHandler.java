@@ -139,7 +139,7 @@ public class InputHandler {
                 if (rollReset.wasPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).setRoll(0);
                 if (zoomReset.wasPressed())
-                    shutter.setZoom(0);
+                    shutter.resetZoom();
                 if(createNode.wasPressed()) {
                     Camera cam = c.gameRenderer.getCamera();
                     PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());

@@ -44,7 +44,7 @@ public class PathFollower {
 
         this.oldGamemode = c.interactionManager.getCurrentGameMode();
         this.oldPos = c.player.getPos();
-        this.oldFov = c.options.fov;
+        this.oldFov = ShutterClient.INSTANCE.getZoom();
         this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
 
         nodeIndex = tickCounter = 0;
@@ -67,7 +67,7 @@ public class PathFollower {
         c.setCameraEntity(c.player);
         c.player.setPos(oldPos.getX(), oldPos.getY(), oldPos.getZ());
         c.interactionManager.setGameMode(oldGamemode);
-        c.options.fov = oldFov;
+        ShutterClient.INSTANCE.setZoom(this.oldFov);
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
     }
 

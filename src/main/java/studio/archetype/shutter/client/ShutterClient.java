@@ -66,4 +66,8 @@ public class ShutterClient implements ClientModInitializer {
     public void setZoom(double zoom) {
         this.zoom = zoom;
     }
+
+    public void resetZoom() {
+        this.zoom = this.prevZoom = 0;
+    }
 }
