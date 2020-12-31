@@ -38,6 +38,8 @@ public class ShutterClient implements ClientModInitializer {
         this.pathManagers = new HashMap<>();
         this.follower = new PathFollower();
         this.iterator = new PathIterator();
+
+        this.zoom = this.prevZoom = 0;
     }
 
     public CameraPathManager getPathManager(World w) {
@@ -49,18 +51,19 @@ public class ShutterClient implements ClientModInitializer {
     public PathFollower getPathFollower() { return follower; }
     public PathIterator getPathIterator() { return iterator; }
 
+    public double getZoom() {
+        return this.zoom;
+    }
+
+    public double getCurrentZoomModifier() {
+        return this.prevZoom;
+    }
+
     public double getZoom(float delta) {
-        if(zoom == 0 || prevZoom == 0)
-            this.zoom = this.prevZoom = MinecraftClient.getInstance().options.fov;
-        return MathHelper.lerp(delta, prevZoom, zoom);
+        return (prevZoom = MathHelper.lerp(delta, prevZoom, zoom));
     }
 
     public void setZoom(double zoom) {
-        prevZoom = MinecraftClient.getInstance().options.fov;
         this.zoom = zoom;
-    }
-
-    public void setPreviousZoom(double prev) {
-        this.prevZoom = prev;
     }
 }

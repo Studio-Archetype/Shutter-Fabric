@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.extensions.CameraExt;
@@ -28,10 +29,13 @@ public abstract class GameRendererMixin {
                     shift = At.Shift.AFTER,
                     target = "Lnet/minecraft/client/render/Camera;update(Lnet/minecraft/world/BlockView;Lnet/minecraft/entity/Entity;ZZF)V"))
     public void addRollMatrixMult(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo info) {
-        client.options.fov = ShutterClient.INSTANCE.getZoom(tickDelta);
-        ShutterClient.INSTANCE.setPreviousZoom(client.options.fov);
         float roll = ((CameraExt)getCamera()).getRoll(tickDelta);
         matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(roll));
         ((CameraExt)getCamera()).setPreviousRoll(roll);
+    }
+
+    @ModifyVariable(method = "getFov", at = @At("STORE"), index = 4)
+    public double injectZoom(double d) {
+        return this.client.options.fov + ShutterClient.INSTANCE.getZoom(this.client.getTickDelta());
     }
 }

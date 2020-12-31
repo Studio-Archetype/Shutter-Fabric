@@ -22,7 +22,7 @@
 
   "text.autoconfig.shutter.title": "Shutter Configuration",
   "config.shutter.pathTime": "Path Time",
-  "config.shutter.curveDetail": "Curve Segment Length",
+  "config.shutter.curveDetail": "Path Detail Level",
   "config.shutter.pathSettings": "Visualization",
   "config.shutter.tooltip.pathSettings": "Settings regarding the Camera Path Visualization.",
   "config.shutter.pathSettings.nodeTransparency": "Node Transparency",

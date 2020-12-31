@@ -124,23 +124,26 @@ public class InputHandler {
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
             if (c.player == null)
                 return;
-            if(!ShutterClient.INSTANCE.getPathFollower().isFollowing() && !ShutterClient.INSTANCE.getPathIterator().isIterating()) {
+
+            ShutterClient shutter = ShutterClient.INSTANCE;
+
+            if(!shutter.getPathFollower().isFollowing() && !shutter.getPathIterator().isIterating()) {
                 if (rollLeft.isPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
                 if (rollRight.isPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
                 if (zoomIn.isPressed())
-                    ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
+                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
                 if (zoomOut.isPressed())
-                    ShutterClient.INSTANCE.setZoom(MathHelper.clamp(c.options.fov + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), 0.1, 179.9));
+                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
                 if (rollReset.wasPressed())
-                (   (CameraExt) c.gameRenderer.getCamera()).setRoll(0);
+                    ((CameraExt) c.gameRenderer.getCamera()).setRoll(0);
                 if (zoomReset.wasPressed())
-                    ShutterClient.INSTANCE.setZoom(DEFAULT_FOV);
+                    shutter.setZoom(0);
                 if(createNode.wasPressed()) {
                     Camera cam = c.gameRenderer.getCamera();
-                    PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)c.options.fov);
-                    ShutterClient.INSTANCE.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
+                    PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
+                    shutter.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
                 }
             }
 
