@@ -22,8 +22,8 @@ public class PathFollower {
 
     private PathNode currentNode;
     private LinkedList<InterpolationData> currentSegmentData = new LinkedList<>();
-    private int nodeIndex, segmentIndex, tickCounter;
-    private int segmentTime;
+    private int nodeIndex, segmentIndex;
+    private double segmentTime, tickCounter;
 
     private GameMode oldGamemode;
     private Vec3d oldPos;
@@ -34,7 +34,7 @@ public class PathFollower {
         ClientTickEvents.END_CLIENT_TICK.register((e) -> {
             if(path == null)
                 return;
-            tick();
+            tick(e.getTickDelta());
         });
     }
 
@@ -42,16 +42,20 @@ public class PathFollower {
         MinecraftClient c = MinecraftClient.getInstance();
         this.path = path;
 
+        assert c.interactionManager != null;
         this.oldGamemode = c.interactionManager.getCurrentGameMode();
+        assert c.player != null;
         this.oldPos = c.player.getPos();
         this.oldFov = ShutterClient.INSTANCE.getZoom();
         this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
 
-        nodeIndex = tickCounter = 0;
+        nodeIndex = 0;
+        tickCounter = 0;
         segmentIndex = 1;
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData().get(currentNode);
-        segmentTime = (ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
+        segmentTime = ((double)ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
+        System.out.printf("%f = ((double)%f / %d) / (%d - 1)%n", segmentTime, (double)ClientConfigManager.CLIENT_CONFIG.pathTime, path.getInterpolatedData().size(), currentSegmentData.size());
         c.interactionManager.setGameMode(GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
@@ -65,13 +69,15 @@ public class PathFollower {
 
         MinecraftClient c = MinecraftClient.getInstance();
         c.setCameraEntity(c.player);
+        assert c.player != null;
         c.player.setPos(oldPos.getX(), oldPos.getY(), oldPos.getZ());
+        assert c.interactionManager != null;
         c.interactionManager.setGameMode(oldGamemode);
         ShutterClient.INSTANCE.setZoom(this.oldFov);
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
     }
 
-    public void tick() {
+    public void tick(float tickDelta) {
         double delta = Math.min((float)tickCounter / segmentTime, 1);
         InterpolationData cur = currentSegmentData.get(segmentIndex);
         InterpolationData prev = currentSegmentData.get(segmentIndex - 1);
@@ -85,6 +91,11 @@ public class PathFollower {
         float roll = (float)MathHelper.lerp(delta, prev.getRotation().getZ(), cur.getRotation().getZ());
         double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
 
+        System.out.printf("X %.1f Y %.1f Z %.1f | P %.1f Y %.1f R %.1f Z %.1f | %.1f/%.1f%n",
+                target.x, target.y, target.z,
+                pitch, yaw, roll, zoom,
+                tickCounter, segmentTime);
+
         entity.prevX = entity.getX();
         entity.prevY = entity.getY();
         entity.prevZ = entity.getZ();
@@ -94,23 +105,22 @@ public class PathFollower {
         entity.setPos(target.x, target.y, target.z);
         entity.setRotation(pitch, yaw, roll);
 
-        if(delta >= 1) {
-            tickCounter = 0;
-            segmentIndex++;
+        tickCounter += 1 + tickDelta;
+
+        if(delta >= 1 || tickCounter >= segmentTime) {
+            segmentIndex += tickCounter / segmentTime;
+            tickCounter = tickCounter % segmentTime;
             if(segmentIndex >= currentSegmentData.size()) {
                 segmentIndex = 1;
                 nodeIndex++;
                 if(nodeIndex >= path.getNodes().size() - 1) {
                     end();
-                    return;
                 } else {
                     currentNode = path.getNodes().get(nodeIndex);
                     currentSegmentData = path.getInterpolatedData().get(currentNode);
                 }
             }
         }
-
-        tickCounter++;
     }
 
     public boolean isFollowing() {
