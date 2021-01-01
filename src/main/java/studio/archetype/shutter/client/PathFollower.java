@@ -55,7 +55,6 @@ public class PathFollower {
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData().get(currentNode);
         segmentTime = ((double)ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
-        System.out.printf("%f = ((double)%f / %d) / (%d - 1)%n", segmentTime, (double)ClientConfigManager.CLIENT_CONFIG.pathTime, path.getInterpolatedData().size(), currentSegmentData.size());
         c.interactionManager.setGameMode(GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
@@ -90,11 +89,6 @@ public class PathFollower {
         float yaw = (float)MathHelper.lerp(delta, prev.getRotation().getY(), cur.getRotation().getY());
         float roll = (float)MathHelper.lerp(delta, prev.getRotation().getZ(), cur.getRotation().getZ());
         double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
-
-        System.out.printf("X %.1f Y %.1f Z %.1f | P %.1f Y %.1f R %.1f Z %.1f | %.1f/%.1f%n",
-                target.x, target.y, target.z,
-                pitch, yaw, roll, zoom,
-                tickCounter, segmentTime);
 
         entity.prevX = entity.getX();
         entity.prevY = entity.getY();
