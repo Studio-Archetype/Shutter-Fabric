@@ -2,7 +2,6 @@ package studio.archetype.shutter.pathing;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -11,7 +10,7 @@ import studio.archetype.shutter.client.PathFollower;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.ui.ShutterMessageToast;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
-import studio.archetype.shutter.pathing.exceptions.PathException;
+import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 import java.util.*;
@@ -35,6 +34,8 @@ public class CameraPathManager {
         return cameraPaths.computeIfAbsent(id, CameraPath::new);
     }
 
+    public boolean isVisualizing() { return this.currentVisualization != null; }
+
     public void addNode(Identifier cameraPathId, PathNode node) {
         CameraPath path = cameraPaths.computeIfAbsent(cameraPathId, CameraPath::new);
         path.addNode(node);
@@ -50,21 +51,22 @@ public class CameraPathManager {
         ));
     }
 
-    public void startCameraPath(Identifier id) {
+    public void startCameraPath(Identifier id, double pathTime) throws PathTooSmallException {
         CameraPath path = cameraPaths.computeIfAbsent(id, CameraPath::new);
 
-        if(path.getNodes().size() < 2 || MinecraftClient.getInstance().player == null) {
-            MinecraftClient.getInstance().player.sendMessage(new LiteralText("Needs more than 2 nodes."), true);
-            return;
-        }
+        if(path.getNodes().size() < 2 || MinecraftClient.getInstance().player == null)
+            throw new PathTooSmallException();
 
+        ShutterClient.INSTANCE.getPathFollower().start(path, pathTime);
+    }
+
+    public void stopCameraPath() throws PathNotFollowingException {
         PathFollower follower = ShutterClient.INSTANCE.getPathFollower();
 
-        if(follower.isFollowing()) {
+        if(follower.isFollowing())
             follower.end();
-            return;
-        }
-        follower.start(ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).getPaths().get(0));
+        else
+            throw new PathNotFollowingException();
     }
 
     public void clearPath(Identifier id) throws PathEmptyException {

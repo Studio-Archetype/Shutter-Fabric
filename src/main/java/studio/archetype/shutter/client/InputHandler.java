@@ -14,10 +14,12 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.config.ClientConfig;
+import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.PathListScreen;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
+import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 public class InputHandler {
@@ -154,7 +156,7 @@ public class InputHandler {
                 ClientPlayerEntity p = c.player;
                 Identifier id = CameraPathManager.DEFAULT_PATH;
                 try {
-                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(p, id))
+                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(id))
                         p.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
                     else
                         p.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
@@ -170,22 +172,30 @@ public class InputHandler {
                 c.openScreen(provider.get());
             }
 
-            if(startPath.wasPressed() && !ShutterClient.INSTANCE.getPathIterator().isIterating()) {
-                ShutterClient.INSTANCE.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH);
+            if(startPath.wasPressed() && !shutter.getPathIterator().isIterating()) {
+                try {
+                    shutter.getPathManager(c.world).stopCameraPath();
+                } catch(PathNotFollowingException e) {
+                    try {
+                        shutter.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH, ClientConfigManager.CLIENT_CONFIG.pathTime);
+                    } catch(PathTooSmallException ex) {
+                        c.player.sendMessage(new LiteralText("Needs more than 2 nodes."), true);
+                    }
+                }
             }
 
-            if(toggleIterationMode.wasPressed() && !ShutterClient.INSTANCE.getPathFollower().isFollowing()) {
-                if(ShutterClient.INSTANCE.getPathIterator().isIterating())
-                    ShutterClient.INSTANCE.getPathIterator().end();
+            if(toggleIterationMode.wasPressed() && !shutter.getPathFollower().isFollowing()) {
+                if(shutter.getPathIterator().isIterating())
+                    shutter.getPathIterator().end();
                 else
-                    ShutterClient.INSTANCE.getPathIterator().begin(ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH));
+                    shutter.getPathIterator().begin(shutter.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH));
             }
 
-            if(ShutterClient.INSTANCE.getPathIterator().isIterating()) {
+            if(shutter.getPathIterator().isIterating()) {
                 if(moveNextNode.wasPressed())
-                    ShutterClient.INSTANCE.getPathIterator().next();
+                    shutter.getPathIterator().next();
                 if(movePreviousNode.wasPressed())
-                    ShutterClient.INSTANCE.getPathIterator().previous();
+                    shutter.getPathIterator().previous();
             }
         });
     }

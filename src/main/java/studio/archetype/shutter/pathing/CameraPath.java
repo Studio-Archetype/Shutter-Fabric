@@ -16,7 +16,7 @@ public class CameraPath {
     private final LinkedList<PathNode> nodes = new LinkedList<>();
 
     private final Map<PathNode, LinkedList<InterpolationData>> interpolation = new HashMap<>();
-    boolean needsInterpolationRebuilt = true;
+    private boolean needsInterpolationRebuilt = true;
 
     public CameraPath(Identifier id) {
         this.id = id;
@@ -45,6 +45,22 @@ public class CameraPath {
         nodes.clear();
         interpolation.clear();
         needsInterpolationRebuilt = false;
+    }
+
+    public void removeNode(int index) throws IndexOutOfBoundsException {
+        if(index >= nodes.size())
+            throw new IndexOutOfBoundsException();
+
+        nodes.remove(index);
+        this.needsInterpolationRebuilt = true;
+    }
+
+    public void setNode(PathNode node, int index) throws IndexOutOfBoundsException {
+        if(index >= nodes.size())
+            throw new IndexOutOfBoundsException();
+
+        nodes.set(index, node);
+        this.needsInterpolationRebuilt = true;
     }
 
     public Identifier readFromNbt(CompoundTag compoundTag) {

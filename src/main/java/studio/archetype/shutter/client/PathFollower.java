@@ -38,7 +38,7 @@ public class PathFollower {
         });
     }
 
-    public void start(CameraPath path) {
+    public void start(CameraPath path, double pathTime) {
         MinecraftClient c = MinecraftClient.getInstance();
         this.path = path;
 
@@ -54,7 +54,7 @@ public class PathFollower {
         segmentIndex = 1;
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData().get(currentNode);
-        segmentTime = ((double)ClientConfigManager.CLIENT_CONFIG.pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
+        segmentTime = (pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
         c.interactionManager.setGameMode(GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
