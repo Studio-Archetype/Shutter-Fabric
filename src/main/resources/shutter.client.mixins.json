@@ -7,7 +7,11 @@
     "CameraMixin",
     "GameRendererMixin",
     "WorldRendererMixin",
-    "DebugHudMixin"
+    "DebugHudMixin",
+    "ClientCommandSourceMixin",
+    "ClientPlayerEntityMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

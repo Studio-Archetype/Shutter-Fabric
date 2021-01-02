@@ -4,9 +4,12 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import studio.archetype.shutter.Shutter;
@@ -15,12 +18,12 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.PathListScreen;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
+import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 public class InputHandler {
 
     private static final float ROT_FACTOR = .5F;
     private static final double ZOOM_FACTOR = .1F;
-    private static final double DEFAULT_FOV = 70;
 
     private static KeyBinding rollLeft, rollRight, rollReset;
     private static KeyBinding zoomIn, zoomOut, zoomReset;
@@ -147,8 +150,18 @@ public class InputHandler {
                 }
             }
 
-            if(visualizePath.wasPressed())
-                ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(c.player, CameraPathManager.DEFAULT_PATH);
+            if(visualizePath.wasPressed()) {
+                ClientPlayerEntity p = c.player;
+                Identifier id = CameraPathManager.DEFAULT_PATH;
+                try {
+                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(p, id))
+                        p.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
+                    else
+                        p.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
+                } catch(PathTooSmallException e) {
+                    p.sendMessage(new LiteralText("Not enough nodes, minimum 2."), true);
+                }
+            }
             if(openScreen.wasPressed())
                 c.openScreen(new PathListScreen(c.world));
             if(openConfig.wasPressed()) {

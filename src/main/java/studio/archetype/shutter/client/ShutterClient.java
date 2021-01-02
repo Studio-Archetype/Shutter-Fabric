@@ -1,9 +1,14 @@
 package studio.archetype.shutter.client;
 
+import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import studio.archetype.shutter.client.cmd.PathControlCommand;
+import studio.archetype.shutter.client.cmd.PathNodeCommand;
+import studio.archetype.shutter.client.cmd.PathVisualCommands;
+import studio.archetype.shutter.client.cmd.handler.ClientCommandManager;
+import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
@@ -30,6 +35,7 @@ public class ShutterClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
+
         ClientConfigManager.register();
 
         this.inputHandler = new InputHandler();
@@ -38,6 +44,11 @@ public class ShutterClient implements ClientModInitializer {
         this.pathManagers = new HashMap<>();
         this.follower = new PathFollower();
         this.iterator = new PathIterator();
+
+        CommandDispatcher<FabricClientCommandSource> dis = ClientCommandManager.DISPATCHER;
+        PathControlCommand.register(dis);
+        PathNodeCommand.register(dis);
+        PathVisualCommands.register(dis);
 
         this.zoom = this.prevZoom = 0;
     }

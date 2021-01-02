@@ -2,8 +2,6 @@ package studio.archetype.shutter.pathing;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
@@ -12,6 +10,9 @@ import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.PathFollower;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.ui.ShutterMessageToast;
+import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
+import studio.archetype.shutter.pathing.exceptions.PathException;
+import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 import java.util.*;
 
@@ -32,10 +33,6 @@ public class CameraPathManager {
 
     public CameraPath getPath(Identifier id) {
         return cameraPaths.computeIfAbsent(id, CameraPath::new);
-    }
-
-    public boolean isVisualized(Identifier id) {
-        return id.equals(currentVisualization);
     }
 
     public void addNode(Identifier cameraPathId, PathNode node) {
@@ -70,41 +67,39 @@ public class CameraPathManager {
         follower.start(ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).getPaths().get(0));
     }
 
-    public void clearPath(Identifier id) {
+    public void clearPath(Identifier id) throws PathEmptyException {
         CameraPath path = cameraPaths.computeIfAbsent(id, CameraPath::new);
-        if(path.getNodes().isEmpty()) {
-            MinecraftClient.getInstance().player.sendMessage(new LiteralText("Path is empty already."), true);
-            return;
-        }
+        if(path.getNodes().isEmpty())
+            throw new PathEmptyException();
 
         if(ShutterClient.INSTANCE.getPathFollower().isFollowing())
             ShutterClient.INSTANCE.getPathFollower().end();
         if(ShutterClient.INSTANCE.getPathIterator().isIterating())
             ShutterClient.INSTANCE.getPathIterator().end();
         if(currentVisualization != null)
-            togglePathVisualization(MinecraftClient.getInstance().player, id);
+            try {
+                togglePathVisualization(id);
+            } catch(PathTooSmallException ignored) { }
 
         path.clear();
     }
 
-    public void togglePathVisualization(PlayerEntity e, Identifier id) {
+    public boolean togglePathVisualization(Identifier id) throws PathTooSmallException {
         CameraPath path = cameraPaths.computeIfAbsent(id, CameraPath::new);
 
-        if(path.getNodes().size() < 2) {
-            e.sendMessage(new LiteralText("Not enough nodes, minimum 2."), true);
-            return;
-        }
+        if(path.getNodes().size() < 2)
+            throw new PathTooSmallException();
 
         if(currentVisualization != null) {
             currentVisualization = null;
             ShutterClient.INSTANCE.getPathRenderer().disable();
             ShutterClient.INSTANCE.getNodeRenderer().setPath(null);
-            e.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
+            return false;
         } else {
             currentVisualization = id;
             ShutterClient.INSTANCE.getPathRenderer().setPath(path);
             ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
-            e.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
+            return true;
         }
     }
 }

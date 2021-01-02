@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
+import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +53,15 @@ public class PathListScreen extends Screen {
                         entries,
                         i == 0
                 );
-
             }
         }
 
         addButton(new ButtonWidget(this.width / 2 - 100, this.height - 50, 200, 20, ScreenTexts.DONE, (button) -> this.client.openScreen(null) ));
-        addButton(new ButtonWidget(this.width / 2 - 100, this.height - 80, 200, 20, new LiteralText("Clear Path"), (button) -> ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(CameraPathManager.DEFAULT_PATH)));
+        addButton(new ButtonWidget(this.width / 2 - 100, this.height - 80, 200, 20, new LiteralText("Clear Path"), (button) -> {
+            try {
+                ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(CameraPathManager.DEFAULT_PATH);
+            } catch(PathEmptyException ignored) { }
+        }));
     }
 
     @Override
