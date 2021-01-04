@@ -77,7 +77,7 @@ public final class PathControlCommand {
     }
 
     private static int openConfig(CommandContext<FabricClientCommandSource> ctx) {
-        ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, null);
+        ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, ctx.getSource().getClient().currentScreen);
         provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());
         ctx.getSource().getClient().openScreen(provider.get());
         return 1;
