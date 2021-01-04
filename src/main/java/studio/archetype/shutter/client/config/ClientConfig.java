@@ -12,17 +12,21 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public PathDetail curveDetail = PathDetail.LOW;
 
-    public int pathTime = 100;
+    public double pathTime = 100;
+
+    public boolean hideArmorStands = true;
 
     @ConfigEntry.Gui.CollapsibleObject
     public final CameraPathSettings pathSettings = new CameraPathSettings();
 
     public static class CameraPathSettings {
 
+        public boolean showNodeHead = false;
+
         @ConfigEntry.BoundedDiscrete(max = 100, min = 0)
         public int nodeTransparency = 50;
 
-        public boolean showNodeDirectionalBeam = false;
+        public boolean showDirectionalBeam = false;
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public PathStyle pathStyle = PathStyle.LINE;
@@ -34,8 +38,7 @@ public class ClientConfig implements ConfigData {
     public enum PathStyle {
         LINE("config.shutter.pathStyle.line"),
         CUBES("config.shutter.pathStyle.cubes"),
-        NONE("config.shutter.pathStyle.none"),
-        DEBUG("config.shutter.pathStyle.debug");
+        ADVANCED("config.shutter.pathStyle.debug");
 
         String key;
 

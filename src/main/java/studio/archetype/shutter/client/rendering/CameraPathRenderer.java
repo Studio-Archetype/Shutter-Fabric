@@ -29,8 +29,10 @@ public class CameraPathRenderer {
     }
 
     public void render(MatrixStack stack, OutlineVertexConsumerProvider consume, Vec3d camera) {
-        if(camPath == null || ClientConfigManager.CLIENT_CONFIG.pathSettings.pathStyle == ClientConfig.PathStyle.NONE)
+        if(camPath == null)
             return;
+
+        ClientConfig config = ClientConfigManager.CLIENT_CONFIG;
 
         stack.push();
         stack.translate(-camera.getX(), -camera.getY(), -camera.getZ());
@@ -39,46 +41,67 @@ public class CameraPathRenderer {
 
         pathData.forEach((node, points) -> {
             Vec3d previous = points.get(0).getPosition();
+
+            Color c = Color.ofOpaque(config.pathSettings.pathColour);
+            Vec3d colour = new Vec3d(c.getRed() / 256F, c.getGreen() / 256F, c.getBlue() / 256F);
+
             for (InterpolationData point : points) {
                 Vec3d p = point.getPosition();
                 Matrix4f model = stack.peek().getModel();
 
-                Color c = Color.ofOpaque(ClientConfigManager.CLIENT_CONFIG.pathSettings.pathColour);
-                Vec3d colour = new Vec3d(c.getRed() / 256F, c.getGreen() / 256F, c.getBlue() / 256F);
-
-                switch (ClientConfigManager.CLIENT_CONFIG.pathSettings.pathStyle) {
+                switch (config.pathSettings.pathStyle) {
                     case CUBES:
                         VertexConsumer vert = consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE);
                         DrawUtils.renderCube(p, .1F, colour, vert, model);
                         break;
                     case LINE:
                         VertexConsumer line = consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE);
-                        line.vertex(model, (float) previous.getX(), (float) previous.getY(), (float) previous.getZ())
-                                .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                                .next();
-                        line.vertex(model, (float) p.getX(), (float) p.getY(), (float) p.getZ())
-                                .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                                .next();
+                        DrawUtils.renderLine(previous, p, colour, line, model);
                         break;
-                    case DEBUG:
-                        VertexConsumer l1 = consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE);
-                        DrawUtils.renderCube(p, .1F, colour, l1, model);
-                        VertexConsumer l2 = consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE);
-                        l2.vertex(model, (float) previous.getX(), (float) previous.getY(), (float) previous.getZ())
-                                .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                                .next();
-                        l2.vertex(model, (float) p.getX(), (float) p.getY(), (float) p.getZ())
-                                .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                                .next();
+                    case ADVANCED:
+                        vert = consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE);
+                        DrawUtils.renderCube(p, .1F, colour, vert, model);
+                        line = consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE);
+                        DrawUtils.renderLine(previous, p, colour, line, model);
+                        break;
                 }
 
                 previous = p;
             }
-            if(ClientConfigManager.CLIENT_CONFIG.pathSettings.pathStyle == ClientConfig.PathStyle.DEBUG)
-                DrawUtils.renderCube(node.getPosition(), .2F, new Vec3d(0F, 1F, 0F), consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek().getModel()); }
-        );
-        if(ClientConfigManager.CLIENT_CONFIG.pathSettings.pathStyle == ClientConfig.PathStyle.DEBUG)
-            DrawUtils.renderCube(camPath.getNodes().getLast().getPosition(), .2F, new Vec3d(1F, 0F, 0F), consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek().getModel());
+            if (config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED)
+                DrawUtils.renderCube(
+                        node.getPosition(),
+                        .2F,
+                        colour,
+                        consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE),
+                        stack.peek().getModel());
+
+            if(config.pathSettings.showDirectionalBeam || config.pathSettings.showNodeHead)
+                DrawUtils.renderLine(
+                        node.getPosition(),
+                        DrawUtils.getOffsetPoint(node.getPosition(), node.getPitch(), node.getYaw(), 2F),
+                        new Vec3d(1F, 0, 0),
+                        consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE),
+                        stack.peek().getModel());
+        });
+
+        PathNode last = camPath.getNodes().getLast();
+
+        if(config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED || config.pathSettings.showNodeHead)
+            DrawUtils.renderCube(
+                    last.getPosition(),
+                    .2F,
+                    new Vec3d(1F, 0F, 0F),
+                    consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE),
+                    stack.peek().getModel());
+
+        if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showDirectionalBeam)
+            DrawUtils.renderLine(
+                    last.getPosition(),
+                    DrawUtils.getOffsetPoint(last.getPosition(), last.getPitch(), last.getYaw(), 2F),
+                    new Vec3d(1F, 0, 0),
+                    consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE),
+                    stack.peek().getModel());
 
         stack.pop();
     }

@@ -6,7 +6,6 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
 import org.lwjgl.opengl.GL11;
-import studio.archetype.shutter.Shutter;
 
 import java.util.OptionalDouble;
 

@@ -3,6 +3,7 @@ package studio.archetype.shutter.client.cmd;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
@@ -15,13 +16,13 @@ import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
 
-import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
+import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
 
 public final class PathNodeCommand {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(
+        LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                         .requires(src -> src.hasPermissionLevel(4))
                         .then(literal("add")
@@ -35,6 +36,10 @@ public final class PathNodeCommand {
                         .then(literal("goto")
                                 .then(argument("index", IntegerArgumentType.integer())
                                         .executes(ctx -> gotoNode(ctx, IntegerArgumentType.getInteger(ctx, "index"))))));
+
+        dispatcher.register(
+                literal("shutter")
+                        .redirect(node));
     }
 
     private static int addNode(CommandContext<FabricClientCommandSource> ctx) {
@@ -83,6 +88,7 @@ public final class PathNodeCommand {
             PathNode node = path.getNodes().get(index);
             Vec3d position = node.getPosition();
             p.teleport(position.getX(), position.getY(), position.getZ());
+            p.setPos(position.getX(), position.getY(), position.getZ());
             p.pitch = node.getPitch(); p.yaw = node.getYaw(); ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
             ShutterClient.INSTANCE.setZoom(node.getZoom());
             ctx.getSource().sendFeedback(Text.of("Going to Node #" + index + "."));

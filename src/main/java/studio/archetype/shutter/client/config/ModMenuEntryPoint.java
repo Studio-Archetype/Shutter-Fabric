@@ -5,7 +5,6 @@ import io.github.prospector.modmenu.api.ModMenuApi;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import studio.archetype.shutter.Shutter;
-import studio.archetype.shutter.client.config.ClientConfig;
 
 public class ModMenuEntryPoint implements ModMenuApi {
 

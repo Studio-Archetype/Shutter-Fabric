@@ -1,8 +1,8 @@
 package studio.archetype.shutter.client.cmd;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.minecraft.client.MinecraftClient;
@@ -10,20 +10,20 @@ import net.minecraft.text.Text;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
-import studio.archetype.shutter.client.cmd.handler.PathTimeArgumentType;
 import studio.archetype.shutter.client.config.ClientConfig;
+import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
-import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
+import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
 
 public final class PathControlCommand {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(
+        LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                     .requires(src -> src.hasPermissionLevel(4))
                     .then(literal("start")
@@ -35,11 +35,16 @@ public final class PathControlCommand {
                             .executes(PathControlCommand::clearPath))
                     .then(literal("config")
                             .executes(PathControlCommand::openConfig)));
+
+        dispatcher.register(
+                literal("shutter")
+                    .redirect(node));
     }
 
     private static int startPath(CommandContext<FabricClientCommandSource> ctx, double pathTime) {
         try {
             CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld());
+            ClientConfigManager.CLIENT_CONFIG.pathTime = pathTime;
             manager.startCameraPath(CameraPathManager.DEFAULT_PATH, pathTime);
             return 1;
         } catch(PathTooSmallException e) {

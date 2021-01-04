@@ -21,7 +21,7 @@
   "ui.shutter.pathList.none": "No Paths available.",
 
   "text.autoconfig.shutter.title": "Shutter Configuration",
-  "config.shutter.pathTime": "Path Time",
+  "config.shutter.pathTime": "Default Path Time",
   "config.shutter.curveDetail": "Path Detail Level",
   "config.shutter.pathSettings": "Visualization",
   "config.shutter.tooltip.pathSettings": "Settings regarding the Camera Path Visualization.",
@@ -35,7 +35,6 @@
   "config.shutter.tooltip.pathSettings.pathColour": "Set the colour in which the path between nodes is rendered during visualization.",
   "config.shutter.pathStyle.line": "Lines",
   "config.shutter.pathStyle.cubes": "Cubes",
-  "config.shutter.pathStyle.none": "None",
   "config.shutter.pathStyle.debug": "Advanced",
   "config.shutter.pathDetail.ultra_low": "Ultra Low",
   "config.shutter.pathDetail.low": "Low",

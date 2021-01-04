@@ -3,12 +3,13 @@ package studio.archetype.shutter.pathing;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.util.InterpolationMath;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class CameraPath {
 

@@ -2,6 +2,7 @@ package studio.archetype.shutter.client.cmd;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -15,7 +16,7 @@ import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.l
 public final class PathVisualCommands {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(
+        LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                         .requires(src -> src.hasPermissionLevel(4))
                         .then(literal("show")
@@ -24,6 +25,10 @@ public final class PathVisualCommands {
                                 .executes(PathVisualCommands::hidePath))
                         .then(literal("toggleVisualization")
                                 .executes(PathVisualCommands::togglePath)));
+
+        dispatcher.register(
+                literal("shutter")
+                        .redirect(node));
     }
 
     private static int showPath(CommandContext<FabricClientCommandSource> ctx) {

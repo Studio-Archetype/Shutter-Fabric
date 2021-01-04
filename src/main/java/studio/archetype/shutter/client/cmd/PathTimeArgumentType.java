@@ -1,12 +1,16 @@
-package studio.archetype.shutter.client.cmd.handler;
+package studio.archetype.shutter.client.cmd;
 
-import com.mojang.brigadier.Command;
+import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import java.util.Collection;
+
 public class PathTimeArgumentType implements ArgumentType<Double> {
+
+    private static final ImmutableList<String> EXAMPLES = ImmutableList.of("77.9", "22.2t", "5.25s", "3.75m", "1.0025h");
 
     private PathTimeArgumentType() { }
 
@@ -16,6 +20,11 @@ public class PathTimeArgumentType implements ArgumentType<Double> {
 
     public static double getTicks(final CommandContext<?> context, final String name) {
         return context.getArgument(name, Double.class);
+    }
+
+    @Override
+    public Collection<String> getExamples() {
+        return EXAMPLES;
     }
 
     @Override
