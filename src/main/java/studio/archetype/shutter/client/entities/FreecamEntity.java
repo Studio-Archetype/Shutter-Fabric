@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.extensions.CameraExt;
 
-public class FreecamEntity extends Entity {
+public class FreecamEntity extends Entity{
 
     private float roll;
 
@@ -29,12 +29,12 @@ public class FreecamEntity extends Entity {
             0,
             0);
 
-    public FreecamEntity(EntityType type, World w) {
-        super(type, w);
+    public FreecamEntity(World w) {
+        super(TYPE, w);
     }
 
     public FreecamEntity(Vec3d pos, float pitch, float yaw, float roll, World w) {
-        this(TYPE, w);
+        this(w);
 
         this.setPos(pos.getX(), pos.getY(), pos.getZ());
         this.setRotation(yaw, pitch, roll);
@@ -56,14 +56,18 @@ public class FreecamEntity extends Entity {
         ((CameraExt)MinecraftClient.getInstance().gameRenderer.getCamera()).setRoll(roll);
     }
 
+    public EntityType<?> getType() {
+        return EntityType.PLAYER;
+    }
+
     @Override
     protected void initDataTracker() { }
 
     @Override
-    protected void readCustomDataFromTag(CompoundTag tag) { }
+    public void readCustomDataFromTag(CompoundTag tag) { }
 
     @Override
-    protected void writeCustomDataToTag(CompoundTag tag) { }
+    public void writeCustomDataToTag(CompoundTag tag) { }
 
     @Override
     public Packet<?> createSpawnPacket() { return null; }

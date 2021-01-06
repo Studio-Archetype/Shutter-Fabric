@@ -87,8 +87,7 @@ public final class PathNodeCommand {
         try {
             PathNode node = path.getNodes().get(index);
             Vec3d position = node.getPosition();
-            p.teleport(position.getX(), position.getY(), position.getZ());
-            p.setPos(position.getX(), position.getY(), position.getZ());
+            p.setPos(position.getX(), position.getY() - (16 * 1.3), position.getZ());
             p.pitch = node.getPitch(); p.yaw = node.getYaw(); ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
             ShutterClient.INSTANCE.setZoom(node.getZoom());
             ctx.getSource().sendFeedback(Text.of("Going to Node #" + index + "."));

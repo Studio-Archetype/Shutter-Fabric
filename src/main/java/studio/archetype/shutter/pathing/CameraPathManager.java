@@ -43,7 +43,7 @@ public class CameraPathManager {
         path.addNode(node);
         MinecraftClient.getInstance().getToastManager().add(new ShutterMessageToast(
                 ShutterMessageToast.Type.POSITIVE,
-                new LiteralText("Node Created @"),
+                new LiteralText(String.format("Node #%d Created @", path.getNodes().indexOf(node))),
                 new LiteralText("x").formatted(Formatting.DARK_RED)
                         .append(new LiteralText(String.format("%.3f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
                         .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
