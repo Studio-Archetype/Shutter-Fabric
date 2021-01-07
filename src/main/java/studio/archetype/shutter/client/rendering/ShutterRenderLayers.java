@@ -23,7 +23,6 @@ public class ShutterRenderLayers {
         );
 
         private static final RenderLayer LAYER = RenderLayer.of("shutter_cube", VERTEX_FORMAT, GL11.GL_QUADS, 256, RenderLayer.MultiPhaseParameters.builder()
-                .transparency(TRANSLUCENT_TRANSPARENCY)
                 .build(true)
         );
 
@@ -46,7 +45,6 @@ public class ShutterRenderLayers {
         );
 
         private static final RenderLayer LAYER = RenderLayer.of("shutter_line", VERTEX_FORMAT, GL11.GL_LINES, 256, RenderLayer.MultiPhaseParameters.builder()
-                .transparency(TRANSLUCENT_TRANSPARENCY)
                 .lineWidth(new LineWidth(OptionalDouble.of(2)))
                 .build(true)
         );

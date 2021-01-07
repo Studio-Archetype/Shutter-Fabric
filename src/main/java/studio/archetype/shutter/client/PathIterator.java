@@ -86,8 +86,6 @@ public class PathIterator {
         PlayerEntity p = c.player;
         assert p != null;
 
-        System.out.println("Prev Y " + entity.getY() + " | New Y " + node.getYaw());
-
         entity.setPos(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
         entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
         entity.prevX = node.getPosition().getX();
