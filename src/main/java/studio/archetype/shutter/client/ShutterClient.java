@@ -2,6 +2,8 @@ package studio.archetype.shutter.client;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
@@ -10,6 +12,7 @@ import studio.archetype.shutter.client.cmd.PathVisualCommands;
 import studio.archetype.shutter.client.cmd.handler.ClientCommandManager;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
 import studio.archetype.shutter.pathing.CameraPathManager;
@@ -49,6 +52,8 @@ public class ShutterClient implements ClientModInitializer {
         PathControlCommand.register(dis);
         PathNodeCommand.register(dis);
         PathVisualCommands.register(dis);
+
+        EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, (disp, ctx) -> new PlayerEntityRenderer(disp));
 
         this.zoom = this.prevZoom = 0;
     }

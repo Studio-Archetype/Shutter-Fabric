@@ -15,9 +15,7 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 
 public class FreecamEntity extends Entity{
 
-    private float roll;
-
-    private static final EntityType<FreecamEntity> TYPE = new EntityType<>((i, d) -> {
+    public static final EntityType<FreecamEntity> TYPE = new EntityType<>((i, d) -> {
         throw new RuntimeException("Can't construct freecam entity type!");},
             SpawnGroup.MISC,
             false,
@@ -38,7 +36,6 @@ public class FreecamEntity extends Entity{
 
         this.setPos(pos.getX(), pos.getY(), pos.getZ());
         this.setRotation(yaw, pitch, roll);
-        this.roll = roll % 360;
 
         this.prevX = this.getX();
         this.prevY = this.getY();
@@ -52,12 +49,7 @@ public class FreecamEntity extends Entity{
 
     public void setRotation(float pitch, float yaw, float roll) {
         setRotation(yaw, pitch);
-        this.roll = roll % 360;
-        ((CameraExt)MinecraftClient.getInstance().gameRenderer.getCamera()).setRoll(roll);
-    }
-
-    public EntityType<?> getType() {
-        return EntityType.PLAYER;
+        ((CameraExt)MinecraftClient.getInstance().gameRenderer.getCamera()).setRoll(roll % 360);
     }
 
     @Override
