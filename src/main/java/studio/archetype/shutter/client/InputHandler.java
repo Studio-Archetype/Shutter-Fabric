@@ -157,9 +157,9 @@ public class InputHandler {
                 Identifier id = CameraPathManager.DEFAULT_PATH;
                 try {
                     if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(id))
-                        p.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
-                    else
                         p.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
+                    else
+                        p.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
                 } catch(PathTooSmallException e) {
                     p.sendMessage(new LiteralText("Not enough nodes, minimum 2."), true);
                 }

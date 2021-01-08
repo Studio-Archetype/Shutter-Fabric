@@ -73,7 +73,7 @@ public final class PathVisualCommands {
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
             if(manager.togglePathVisualization(id))
-                ctx.getSource().sendFeedback(Text.of("Visualizing path."));
+                ctx.getSource().sendFeedback(Text.of("Showing path preview."));
             else
                 ctx.getSource().sendFeedback(Text.of("Hiding visualization for path."));
 
