@@ -9,28 +9,37 @@ import studio.archetype.shutter.Shutter;
 @Config(name = Shutter.MOD_ID)
 public class ClientConfig implements ConfigData {
 
+    @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public PathDetail curveDetail = PathDetail.LOW;
 
+    @ConfigEntry.Gui.Tooltip
     public double pathTime = 100;
 
+    @ConfigEntry.Gui.Tooltip
     public boolean hideArmorStands = true;
 
+    @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.CollapsibleObject
     public final CameraPathSettings pathSettings = new CameraPathSettings();
 
     public static class CameraPathSettings {
 
+        @ConfigEntry.Gui.Tooltip
         public boolean showNodeHead = false;
 
+        @ConfigEntry.Gui.Tooltip
         @ConfigEntry.BoundedDiscrete(max = 100, min = 0)
         public int nodeTransparency = 50;
 
+        @ConfigEntry.Gui.Tooltip
         public boolean showDirectionalBeam = false;
 
+        @ConfigEntry.Gui.Tooltip
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public PathStyle pathStyle = PathStyle.LINE;
 
+        @ConfigEntry.Gui.Tooltip
         @ConfigEntry.ColorPicker
         public int pathColour = 0;
     }

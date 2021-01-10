@@ -3,8 +3,12 @@ package studio.archetype.shutter.client;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
+import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
 import studio.archetype.shutter.client.cmd.PathNodeCommand;
@@ -34,6 +38,8 @@ public class ShutterClient implements ClientModInitializer {
     private Map<World, CameraPathManager> pathManagers;
 
     private double zoom, prevZoom;
+
+    public static int queuedTeleportMessageFilter = 0;
 
     @Override
     public void onInitializeClient() {
@@ -85,5 +91,13 @@ public class ShutterClient implements ClientModInitializer {
 
     public void resetZoom() {
         this.zoom = this.prevZoom = 0;
+    }
+
+    public static void teleportClient(Vec3d position, double pitch, double yaw) {
+        queuedTeleportMessageFilter++;
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new ChatMessageC2SPacket(String.format(
+                "/tp @s %f %f %f %f %f",
+                position.getX(), position.getY(), position.getZ(),
+                yaw, pitch)));
     }
 }

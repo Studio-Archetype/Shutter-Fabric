@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
 import net.minecraft.text.Text;
@@ -82,13 +83,12 @@ public final class PathNodeCommand {
 
     private static int gotoNode(CommandContext<FabricClientCommandSource> ctx, int index) {
         MinecraftClient c = ctx.getSource().getClient();
-        ClientPlayerEntity p = c.player;
         CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH);
         try {
             PathNode node = path.getNodes().get(index);
-            Vec3d position = node.getPosition();
-            p.setPos(position.getX(), position.getY() - (16 * 1.3), position.getZ());
-            p.pitch = node.getPitch(); p.yaw = node.getYaw(); ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
+            Vec3d position = node.getPosition().add(0, -1.62, 0);
+            ShutterClient.teleportClient(position, node.getPitch(), node.getYaw());
+            ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
             ShutterClient.INSTANCE.setZoom(node.getZoom());
             ctx.getSource().sendFeedback(Text.of("Going to Node #" + index + "."));
             return 1;

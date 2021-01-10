@@ -3,6 +3,7 @@ package studio.archetype.shutter.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import studio.archetype.shutter.client.entities.FreecamEntity;
@@ -20,7 +21,7 @@ public class PathIterator {
     private GameMode oldGamemode;
     private Vec3d oldPos;
     private double oldFov;
-    private float oldRoll;
+    private float oldRoll, oldPitch, oldYaw;
 
     public boolean isIterating() {
         return currentPath != null && entity != null;
@@ -42,7 +43,7 @@ public class PathIterator {
         PathNode node = this.currentPath.getNodes().get(index);
         this.oldGamemode = c.interactionManager.getCurrentGameMode();
         this.oldPos = p.getPos();
-        this.oldFov = c.options.fov;
+        this.oldFov = c.options.fov; this.oldPitch = p.getPitch(1.0F); this.oldYaw = p.getYaw(1.0F);
         this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
 
         entity = new FreecamEntity(node.getPosition(), node.getPitch(), node.getYaw(), node.getRoll(), c.world);
@@ -74,11 +75,12 @@ public class PathIterator {
         MinecraftClient c = MinecraftClient.getInstance();
         PlayerEntity p = c.player;
 
-        p.teleport(oldPos.getX(), oldPos.getY(), oldPos.getZ());
+        ShutterClient.teleportClient(oldPos, oldPitch, oldYaw);
         c.options.fov = oldFov;
-        c.setCameraEntity(p);
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
         c.interactionManager.setGameMode(oldGamemode);
+
+        c.setCameraEntity(p);
     }
 
     private void setCameraToNode(PathNode node) {
@@ -86,18 +88,15 @@ public class PathIterator {
         PlayerEntity p = c.player;
         assert p != null;
 
-        entity.setPos(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
-        entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
-        entity.prevX = node.getPosition().getX();
-        entity.prevY = node.getPosition().getY();
-        entity.prevZ = node.getPosition().getZ();
-        entity.lastRenderX = node.getPosition().getX();
-        entity.lastRenderY = node.getPosition().getY();
-        entity.lastRenderZ = node.getPosition().getZ();
-        entity.prevPitch = node.getPitch();
-        entity.prevYaw = node.getYaw();
+        Vec3d position = node.getPosition();
+        entity.setPos(position.getX(), position.getY(), position.getZ());
+        entity.prevX = position.getX(); entity.prevY = position.getY(); entity.prevZ = position.getZ();
+        entity.pitch = node.getPitch(); entity.yaw = node.getYaw(); ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
+        entity.prevPitch = node.getPitch(); entity.prevYaw = node.getYaw();
         ShutterClient.INSTANCE.setZoom(node.getZoom());
 
-        p.teleport(node.getPosition().getX(), node.getPosition().getY(), node.getPosition().getZ());
+        ShutterClient.teleportClient(node.getPosition(), node.getPitch(), node.getYaw());
+
+        p.sendMessage(Text.of("Going to Node #" + index + "."), true);
     }
 }
