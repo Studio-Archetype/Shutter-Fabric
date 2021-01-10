@@ -12,9 +12,10 @@
   "key.shutter.cam.open_screen": "Open Path Overview",
   "key.shutter.cam.open_config": "Open Config",
   "key.shutter.cam.start_path": "Start/Stop Path",
-  "key.stutter.cam.toggle_iteration": "Toggle Iteration Mode",
-  "key.stutter.cam.next_node": "Next Iteration Node",
-  "key.stutter.cam.previous_node": "Previous Iteration Node",
+  "key.shutter.cam.toggle_iteration": "Toggle Iteration Mode",
+  "key.shutter.cam.factor_mod": "Rotation/Zoom Modifier",
+  "key.shutter.cam.next_node": "Next Iteration Node",
+  "key.shutter.cam.previous_node": "Previous Iteration Node",
 
   "ui.shutter.pathList.entry": "Camera Path #%s",
   "ui.shutter.pathList.entryName": "Camera Path Name",

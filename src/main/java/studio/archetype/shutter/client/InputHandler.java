@@ -29,6 +29,7 @@ public class InputHandler {
 
     private static KeyBinding rollLeft, rollRight, rollReset;
     private static KeyBinding zoomIn, zoomOut, zoomReset;
+    private static KeyBinding rotateModifier;
     private static KeyBinding createNode, visualizePath, startPath;
     private static KeyBinding openScreen, openConfig;
     private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
@@ -107,21 +108,27 @@ public class InputHandler {
         ));
 
         movePreviousNode = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.stutter.cam.previous_node",
+                "key.shutter.cam.previous_node",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_1,
                 "category.shutter.keybinds"
         ));
         moveNextNode = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.stutter.cam.next_node",
+                "key.shutter.cam.next_node",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_3,
                 "category.shutter.keybinds"
         ));
         toggleIterationMode = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.stutter.cam.toggle_iteration",
+                "key.shutter.cam.toggle_iteration",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_ADD,
+                "category.shutter.keybinds"
+        ));
+        rotateModifier = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.shutter.cam.factor_mod",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_Z,
                 "category.shutter.keybinds"
         ));
 
@@ -134,13 +141,13 @@ public class InputHandler {
 
             if(!shutter.getPathFollower().isFollowing() && !shutter.getPathIterator().isIterating()) {
                 if (rollLeft.isPressed())
-                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (rotateModifier.isPressed() ? 10 : 1));
                 if (rollRight.isPressed())
-                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (c.player.isSneaking() ? 10 : 1));
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (rotateModifier.isPressed() ? 10 : 1));
                 if (zoomIn.isPressed())
-                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() - ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
+                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() - ZOOM_FACTOR * (rotateModifier.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
                 if (zoomOut.isPressed())
-                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() + ZOOM_FACTOR * (c.player.isSneaking() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
+                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() + ZOOM_FACTOR * (rotateModifier.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
                 if (rollReset.wasPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).setRoll(0);
                 if (zoomReset.wasPressed())
