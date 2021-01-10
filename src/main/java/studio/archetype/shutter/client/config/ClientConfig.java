@@ -23,6 +23,10 @@ public class ClientConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     public final CameraPathSettings pathSettings = new CameraPathSettings();
 
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public NotificationTarget notificationTarget = NotificationTarget.ACTION_BAR;
+
     public static class CameraPathSettings {
 
         @ConfigEntry.Gui.Tooltip
@@ -72,6 +76,22 @@ public class ClientConfig implements ConfigData {
 
         PathDetail(double detail, String key) {
             this.detail = detail;
+            this.key = key;
+        }
+
+        public String toString() {
+            return I18n.translate(this.key);
+        }
+    }
+
+    public enum NotificationTarget {
+        CHAT("config.shutter.notification.chat"),
+        ACTION_BAR("config.shutter.notification.action_bar"),
+        TOAST("config.shutter.notification.toasts");
+
+        String key;
+
+        NotificationTarget(String key) {
             this.key = key;
         }
 

@@ -28,6 +28,8 @@
   "config.shutter.curveDetail.@Tooltip": "The detail level of the curve interpolation for generated paths.",
   "config.shutter.hideArmorStands": "Hide Armor Stands",
   "config.shutter.hideArmorStands.@Tooltip": "Whether or not to show Armor Stands translucently during path following.",
+  "config.shutter.notificationTarget": "Notification Target",
+  "config.shutter.notificationTarget.@Tooltip": "Determines where and how notifications are displayed.",
   "config.shutter.pathSettings": "Visualization",
   "config.shutter.pathSettings.@Tooltip": "Settings regarding the Camera Path Visualization.",
   "config.shutter.pathSettings.showNodeHead": "Show Node Heads",
@@ -49,5 +51,18 @@
   "config.shutter.pathDetail.low": "Low",
   "config.shutter.pathDetail.medium": "Medium",
   "config.shutter.pathDetail.high": "High",
-  "config.shutter.pathDetail.absurd": "Absurd"
+  "config.shutter.pathDetail.absurd": "Absurd",
+
+  "config.shutter.notification.action_bar": "Action Bar",
+  "config.shutter.notification.toasts": "Toast Popups",
+  "config.shutter.notification.chat": "Chat Messages",
+
+  "msg.shutter.headline.cmd.failed": "Command failed!",
+  "msg.shutter.headline.cmd.success": "Command succeeded",
+
+  "msg.shutter.error.not_enough_start": "At least 2 nodes are required to start the path!",
+  "msg.shutter.error.not_following": "Not following a path!",
+  "msg.shutter.error.path_empty": "Path is already empty!",
+  "msg.shutter.ok.stopped_following": "Stopped following the path.",
+  "msg.shutter.ok.path_cleared": "Path has been cleared."
 }

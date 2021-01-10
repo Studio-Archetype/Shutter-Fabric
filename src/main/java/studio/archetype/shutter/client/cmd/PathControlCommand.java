@@ -7,11 +7,13 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
@@ -48,7 +50,10 @@ public final class PathControlCommand {
             manager.startCameraPath(CameraPathManager.DEFAULT_PATH, pathTime);
             return 1;
         } catch(PathTooSmallException e) {
-            ctx.getSource().sendError(Text.of("At least 2 nodes are needed to start the path."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.not_enough_start"),
+                    Messaging.MessageType.NEGATIVE);
             return 0;
         }
     }
@@ -57,10 +62,16 @@ public final class PathControlCommand {
         try {
             CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld());
             manager.stopCameraPath();
-            ctx.getSource().sendFeedback(Text.of("Stopped path following."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.ok.stopped_following"),
+                    Messaging.MessageType.POSITIVE);
             return 1;
         } catch(PathNotFollowingException e) {
-            ctx.getSource().sendError(Text.of("Not following a path."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.not_following"),
+                    Messaging.MessageType.NEUTRAL);
             return 0;
         }
     }
@@ -68,10 +79,16 @@ public final class PathControlCommand {
     private static int clearPath(CommandContext<FabricClientCommandSource> ctx) {
         try {
             ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(CameraPathManager.DEFAULT_PATH);
-            ctx.getSource().sendFeedback(Text.of("Path has been cleared."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.ok.path_cleared"),
+                    Messaging.MessageType.POSITIVE);
             return 1;
         } catch(PathEmptyException e) {
-            ctx.getSource().sendError(Text.of("Path is already empty!"));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.path_empty"),
+                    Messaging.MessageType.NEUTRAL);
             return 0;
         }
     }
