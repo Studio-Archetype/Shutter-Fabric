@@ -72,7 +72,7 @@ public class CameraPathRenderer {
                 DrawUtils.renderCube(
                         node.getPosition(),
                         .2F,
-                        colour,
+                        node.equals(camPath.getNodes().getFirst()) ? new Vec3d(0, 1F, 0) : colour,
                         consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE),
                         stack.peek().getModel());
 
@@ -80,8 +80,8 @@ public class CameraPathRenderer {
                 DrawUtils.renderLine(
                         node.getPosition(),
                         DrawUtils.getOffsetPoint(node.getPosition(), node.getPitch(), node.getYaw(), 2F),
-                        new Vec3d(1F, 0, 0),
-                        consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE),
+                        node.equals(camPath.getNodes().getFirst()) ? new Vec3d(0, 1F, 0) : colour,
+                        consume.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
                         stack.peek().getModel());
         });
 
@@ -100,7 +100,7 @@ public class CameraPathRenderer {
                     last.getPosition(),
                     DrawUtils.getOffsetPoint(last.getPosition(), last.getPitch(), last.getYaw(), 2F),
                     new Vec3d(1F, 0, 0),
-                    consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE),
+                    consume.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
                     stack.peek().getModel());
 
         stack.pop();
