@@ -20,12 +20,12 @@ public class ClientConfig implements ConfigData {
     public boolean hideArmorStands = true;
 
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.Gui.CollapsibleObject
-    public final CameraPathSettings pathSettings = new CameraPathSettings();
-
-    @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public NotificationTarget notificationTarget = NotificationTarget.ACTION_BAR;
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.CollapsibleObject
+    public final CameraPathSettings pathSettings = new CameraPathSettings();
 
     public static class CameraPathSettings {
 
