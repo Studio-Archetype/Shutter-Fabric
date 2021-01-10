@@ -71,7 +71,6 @@ public final class PathNodeCommand {
         try {
             Camera cam = c.gameRenderer.getCamera();
             PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)ShutterClient.INSTANCE.getZoom());
-
             path.setNode(node, index);
             ctx.getSource().sendFeedback(Text.of("Replaced Node #" + index + "."));
             return 1;

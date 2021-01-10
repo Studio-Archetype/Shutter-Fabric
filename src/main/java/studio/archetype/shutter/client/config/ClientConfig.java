@@ -11,17 +11,11 @@ public class ClientConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-    public PathDetail curveDetail = PathDetail.LOW;
-
-    @ConfigEntry.Gui.Tooltip
-    public double pathTime = 100;
-
-    @ConfigEntry.Gui.Tooltip
-    public boolean hideArmorStands = true;
-
-    @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public NotificationTarget notificationTarget = NotificationTarget.ACTION_BAR;
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.CollapsibleObject
+    public final PathGenerationSettings genSettings = new PathGenerationSettings();
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.CollapsibleObject
@@ -46,6 +40,19 @@ public class ClientConfig implements ConfigData {
         @ConfigEntry.Gui.Tooltip
         @ConfigEntry.ColorPicker
         public int pathColour = 0;
+    }
+
+    public static class PathGenerationSettings {
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public PathDetail curveDetail = PathDetail.LOW;
+
+        @ConfigEntry.Gui.Tooltip
+        public double pathTime = 100;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean hideArmorStands = true;
     }
 
     public enum PathStyle {

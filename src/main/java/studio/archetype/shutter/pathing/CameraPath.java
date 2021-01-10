@@ -96,7 +96,7 @@ public class CameraPath {
 
             LinkedList<InterpolationData> splinePoints = new LinkedList<>();
 
-            for(float j = 0; j <= 1; j += ClientConfigManager.CLIENT_CONFIG.curveDetail.detail) {
+            for(float j = 0; j <= 1; j += ClientConfigManager.CLIENT_CONFIG.genSettings.curveDetail.detail) {
                 Vec3d spline, rotation;
                 float zoom;
                 if(nodes.size() == 2) {

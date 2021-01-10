@@ -16,7 +16,6 @@ import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.extensions.CameraExt;
-import studio.archetype.shutter.client.ui.PathListScreen;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
@@ -31,7 +30,7 @@ public class InputHandler {
     private static KeyBinding zoomIn, zoomOut, zoomReset;
     private static KeyBinding rotateModifier;
     private static KeyBinding createNode, visualizePath, startPath;
-    private static KeyBinding openScreen, openConfig;
+    private static KeyBinding /*openScreen,*/ openConfig;
     private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
 
     public InputHandler() {
@@ -93,12 +92,12 @@ public class InputHandler {
                 GLFW.GLFW_KEY_KP_ENTER,
                 "category.shutter.keybinds"
         ));
-        openScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        /*openScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.shutter.cam.open_screen",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_DECIMAL,
                 "category.shutter.keybinds"
-        ));
+        ));*/
 
         openConfig = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.shutter.cam.open_config",
@@ -171,8 +170,8 @@ public class InputHandler {
                     p.sendMessage(new LiteralText("Not enough nodes, minimum 2."), true);
                 }
             }
-            if(openScreen.wasPressed())
-                c.openScreen(new PathListScreen(c.world));
+            /*if(openScreen.wasPressed())
+                c.openScreen(new PathListScreen(c.world));*/
             if(openConfig.wasPressed()) {
                 ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, c.currentScreen);
                 provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());
@@ -184,7 +183,7 @@ public class InputHandler {
                     shutter.getPathManager(c.world).stopCameraPath();
                 } catch(PathNotFollowingException e) {
                     try {
-                        shutter.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH, ClientConfigManager.CLIENT_CONFIG.pathTime);
+                        shutter.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime);
                     } catch(PathTooSmallException ex) {
                         c.player.sendMessage(new LiteralText("Needs more than 2 nodes."), true);
                     }

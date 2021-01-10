@@ -29,6 +29,7 @@ public final class PathControlCommand {
                 literal("s")
                     .requires(src -> src.hasPermissionLevel(4))
                     .then(literal("start")
+                            .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime))
                             .then(argument("time", PathTimeArgumentType.pathTime())
                                     .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time")))))
                     .then(literal("stop")
@@ -46,7 +47,7 @@ public final class PathControlCommand {
     private static int startPath(CommandContext<FabricClientCommandSource> ctx, double pathTime) {
         try {
             CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld());
-            ClientConfigManager.CLIENT_CONFIG.pathTime = pathTime;
+            ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime = pathTime;
             manager.startCameraPath(CameraPathManager.DEFAULT_PATH, pathTime);
             return 1;
         } catch(PathTooSmallException e) {
