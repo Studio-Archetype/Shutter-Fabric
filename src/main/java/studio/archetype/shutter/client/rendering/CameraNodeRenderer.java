@@ -29,6 +29,10 @@ public class CameraNodeRenderer {
 
     private CameraPath path;
 
+    public void disable() {
+        this.path = null;
+    }
+
     public void setPath(CameraPath path) {
         this.path = path;
     }

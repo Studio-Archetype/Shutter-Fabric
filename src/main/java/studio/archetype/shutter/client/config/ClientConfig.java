@@ -11,7 +11,7 @@ public class ClientConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-    public NotificationTarget notificationTarget = NotificationTarget.ACTION_BAR;
+    public NotificationTarget notificationTarget = NotificationTarget.TOAST;
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.CollapsibleObject

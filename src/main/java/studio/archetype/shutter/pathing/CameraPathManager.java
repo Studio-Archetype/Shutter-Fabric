@@ -80,10 +80,10 @@ public class CameraPathManager {
             ShutterClient.INSTANCE.getPathFollower().end();
         if(ShutterClient.INSTANCE.getPathIterator().isIterating())
             ShutterClient.INSTANCE.getPathIterator().end();
-        if(currentVisualization != null)
-            try {
-                togglePathVisualization(id);
-            } catch(PathTooSmallException ignored) { }
+
+        this.currentVisualization = null;
+        ShutterClient.INSTANCE.getPathRenderer().disable();
+        ShutterClient.INSTANCE.getNodeRenderer().disable();
 
         path.clear();
     }
@@ -97,7 +97,7 @@ public class CameraPathManager {
         if(currentVisualization != null) {
             currentVisualization = null;
             ShutterClient.INSTANCE.getPathRenderer().disable();
-            ShutterClient.INSTANCE.getNodeRenderer().setPath(null);
+            ShutterClient.INSTANCE.getNodeRenderer().disable();
             return false;
         } else {
             currentVisualization = id;

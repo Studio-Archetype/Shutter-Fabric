@@ -11,7 +11,8 @@
     "ClientCommandSourceMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
