@@ -1,7 +1,9 @@
 package studio.archetype.shutter.client.ui;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 

@@ -5,14 +5,15 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.extensions.CameraExt;
+import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
@@ -48,7 +49,6 @@ public final class PathNodeCommand {
         Camera cam = c.gameRenderer.getCamera();
         PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)ShutterClient.INSTANCE.getZoom());
         ShutterClient.INSTANCE.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
-        ctx.getSource().sendFeedback(Text.of("Created Node #" + (ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH).getNodes().size() - 1) + "."));
         return 1;
     }
 
@@ -57,10 +57,16 @@ public final class PathNodeCommand {
         CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH);
         try {
             path.removeNode(index);
-            ctx.getSource().sendFeedback(Text.of("Removed Node #" + index + " from path."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.ok.remove_node", index),
+                    Messaging.MessageType.POSITIVE);
             return 1;
         } catch(IndexOutOfBoundsException e) {
-            ctx.getSource().sendError(Text.of("Unable to remove Node #" + index + ": Out of bounds!"));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.error.remove_node", index),
+                    Messaging.MessageType.NEGATIVE);
             return 0;
         }
     }
@@ -72,10 +78,22 @@ public final class PathNodeCommand {
             Camera cam = c.gameRenderer.getCamera();
             PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)ShutterClient.INSTANCE.getZoom());
             path.setNode(node, index);
-            ctx.getSource().sendFeedback(Text.of("Replaced Node #" + index + "."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.ok.set_node", index)
+                            .append(new LiteralText(" x").formatted(Formatting.DARK_RED)
+                            .append(new LiteralText(String.format("%.3f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
+                            .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
+                            .append(new LiteralText(String.format("%.3f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
+                            .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
+                            .append(new LiteralText(String.format("%.3f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE))),
+                    Messaging.MessageType.POSITIVE);
             return 1;
         } catch(IndexOutOfBoundsException e) {
-            ctx.getSource().sendError(Text.of("Unable to replace Node #" + index + ": Out of bounds!"));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.set_node", index),
+                    Messaging.MessageType.NEGATIVE);
             return 0;
         }
     }
@@ -89,10 +107,16 @@ public final class PathNodeCommand {
             ShutterClient.teleportClient(position, node.getPitch(), node.getYaw());
             ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
             ShutterClient.INSTANCE.setZoom(node.getZoom());
-            ctx.getSource().sendFeedback(Text.of("Going to Node #" + index + "."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.ok.go_to_node", index),
+                    Messaging.MessageType.NEUTRAL);
             return 1;
         } catch(IndexOutOfBoundsException e) {
-            ctx.getSource().sendError(Text.of("Unable to go to Node #" + index + ": Out of bounds!"));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.go_to_node", index),
+                    Messaging.MessageType.NEGATIVE);
             return 0;
         }
     }

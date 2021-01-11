@@ -2,12 +2,12 @@ package studio.archetype.shutter.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.extensions.CameraExt;
+import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.PathNode;
 
@@ -29,7 +29,10 @@ public class PathIterator {
 
     public void begin(CameraPath path) {
         if(path.getNodes().size() < 2 || MinecraftClient.getInstance().player == null) {
-            MinecraftClient.getInstance().player.sendMessage(new LiteralText("Needs more than 2 nodes."), true);
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.not_enough_show"),
+                    Messaging.MessageType.NEGATIVE);
             return;
         }
 
@@ -97,6 +100,9 @@ public class PathIterator {
 
         ShutterClient.teleportClient(node.getPosition(), node.getPitch(), node.getYaw());
 
-        p.sendMessage(Text.of("Going to Node #" + index + "."), true);
+        Messaging.sendMessage(
+                new TranslatableText("msg.shutter.headline.cmd.success"),
+                new TranslatableText("msg.shutter.ok.go_to_node", index),
+                Messaging.MessageType.NEUTRAL);
     }
 }

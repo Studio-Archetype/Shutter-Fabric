@@ -9,21 +9,22 @@ import net.minecraft.text.Text;
 public class ShutterMessageToast extends ShutterToast {
 
     private final Type type;
-    private final Text title, subtitle1;
+    private final Text title, subtitle;
 
-    public ShutterMessageToast(Type type, Text title, Text subtitle1) {
+    public ShutterMessageToast(Type type, Text title, Text subtitle) {
         super(160, 48);
         this.type = type;
         this.title = title;
-        this.subtitle1 = subtitle1;
+        this.subtitle = subtitle;
     }
 
     @Override
     protected void drawToastContent(MatrixStack matrices, ToastManager manager) {
+        //TODO Auto-Linebreak
         type.graphic.draw(matrices, 3, 3, manager);
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
         renderer.draw(matrices, title, 10, 13, 0xFFFFFFFF);
-        renderer.draw(matrices, subtitle1, 10, 13 + renderer.fontHeight + 2, 0xFFFFFFFF);
+        renderer.draw(matrices, subtitle, 10, 13 + renderer.fontHeight + 2, 0xFFFFFFFF);
     }
 
     public enum Type {

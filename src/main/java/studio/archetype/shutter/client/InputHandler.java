@@ -4,11 +4,10 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
@@ -16,6 +15,7 @@ import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.extensions.CameraExt;
+import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
@@ -159,16 +159,23 @@ public class InputHandler {
             }
 
             if(visualizePath.wasPressed()) {
-                ClientPlayerEntity p = c.player;
                 Identifier id = CameraPathManager.DEFAULT_PATH;
                 try {
                     if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(id))
-                        p.sendMessage(new LiteralText("Creating visualization for " + id.toString() + "."), true);
+                        Messaging.sendMessage(
+                                new TranslatableText("msg.shutter.headline.cmd.success"),
+                                new TranslatableText("msg.shutter.ok.showing_path"),
+                                Messaging.MessageType.NEUTRAL);
                     else
-                        p.sendMessage(new LiteralText("Visualization for " + id.toString() + " destroyed."), true);
+                        Messaging.sendMessage(
+                                new TranslatableText("msg.shutter.headline.cmd.success"),
+                                new TranslatableText("msg.shutter.ok.hiding_path"),
+                                Messaging.MessageType.NEUTRAL);
                 } catch(PathTooSmallException e) {
-                    p.sendMessage(new LiteralText("Not enough nodes, minimum 2."), true);
-                }
+                    Messaging.sendMessage(
+                            new TranslatableText("msg.shutter.headline.cmd.failed"),
+                            new TranslatableText("msg.shutter.error.not_enough_show"),
+                            Messaging.MessageType.NEGATIVE);                }
             }
             /*if(openScreen.wasPressed())
                 c.openScreen(new PathListScreen(c.world));*/
@@ -185,7 +192,10 @@ public class InputHandler {
                     try {
                         shutter.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime);
                     } catch(PathTooSmallException ex) {
-                        c.player.sendMessage(new LiteralText("Needs more than 2 nodes."), true);
+                        Messaging.sendMessage(
+                                new TranslatableText("msg.shutter.headline.cmd.failed"),
+                                new TranslatableText("msg.shutter.error.not_enough_start"),
+                                Messaging.MessageType.NEGATIVE);
                     }
                 }
             }

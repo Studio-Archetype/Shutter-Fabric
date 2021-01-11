@@ -4,10 +4,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
+import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
@@ -23,7 +24,7 @@ public final class PathVisualCommands {
                                 .executes(PathVisualCommands::showPath))
                         .then(literal("hide")
                                 .executes(PathVisualCommands::hidePath))
-                        .then(literal("toggleVisualization")
+                        .then(literal("toggle")
                                 .executes(PathVisualCommands::togglePath)));
 
         dispatcher.register(
@@ -37,15 +38,24 @@ public final class PathVisualCommands {
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
             if(manager.isVisualizing())
-                ctx.getSource().sendFeedback(Text.of("Path is already being visualized."));
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.success"),
+                        new TranslatableText("msg.shutter.error.showing_path"),
+                        Messaging.MessageType.NEUTRAL);
             else {
                 manager.togglePathVisualization(id);
-                ctx.getSource().sendFeedback(Text.of("Visualizing path."));
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.failed"),
+                        new TranslatableText("msg.shutter.ok.showing_path"),
+                        Messaging.MessageType.NEUTRAL);
             }
 
             return 1;
         } catch(PathTooSmallException e) {
-            ctx.getSource().sendError(Text.of("Not enough nodes in path! The minimum is 2."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.not_enough_show"),
+                    Messaging.MessageType.NEGATIVE);
             return 0;
         }
     }
@@ -57,10 +67,15 @@ public final class PathVisualCommands {
         try {
             if(manager.isVisualizing()) {
                 manager.togglePathVisualization(id);
-                ctx.getSource().sendFeedback(Text.of("Hiding visualization for path."));
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.success"),
+                        new TranslatableText("msg.shutter.ok.hiding_path"),
+                        Messaging.MessageType.NEUTRAL);
             } else
-                ctx.getSource().sendFeedback(Text.of("Path is not being visualized."));
-
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.failed"),
+                        new TranslatableText("msg.shutter.error.hiding_path"),
+                        Messaging.MessageType.NEUTRAL);
             return 1;
         } catch(PathTooSmallException ignored) { }
 
@@ -73,13 +88,22 @@ public final class PathVisualCommands {
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
             if(manager.togglePathVisualization(id))
-                ctx.getSource().sendFeedback(Text.of("Showing path preview."));
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.success"),
+                        new TranslatableText("msg.shutter.ok.showing_path"),
+                        Messaging.MessageType.NEUTRAL);
             else
-                ctx.getSource().sendFeedback(Text.of("Hiding visualization for path."));
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.success"),
+                        new TranslatableText("msg.shutter.ok.hiding_path"),
+                        Messaging.MessageType.NEUTRAL);
 
             return 1;
         } catch(PathTooSmallException e) {
-            ctx.getSource().sendError(Text.of("Not enough nodes in path! The minimum is 2."));
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.not_enough_show"),
+                    Messaging.MessageType.NEGATIVE);
             return 0;
         }
     }

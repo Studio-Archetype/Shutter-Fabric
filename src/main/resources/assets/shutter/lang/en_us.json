@@ -63,8 +63,20 @@
   "msg.shutter.headline.cmd.success": "Command succeeded",
 
   "msg.shutter.error.not_enough_start": "At least 2 nodes are required to start the path!",
+  "msg.shutter.error.not_enough_show": "At least 2 nodes are required to visualize the path!",
   "msg.shutter.error.not_following": "Not following a path!",
   "msg.shutter.error.path_empty": "Path is already empty!",
+  "msg.shutter.error.go_to_node": "Unable to go to Node #%d; Out of Bounds!",
+  "msg.shutter.error.set_node": "Unable to replace Node #%d; Out of Bounds!",
+  "msg.shutter.error.remove_node": "Unable to remove Node #%d; Out of Bounds!",
+  "msg.shutter.error.hiding_path": "Path is not being visualized.",
+  "msg.shutter.error.showing_path": "Path is already being visualized",
   "msg.shutter.ok.stopped_following": "Stopped following the path.",
-  "msg.shutter.ok.path_cleared": "Path has been cleared."
+  "msg.shutter.ok.path_cleared": "Path has been cleared.",
+  "msg.shutter.ok.go_to_node": "Moving to Node #%d.",
+  "msg.shutter.ok.set_node": "Replaced Node #%d.",
+  "msg.shutter.ok.add_node": "Added Node #%d.",
+  "msg.shutter.ok.remove_node": "Removed Node #%d.",
+  "msg.shutter.ok.hiding_path": "Hiding path visualization.",
+  "msg.shutter.ok.showing_path": "Showing path visualization."
 }

@@ -3,12 +3,13 @@ package studio.archetype.shutter.pathing;
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.PathFollower;
 import studio.archetype.shutter.client.ShutterClient;
-import studio.archetype.shutter.client.ui.ShutterMessageToast;
+import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
@@ -41,16 +42,17 @@ public class CameraPathManager {
     public void addNode(Identifier cameraPathId, PathNode node) {
         CameraPath path = cameraPaths.computeIfAbsent(cameraPathId, CameraPath::new);
         path.addNode(node);
-        MinecraftClient.getInstance().getToastManager().add(new ShutterMessageToast(
-                ShutterMessageToast.Type.POSITIVE,
-                new LiteralText(String.format("Node #%d Created", path.getNodes().indexOf(node))),
-                new LiteralText("x").formatted(Formatting.DARK_RED)
-                        .append(new LiteralText(String.format("%.3f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
-                        .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
-                        .append(new LiteralText(String.format("%.3f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
-                        .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
-                        .append(new LiteralText(String.format("%.3f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE))
-        ));
+        Messaging.sendMessage(
+                new TranslatableText("msg.shutter.headline.cmd.success"),
+                new TranslatableText("msg.shutter.ok.add_node", path.getNodes().indexOf(node))
+                        .append(new LiteralText(" x").formatted(Formatting.DARK_RED)
+                                .append(new LiteralText(String.format("%.3f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
+                                .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
+                                .append(new LiteralText(String.format("%.3f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
+                                .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
+                                .append(new LiteralText(String.format("%.3f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE))),
+
+                Messaging.MessageType.POSITIVE);
     }
 
     public void startCameraPath(Identifier id, double pathTime) throws PathTooSmallException {

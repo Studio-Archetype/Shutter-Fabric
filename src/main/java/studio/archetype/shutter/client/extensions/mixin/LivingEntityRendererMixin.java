@@ -20,6 +20,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @ModifyVariable(method = "render", at = @At("STORE"), name = "bl2")
     private boolean hideArmorstands(boolean bl2) {
+        //TODO The thing
         if((Object)this instanceof ArmorStandEntityRenderer)
             if (ShutterClient.INSTANCE.getPathFollower().isFollowing())
                 return !ClientConfigManager.CLIENT_CONFIG.genSettings.hideArmorStands;
