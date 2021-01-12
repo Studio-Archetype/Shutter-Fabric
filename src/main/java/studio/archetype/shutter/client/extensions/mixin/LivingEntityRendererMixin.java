@@ -18,7 +18,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     protected LivingEntityRendererMixin(EntityRenderDispatcher dispatcher) { super(dispatcher); }
 
-    @ModifyVariable(method = "render", at = @At("STORE"), name = "bl2")
+    @ModifyVariable(method = "render", at = @At("STORE"), name = "bl2", remap = false)
     private boolean hideArmorstands(boolean bl2) {
         //TODO The thing
         if((Object)this instanceof ArmorStandEntityRenderer)
