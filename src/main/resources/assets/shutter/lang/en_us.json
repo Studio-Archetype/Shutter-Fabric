@@ -16,6 +16,7 @@
   "key.shutter.cam.factor_mod": "Rotation/Zoom Modifier",
   "key.shutter.cam.next_node": "Next Iteration Node",
   "key.shutter.cam.previous_node": "Previous Iteration Node",
+  "key.shutter.cam.clear_path": "Clear Current Path",
 
   "ui.shutter.pathList.entry": "Camera Path #%s",
   "ui.shutter.pathList.entryName": "Camera Path Name",

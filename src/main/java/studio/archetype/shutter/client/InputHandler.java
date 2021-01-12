@@ -4,6 +4,8 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.options.ControlsOptionsScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.InputUtil;
@@ -18,6 +20,7 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
+import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
@@ -29,7 +32,7 @@ public class InputHandler {
     private static KeyBinding rollLeft, rollRight, rollReset;
     private static KeyBinding zoomIn, zoomOut, zoomReset;
     private static KeyBinding rotateModifier;
-    private static KeyBinding createNode, visualizePath, startPath;
+    private static KeyBinding createNode, visualizePath, startPath, clearPath;
     private static KeyBinding /*openScreen,*/ openConfig;
     private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
 
@@ -130,7 +133,12 @@ public class InputHandler {
                 GLFW.GLFW_KEY_Z,
                 "category.shutter.keybinds"
         ));
-
+        clearPath = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.shutter.cam.clear_path",
+                InputUtil.Type.KEYSYM,
+                InputUtil.UNKNOWN_KEY.getCode(),
+                "category.shutter.keybinds"
+        ));
 
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
             if (c.player == null)
@@ -197,6 +205,21 @@ public class InputHandler {
                                 new TranslatableText("msg.shutter.error.not_enough_start"),
                                 Messaging.MessageType.NEGATIVE);
                     }
+                }
+            }
+
+            if(clearPath.wasPressed()) {
+                try {
+                    ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(CameraPathManager.DEFAULT_PATH);
+                    Messaging.sendMessage(
+                            new TranslatableText("msg.shutter.headline.cmd.success"),
+                            new TranslatableText("msg.shutter.ok.path_cleared"),
+                            Messaging.MessageType.POSITIVE);
+                } catch(PathEmptyException e) {
+                    Messaging.sendMessage(
+                            new TranslatableText("msg.shutter.headline.cmd.failed"),
+                            new TranslatableText("msg.shutter.error.path_empty"),
+                            Messaging.MessageType.NEUTRAL);
                 }
             }
 
