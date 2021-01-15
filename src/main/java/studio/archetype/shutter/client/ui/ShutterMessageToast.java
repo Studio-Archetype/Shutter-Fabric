@@ -10,12 +10,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.core.config.Order;
 
 import java.util.List;
 
 public class ShutterMessageToast extends ShutterToast {
 
-    private static final int GENERAL_Y_OFFSET = 4;
+    private static final int TOAST_HEIGHT = 48;
+    private static final int WRAP_COUNT = 130;
 
     private final Type type;
     private final Text title, subtitle, subsubTitle;
@@ -33,20 +35,27 @@ public class ShutterMessageToast extends ShutterToast {
         type.graphic.draw(matrices, 3, 3, manager);
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 
-        renderer.draw(matrices, title, 10, GENERAL_Y_OFFSET, 0xFFFFFFFF);
+        List<OrderedText> lines = renderer.wrapLines(subtitle, WRAP_COUNT);
+        int totalHeight = (lines.size() + 1) * (renderer.fontHeight + 2) - 2;
+        List<OrderedText> subLines = null;
+        if(subsubTitle != null) {
+            subLines = renderer.wrapLines(subsubTitle, WRAP_COUNT);
+            totalHeight += subLines.size() * (renderer.fontHeight + 2);
+        }
 
-        List<OrderedText> lines = renderer.wrapLines(subtitle, 130);
+        int yStart = (TOAST_HEIGHT - totalHeight) / 2;
+
+        renderer.draw(matrices, title, 10, yStart, 0xFFFFFFFF);
 
         for(int i = 0; i < lines.size(); i++) {
-            int yOffset = (renderer.fontHeight + 2) * (i + 1) + GENERAL_Y_OFFSET;
+            int yOffset = (renderer.fontHeight + 2) * (i + 1) + yStart;
             renderer.draw(matrices, lines.get(i), 10, yOffset, 0xFFFFFFFF);
         }
 
-        if(subsubTitle != null) {
+        if(subLines != null) {
             int offset = lines.size() * (renderer.fontHeight + 2);
-            List<OrderedText> subLines = renderer.wrapLines(subsubTitle, 130);
             for(int i = 0; i < subLines.size(); i++) {
-                int yOffset = (renderer.fontHeight + 2) * (i + 1) + offset + GENERAL_Y_OFFSET;
+                int yOffset = (renderer.fontHeight + 2) * (i + 1) + offset + yStart;
                 renderer.draw(matrices, subLines.get(i), 10, yOffset, 0xFFFFFFFF);
 
             }
