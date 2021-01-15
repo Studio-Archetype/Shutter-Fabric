@@ -10,20 +10,27 @@ import studio.archetype.shutter.client.config.ClientConfigManager;
 public class Messaging {
 
 
-    public static void sendMessage(MutableText headline, MutableText text, MessageType type) {
+    public static void sendMessage(MutableText headline, MutableText text, MutableText text2, MessageType type) {
         switch(ClientConfigManager.CLIENT_CONFIG.notificationTarget) {
             case CHAT:
-                MinecraftClient.getInstance().player.sendMessage(formatText(text, type), false);
+                MutableText t = text2 == null ? text : text.append(text2);
+                MinecraftClient.getInstance().player.sendMessage(formatText(t, type), false);
                 break;
             case ACTION_BAR:
-                MinecraftClient.getInstance().player.sendMessage(formatText(text, type), true);
+                t = text2 == null ? text : text.append(text2);
+                MinecraftClient.getInstance().player.sendMessage(formatText(t, type), true);
                 break;
             case TOAST:
-                MinecraftClient.getInstance().getToastManager().add(new ShutterMessageToast(type.toastGraphic, headline, text));
+                MinecraftClient.getInstance().getToastManager().add(new ShutterMessageToast(type.toastGraphic, headline, text, text2));
         }
     }
 
-    private static MutableText formatText(MutableText text, MessageType type) {
+    public static void sendMessage(MutableText headline, MutableText text, MessageType type) {
+        sendMessage(headline, text, null, type);
+    }
+
+
+        private static MutableText formatText(MutableText text, MessageType type) {
         switch(type) {
             case NEGATIVE:
                 return Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.RED));

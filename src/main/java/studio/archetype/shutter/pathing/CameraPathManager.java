@@ -44,14 +44,13 @@ public class CameraPathManager {
         path.addNode(node);
         Messaging.sendMessage(
                 new TranslatableText("msg.shutter.headline.cmd.success"),
-                new TranslatableText("msg.shutter.ok.add_node", path.getNodes().indexOf(node))
-                        .append(new LiteralText(" x").formatted(Formatting.DARK_RED)
-                                .append(new LiteralText(String.format("%.3f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
-                                .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
-                                .append(new LiteralText(String.format("%.3f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
-                                .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
-                                .append(new LiteralText(String.format("%.3f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE))),
-
+                new TranslatableText("msg.shutter.ok.add_node", path.getNodes().indexOf(node)),
+                new LiteralText("x").formatted(Formatting.DARK_RED)
+                    .append(new LiteralText(String.format("%.2f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
+                    .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
+                    .append(new LiteralText(String.format("%.2f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
+                    .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
+                    .append(new LiteralText(String.format("%.2f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE)),
                 Messaging.MessageType.POSITIVE);
     }
 

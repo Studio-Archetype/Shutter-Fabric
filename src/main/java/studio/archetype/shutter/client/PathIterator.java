@@ -35,7 +35,6 @@ public class PathIterator {
                     Messaging.MessageType.NEGATIVE);
             return;
         }
-
         this.currentPath = path;
         this.index = 0;
 
@@ -99,10 +98,5 @@ public class PathIterator {
         ShutterClient.INSTANCE.setZoom(node.getZoom());
 
         ShutterClient.teleportClient(node.getPosition(), node.getPitch(), node.getYaw());
-
-        Messaging.sendMessage(
-                new TranslatableText("msg.shutter.headline.cmd.success"),
-                new TranslatableText("msg.shutter.ok.go_to_node", index),
-                Messaging.MessageType.NEUTRAL);
     }
 }
