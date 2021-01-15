@@ -30,7 +30,6 @@ public class ShutterMessageToast extends ShutterToast {
 
     @Override
     protected void drawToastContent(MatrixStack matrices, ToastManager manager) {
-        //TODO Auto-Linebreak
         type.graphic.draw(matrices, 3, 3, manager);
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
 
