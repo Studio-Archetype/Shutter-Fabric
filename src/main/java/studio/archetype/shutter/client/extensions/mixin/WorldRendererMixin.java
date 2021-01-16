@@ -30,6 +30,6 @@ public abstract class WorldRendererMixin {
     private void renderPath(MatrixStack matrixStack, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f modelMatrix, CallbackInfo ci) {
         this.world.getProfiler().swap(Shutter.id("path_render").toString());
         ShutterClient.INSTANCE.getPathRenderer().render(matrixStack, this.bufferBuilders.getOutlineVertexConsumers(), camera.getPos());
-        ShutterClient.INSTANCE.getNodeRenderer().render(matrixStack, this.bufferBuilders.getEntityVertexConsumers(), camera.getPos(), 1);
+        ShutterClient.INSTANCE.getNodeRenderer().render(matrixStack, this.bufferBuilders.getEntityVertexConsumers(), camera.getPos(), 0x00F000F0);
     }
 }

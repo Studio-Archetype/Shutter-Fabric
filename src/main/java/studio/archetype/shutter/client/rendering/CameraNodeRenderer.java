@@ -13,7 +13,9 @@ import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.pathing.CameraPath;
 
@@ -37,29 +39,28 @@ public class CameraNodeRenderer {
         this.path = path;
     }
 
-    public void render(MatrixStack stack, VertexConsumerProvider.Immediate provider, Vec3d pos, int light) {
-        if(path == null)
+    public void render(MatrixStack stack, VertexConsumerProvider.Immediate provider, Vec3d cam, int light) {
+        if(path == null || ShutterClient.INSTANCE.getPathIterator().isIterating() || ShutterClient.INSTANCE.getPathFollower().isFollowing())
             return;
 
         stack.push();
 
-        stack.scale(-1.0F, -1.0F, 1.0F);
-
         path.getNodes().forEach(n -> {
             stack.push();
 
-            stack.translate(-pos.getX(), pos.getY(), -pos.getZ());
+            stack.translate(-cam.getX(), -cam.getY(), -cam.getZ());
+            stack.translate(n.getPosition().getX(), n.getPosition().getY() - (4F / 16), n.getPosition().getZ());
 
-            stack.translate(n.getPosition().getX(), n.getPosition().getY(), n.getPosition().getZ());
+            stack.scale(-1.0F, -1.0F, -1.0F);
 
             stack.translate(0, -4F / 16, 0);
-            stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(n.getRoll()));
-            stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(n.getYaw() + 180));
+            stack.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(n.getYaw()));
             stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n.getPitch()));
+            stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(n.getRoll()));
             stack.translate(0, 4F / 16, 0);
 
             VertexConsumer vertexConsumer = provider.getBuffer(getSkull());
-            model.render(stack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, ClientConfigManager.CLIENT_CONFIG.pathSettings.nodeTransparency);
+            model.render(stack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, ClientConfigManager.CLIENT_CONFIG.pathSettings.nodeTransparency / 100F);
 
             stack.pop();
         });
