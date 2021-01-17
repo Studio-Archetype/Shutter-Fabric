@@ -6,7 +6,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
@@ -18,6 +19,8 @@ import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
+import java.util.*;
+
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
 
@@ -27,6 +30,10 @@ public final class PathControlCommand {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                     .requires(src -> src.hasPermissionLevel(4))
+                    .then(literal("help")
+                            .executes(PathControlCommand::printHelp))
+                    .then(literal("?")
+                            .executes(PathControlCommand::printHelp))
                     .then(literal("start")
                             .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime))
                             .then(argument("time", PathTimeArgumentType.pathTime())
@@ -41,6 +48,64 @@ public final class PathControlCommand {
         dispatcher.register(
                 literal("shutter")
                     .redirect(node));
+    }
+
+    private static int printHelp(CommandContext<FabricClientCommandSource> ctx) {
+        ctx.getSource().sendFeedback(new LiteralText("§8-------+== §2Shutter Help §8==+-------"));
+        sendCommandHelpLine(ctx.getSource(),
+                "/s start",
+                "msg.shutter.help.cmd.start",
+                Collections.singletonMap("msg.shutter.help.arg.time", "msg.shutter.help.arg.time.desc"));
+        sendCommandHelpLine(ctx.getSource(),
+                "/s stop",
+                "msg.shutter.help.cmd.stop",
+                null);
+        sendCommandHelpLine(ctx.getSource(),
+                "/s clear",
+                "msg.shutter.help.cmd.clear",
+                null);
+
+        ctx.getSource().sendFeedback(new LiteralText("§8-------+== ------------ §8==+-------"));
+
+        sendCommandHelpLine(ctx.getSource(),
+                "/s add",
+                "msg.shutter.help.cmd.add",
+                null);
+        sendCommandHelpLine(ctx.getSource(),
+                "/s set",
+                "msg.shutter.help.cmd.set",
+                Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));        sendCommandHelpLine(ctx.getSource(),
+                "/s remove",
+                "msg.shutter.help.cmd.remove",
+                Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));        sendCommandHelpLine(ctx.getSource(),
+                "/s goto",
+                "msg.shutter.help.cmd.goto",
+                Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));
+
+        ctx.getSource().sendFeedback(new LiteralText("§8-------+== ------------ §8==+-------"));
+
+        sendCommandHelpLine(ctx.getSource(),
+                "/s show",
+                "msg.shutter.help.cmd.show",
+                null);
+
+        sendCommandHelpLine(ctx.getSource(),
+                "/s hide",
+                "msg.shutter.help.cmd.hide",
+                null);
+        sendCommandHelpLine(ctx.getSource(),
+                "/s toggle",
+                "msg.shutter.help.cmd.toggle",
+                null);
+
+        sendCommandHelpLine(ctx.getSource(),
+                "/s config",
+                "msg.shutter.help.cmd.config",
+                null);
+
+        ctx.getSource().sendFeedback(new LiteralText("§8-------+== ------------ §8==+-------"));
+
+        return 1;
     }
 
     private static int startPath(CommandContext<FabricClientCommandSource> ctx, double pathTime) {
@@ -91,6 +156,33 @@ public final class PathControlCommand {
                     Messaging.MessageType.NEUTRAL);
             return 0;
         }
+    }
+
+    private static void sendCommandHelpLine(FabricClientCommandSource source, String command, String descriptor, Map<String, String> arguments) {
+        MutableText hover = new LiteralText("");
+        if(arguments != null) {
+            List<Text> args = new ArrayList<>();
+            arguments.forEach((a, d) -> args.add(new LiteralText("<").append(new TranslatableText(a)).append(">: ").append(new TranslatableText(d))));
+            Iterator<Text> argsIt = args.listIterator();
+            while (argsIt.hasNext()) {
+                hover.append(argsIt.next());
+                if (argsIt.hasNext())
+                    hover.append(new LiteralText("\n"));
+            }
+            argsIt.remove();
+            args.clear();
+        } else {
+            hover.append(new TranslatableText("msg.shutter.help.arg.none"));
+        }
+
+        MutableText ult = new LiteralText("§2" + command + " §8- §r")
+                .append(new TranslatableText(descriptor))
+                .setStyle(Style.EMPTY
+                        .withHoverEvent(
+                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover.formatted(Formatting.GRAY, Formatting.ITALIC)))
+                        .withColor(Formatting.GRAY));
+
+        source.sendFeedback(ult);
     }
 
     private static int openConfig(CommandContext<FabricClientCommandSource> ctx) {

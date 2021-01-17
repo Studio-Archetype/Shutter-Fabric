@@ -79,5 +79,24 @@
   "msg.shutter.ok.add_node": "Added Node #%d.",
   "msg.shutter.ok.remove_node": "Removed Node #%d.",
   "msg.shutter.ok.hiding_path": "Hiding path visualization.",
-  "msg.shutter.ok.showing_path": "Showing path visualization."
+  "msg.shutter.ok.showing_path": "Showing path visualization.",
+
+  "msg.shutter.help.arg.none": "No arguments required.",
+  "msg.shutter.help.arg.time": "time",
+  "msg.shutter.help.arg.time.desc": "Time it takes for the path to complete.",
+  "msg.shutter.help.arg.index": "index",
+  "msg.shutter.help.arg.index.desc": "Target node index, starting at 0.",
+
+  "msg.shutter.help.cmd.start": "Starts following the defined camera path.",
+  "msg.shutter.help.cmd.stop": "Stops the current path following.",
+  "msg.shutter.help.cmd.clear": "Clears and resets the current camera path.",
+  "msg.shutter.help.cmd.add": "Adds the current camera state as new node to the path.",
+  "msg.shutter.help.cmd.set": "Replaces the defined node with the current camera state.",
+  "msg.shutter.help.cmd.remove": "Removes the defined node from the current path.",
+  "msg.shutter.help.cmd.goto": "Teleports to the defined node, and adjusts the camera.",
+  "msg.shutter.help.cmd.show": "Visualizes the current path.",
+  "msg.shutter.help.cmd.hide": "Hides the current path's visualization.",
+  "msg.shutter.help.cmd.toggle": "Toggles the path's visualization.",
+  "msg.shutter.help.cmd.config": "Opens the Shutter Config Screen."
+
 }
