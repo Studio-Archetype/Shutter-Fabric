@@ -1,10 +1,11 @@
-package studio.archetype.shutter.client;
+package studio.archetype.shutter.client.camera;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
+import studio.archetype.shutter.client.CommandFilter;
+import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.Messaging;
@@ -18,7 +19,7 @@ public class PathIterator {
 
     private FreecamEntity entity;
 
-    private GameMode oldGamemode;
+    private CommandFilter.GameMode oldGamemode;
     private Vec3d oldPos;
     private double oldFov;
     private float oldRoll, oldPitch, oldYaw;
@@ -43,7 +44,7 @@ public class PathIterator {
         assert p != null;
 
         PathNode node = this.currentPath.getNodes().get(index);
-        this.oldGamemode = c.interactionManager.getCurrentGameMode();
+        this.oldGamemode = CommandFilter.GameMode.getFromVanilla(c.interactionManager.getCurrentGameMode());
         this.oldPos = p.getPos();
         this.oldFov = c.options.fov; this.oldPitch = p.getPitch(1.0F); this.oldYaw = p.getYaw(1.0F);
         this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
@@ -51,7 +52,7 @@ public class PathIterator {
         entity = new FreecamEntity(node.getPosition(), node.getPitch(), node.getYaw(), node.getRoll(), c.world);
         ShutterClient.INSTANCE.setZoom(node.getZoom());
 
-        c.interactionManager.setGameMode(GameMode.SPECTATOR);
+        ShutterClient.INSTANCE.getCommandFilter().changeGameMode(CommandFilter.GameMode.SPECTATOR);
         c.setCameraEntity(entity);
     }
 
@@ -77,10 +78,10 @@ public class PathIterator {
         MinecraftClient c = MinecraftClient.getInstance();
         PlayerEntity p = c.player;
 
-        ShutterClient.teleportClient(oldPos, oldPitch, oldYaw);
+        ShutterClient.INSTANCE.getCommandFilter().teleportClient(oldPos, oldPitch, oldYaw);
         c.options.fov = oldFov;
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
-        c.interactionManager.setGameMode(oldGamemode);
+        ShutterClient.INSTANCE.getCommandFilter().changeGameMode(oldGamemode);
 
         c.setCameraEntity(p);
     }
@@ -97,6 +98,6 @@ public class PathIterator {
         entity.prevPitch = node.getPitch(); entity.prevYaw = node.getYaw();
         ShutterClient.INSTANCE.setZoom(node.getZoom());
 
-        ShutterClient.teleportClient(node.getPosition(), node.getPitch(), node.getYaw());
+        ShutterClient.INSTANCE.getCommandFilter().teleportClient(node.getPosition(), node.getPitch(), node.getYaw());
     }
 }

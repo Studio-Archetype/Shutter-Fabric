@@ -64,7 +64,7 @@ public final class PathNodeCommand {
             return 1;
         } catch(IndexOutOfBoundsException e) {
             Messaging.sendMessage(
-                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.headline.cmd.failure"),
                     new TranslatableText("msg.shutter.error.remove_node", index),
                     Messaging.MessageType.NEGATIVE);
             return 0;
@@ -104,7 +104,7 @@ public final class PathNodeCommand {
         try {
             PathNode node = path.getNodes().get(index);
             Vec3d position = node.getPosition().add(0, -1.62, 0);
-            ShutterClient.teleportClient(position, node.getPitch(), node.getYaw());
+            ShutterClient.INSTANCE.getCommandFilter().teleportClient(position, node.getPitch(), node.getYaw());
             ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
             ShutterClient.INSTANCE.setZoom(node.getZoom());
             Messaging.sendMessage(

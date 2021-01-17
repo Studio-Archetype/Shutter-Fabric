@@ -7,7 +7,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.Shutter;
-import studio.archetype.shutter.client.PathFollower;
+import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;

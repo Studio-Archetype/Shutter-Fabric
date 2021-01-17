@@ -81,6 +81,9 @@
   "msg.shutter.ok.hiding_path": "Hiding path visualization.",
   "msg.shutter.ok.showing_path": "Showing path visualization.",
 
+  "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",
+  "msg.shutter.help.line": "§8+---------------------------------------------------+",
+
   "msg.shutter.help.arg.none": "No arguments required.",
   "msg.shutter.help.arg.time": "time",
   "msg.shutter.help.arg.time.desc": "Time it takes for the path to complete.",

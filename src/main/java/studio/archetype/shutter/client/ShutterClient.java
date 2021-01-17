@@ -9,6 +9,8 @@ import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import studio.archetype.shutter.client.camera.PathFollower;
+import studio.archetype.shutter.client.camera.PathIterator;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
 import studio.archetype.shutter.client.cmd.PathNodeCommand;
 import studio.archetype.shutter.client.cmd.PathVisualCommands;
@@ -28,6 +30,8 @@ public class ShutterClient implements ClientModInitializer {
     public static ShutterClient INSTANCE;
 
     private InputHandler inputHandler;
+    private CommandFilter commandFilter;
+
     private CameraPathRenderer pathRenderer;
     private CameraNodeRenderer nodeRenderer;
 
@@ -38,8 +42,6 @@ public class ShutterClient implements ClientModInitializer {
 
     private double zoom, prevZoom;
 
-    public static int queuedTeleportMessageFilter = 0;
-
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
@@ -47,6 +49,7 @@ public class ShutterClient implements ClientModInitializer {
         ClientConfigManager.register();
 
         this.inputHandler = new InputHandler();
+        this.commandFilter = new CommandFilter();
         this.pathRenderer = new CameraPathRenderer();
         this.nodeRenderer = new CameraNodeRenderer();
         this.pathManagers = new HashMap<>();
@@ -67,6 +70,7 @@ public class ShutterClient implements ClientModInitializer {
         return pathManagers.computeIfAbsent(w, world -> new CameraPathManager());
     }
 
+    public CommandFilter getCommandFilter() { return commandFilter; }
     public CameraPathRenderer getPathRenderer() { return pathRenderer; }
     public CameraNodeRenderer getNodeRenderer() { return nodeRenderer; }
     public PathFollower getPathFollower() { return follower; }
@@ -90,13 +94,5 @@ public class ShutterClient implements ClientModInitializer {
 
     public void resetZoom() {
         this.zoom = this.prevZoom = 0;
-    }
-
-    public static void teleportClient(Vec3d position, double pitch, double yaw) {
-        queuedTeleportMessageFilter++;
-        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new ChatMessageC2SPacket(String.format(
-                "/tp @s %f %f %f %f %f",
-                position.getX(), position.getY(), position.getZ(),
-                yaw, pitch)));
     }
 }

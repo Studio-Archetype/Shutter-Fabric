@@ -51,7 +51,7 @@ public final class PathControlCommand {
     }
 
     private static int printHelp(CommandContext<FabricClientCommandSource> ctx) {
-        ctx.getSource().sendFeedback(new LiteralText("§8-------+== §2Shutter Help §8==+-------"));
+        ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.header"));
         sendCommandHelpLine(ctx.getSource(),
                 "/s start",
                 "msg.shutter.help.cmd.start",
@@ -65,7 +65,7 @@ public final class PathControlCommand {
                 "msg.shutter.help.cmd.clear",
                 null);
 
-        ctx.getSource().sendFeedback(new LiteralText("§8-------+== ------------ §8==+-------"));
+        ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.line"));
 
         sendCommandHelpLine(ctx.getSource(),
                 "/s add",
@@ -82,7 +82,7 @@ public final class PathControlCommand {
                 "msg.shutter.help.cmd.goto",
                 Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));
 
-        ctx.getSource().sendFeedback(new LiteralText("§8-------+== ------------ §8==+-------"));
+        ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.line"));
 
         sendCommandHelpLine(ctx.getSource(),
                 "/s show",
@@ -103,7 +103,7 @@ public final class PathControlCommand {
                 "msg.shutter.help.cmd.config",
                 null);
 
-        ctx.getSource().sendFeedback(new LiteralText("§8-------+== ------------ §8==+-------"));
+        ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.line"));
 
         return 1;
     }

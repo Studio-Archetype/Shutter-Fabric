@@ -1,10 +1,12 @@
-package studio.archetype.shutter.client;
+package studio.archetype.shutter.client.camera;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+import studio.archetype.shutter.client.CommandFilter;
+import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.pathing.CameraPath;
@@ -24,7 +26,7 @@ public class PathFollower {
     private int nodeIndex, segmentIndex;
     private double segmentTime, tickCounter;
 
-    private GameMode oldGamemode;
+    private CommandFilter.GameMode oldGamemode;
     private Vec3d oldPos;
     private double oldFov;
     private float oldRoll;
@@ -42,7 +44,7 @@ public class PathFollower {
         this.path = path;
 
         assert c.interactionManager != null;
-        this.oldGamemode = c.interactionManager.getCurrentGameMode();
+        this.oldGamemode = CommandFilter.GameMode.getFromVanilla(c.interactionManager.getCurrentGameMode());
         assert c.player != null;
         this.oldPos = c.player.getPos();
         this.oldFov = ShutterClient.INSTANCE.getZoom();
@@ -54,7 +56,7 @@ public class PathFollower {
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData().get(currentNode);
         segmentTime = (pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
-        c.interactionManager.setGameMode(GameMode.SPECTATOR);
+        ShutterClient.INSTANCE.getCommandFilter().changeGameMode(CommandFilter.GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
         c.setCameraEntity(entity);
@@ -70,7 +72,7 @@ public class PathFollower {
         assert c.player != null;
         c.player.setPos(oldPos.getX(), oldPos.getY(), oldPos.getZ());
         assert c.interactionManager != null;
-        c.interactionManager.setGameMode(oldGamemode);
+        ShutterClient.INSTANCE.getCommandFilter().changeGameMode(oldGamemode);
         ShutterClient.INSTANCE.setZoom(this.oldFov);
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
     }
