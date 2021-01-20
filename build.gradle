@@ -3,12 +3,22 @@ plugins {
     id 'maven-publish'
 }
 
+
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = project.mod_loader + "_" +
+          project.minecraft_version + "_" +
+          project.mod_version + "_" +
+          getDate()
+
 group = project.maven_group
+
+static def getDate() {
+    return new Date().format('MMddyy')
+}
 
 repositories {
     maven {

@@ -4,14 +4,15 @@
   "version": "${version}",
 
   "name": "Shutter",
-  "description": "Yes.",
+  "description": "Real time cinematography and recording mod.",
 
   "authors": [
+    "Studio Archetype",
     "Nicolas \"Vatuu\" Adamoglou"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://www.mc-market.org/resources/18642/",
+    "issues": "https://github.com/Studio-Archetype/Shutter-Fabric/issues/new/choose"
   },
 
   "license": "All Rights Reserved",

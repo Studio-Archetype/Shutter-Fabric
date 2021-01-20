@@ -6,6 +6,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import studio.archetype.shutter.Shutter;
