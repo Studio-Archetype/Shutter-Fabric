@@ -34,7 +34,6 @@ public final class PathVisualCommands {
 
     private static int showPath(CommandContext<FabricClientCommandSource> ctx) {
         ClientPlayerEntity p = ctx.getSource().getPlayer();
-        Identifier id = CameraPathManager.DEFAULT_PATH;
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
             if(manager.isVisualizing())
@@ -43,7 +42,7 @@ public final class PathVisualCommands {
                         new TranslatableText("msg.shutter.error.showing_path"),
                         Messaging.MessageType.NEUTRAL);
             else {
-                manager.togglePathVisualization(id);
+                manager.togglePathVisualization();
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.failed"),
                         new TranslatableText("msg.shutter.ok.showing_path"),
@@ -62,11 +61,10 @@ public final class PathVisualCommands {
 
     private static int hidePath(CommandContext<FabricClientCommandSource> ctx) {
         ClientPlayerEntity p = ctx.getSource().getPlayer();
-        Identifier id = CameraPathManager.DEFAULT_PATH;
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
             if(manager.isVisualizing()) {
-                manager.togglePathVisualization(id);
+                manager.togglePathVisualization();
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.hiding_path"),
@@ -84,10 +82,9 @@ public final class PathVisualCommands {
 
     private static int togglePath(CommandContext<FabricClientCommandSource> ctx) {
         ClientPlayerEntity p = ctx.getSource().getPlayer();
-        Identifier id = CameraPathManager.DEFAULT_PATH;
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
-            if(manager.togglePathVisualization(id))
+            if(manager.togglePathVisualization())
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.showing_path"),

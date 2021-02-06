@@ -113,7 +113,7 @@ public final class PathControlCommand {
         try {
             CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld());
             ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime = pathTime;
-            manager.startCameraPath(CameraPathManager.DEFAULT_PATH, pathTime);
+            manager.startCameraPath(pathTime);
             return 1;
         } catch(PathTooSmallException e) {
             Messaging.sendMessage(

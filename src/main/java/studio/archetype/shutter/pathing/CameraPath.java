@@ -1,11 +1,12 @@
 package studio.archetype.shutter.pathing;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.util.InterpolationMath;
+import studio.archetype.shutter.util.SerializationUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,46 +15,31 @@ import java.util.Map;
 public class CameraPath {
 
     public final Identifier id;
-    private final LinkedList<PathNode> nodes = new LinkedList<>();
+    private final LinkedList<PathNode> nodes;
 
     private final Map<PathNode, LinkedList<InterpolationData>> interpolation = new HashMap<>();
     private boolean needsInterpolationRebuilt = true;
 
     public CameraPath(Identifier id) {
+        this(id, new LinkedList<>());
+    }
+
+    private CameraPath(Identifier id, LinkedList<PathNode> nodes) {
         this.id = id;
+        this.nodes = nodes;
     }
 
-    public CameraPath(CompoundTag tag) {
-        this.id = readFromNbt(tag);
-    }
-
-    public void addNode(PathNode node) {
-        this.nodes.add(node);
-        needsInterpolationRebuilt = true;
+    public Identifier getId() {
+        return this.id;
     }
 
     public LinkedList<PathNode> getNodes() {
         return nodes;
     }
 
-    public Map<PathNode, LinkedList<InterpolationData>> getInterpolatedData() {
-        if(needsInterpolationRebuilt)
-            calculatePath();
-        return interpolation;
-    }
-
-    public void clear() {
-        nodes.clear();
-        interpolation.clear();
-        needsInterpolationRebuilt = false;
-    }
-
-    public void removeNode(int index) throws IndexOutOfBoundsException {
-        if(index >= nodes.size())
-            throw new IndexOutOfBoundsException();
-
-        nodes.remove(index);
-        this.needsInterpolationRebuilt = true;
+    public void addNode(PathNode node) {
+        this.nodes.add(node);
+        needsInterpolationRebuilt = true;
     }
 
     public void setNode(PathNode node, int index) throws IndexOutOfBoundsException {
@@ -64,26 +50,18 @@ public class CameraPath {
         this.needsInterpolationRebuilt = true;
     }
 
-    public Identifier readFromNbt(CompoundTag compoundTag) {
-        Identifier id = new Identifier(compoundTag.getString("id"));
-        this.nodes.clear();
-        compoundTag.getList("nodes", 10).forEach(t -> {
-            CompoundTag tag = (CompoundTag)t;
-            this.nodes.add(new PathNode(tag));
-        });
-        return id;
+    public void removeNode(int index) throws IndexOutOfBoundsException {
+        if(index >= nodes.size())
+            throw new IndexOutOfBoundsException();
+
+        nodes.remove(index);
+        this.needsInterpolationRebuilt = true;
     }
 
-    public void writeToNbt(CompoundTag tag) {
-        CompoundTag path = new CompoundTag();
-        path.putString("id", this.id.toString());
-        ListTag nodes = new ListTag();
-        this.nodes.forEach(n -> {
-            CompoundTag node = new CompoundTag();
-            n.serialize(node);
-            nodes.add(node);
-        });
-        path.put("nodes", nodes);
+    public Map<PathNode, LinkedList<InterpolationData>> getInterpolatedData() {
+        if(needsInterpolationRebuilt)
+            calculatePath();
+        return interpolation;
     }
 
     public void calculatePath() {
@@ -136,7 +114,19 @@ public class CameraPath {
         needsInterpolationRebuilt = false;
     }
 
+    public void clear() {
+        nodes.clear();
+        interpolation.clear();
+        needsInterpolationRebuilt = false;
+    }
+
     private PathNode getWrapped(int cur, int offset) {
         return nodes.get((cur + offset + nodes.size()) % nodes.size());
     }
+
+    public static final Codec<CameraPath> CODEC = RecordCodecBuilder.create(i ->
+            i.group(
+                SerializationUtils.CODEC_IDENTIFIER.fieldOf("Id").forGetter(CameraPath::getId),
+                PathNode.CODEC.listOf().fieldOf("Nodes").forGetter(CameraPath::getNodes))
+            .apply(i, (id, nodes) -> new CameraPath(id, new LinkedList<>(nodes))));
 }

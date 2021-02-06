@@ -1,17 +1,16 @@
 package studio.archetype.shutter.pathing;
 
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Vec3d;
+import studio.archetype.shutter.util.SerializationUtils;
 
 public class PathNode {
 
-    private Vec3d position;
-    private float pitch, yaw, roll;
-    private float zoom;
-
-    public PathNode(CompoundTag tag) {
-        deserialize(tag);
-    }
+    private final Vec3d position;
+    private final float pitch, yaw, roll;
+    private final float zoom;
 
     public PathNode(Vec3d pos, float pitch, float yaw, float roll, float zoom) {
         this.position = pos;
@@ -21,25 +20,15 @@ public class PathNode {
         this.zoom = zoom;
     }
 
-    public void serialize(CompoundTag tag) {
-        tag.putDouble("x", this.getPosition().getX()); tag.putDouble("y", this.getPosition().getY()); tag.putDouble("z", this.getPosition().getZ());
-        tag.putFloat("pitch", this.getPitch());
-        tag.putFloat("yaw", this.getYaw());
-        tag.putFloat("roll", this.getRoll());
-        tag.putFloat("zoom", this.getZoom());
-    }
-
-    private void deserialize(CompoundTag tag) {
-        this.position = new Vec3d(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z"));
-        this.pitch = tag.getFloat("pitch");
-        this.yaw = tag.getFloat("yaw");
-        this.roll = tag.getFloat("roll");
-        this.zoom = tag.getFloat("zoom");
+    private PathNode(Vec3d pos, Vector3f rot, float zoom) {
+        this(pos, rot.getX(), rot.getY(), rot.getZ(), zoom);
     }
 
     public Vec3d getPosition() {
         return position;
     }
+
+    public Vector3f getRotation() { return new Vector3f(pitch, yaw, roll); }
 
     public float getPitch() {
         return pitch;
@@ -56,4 +45,11 @@ public class PathNode {
     public float getZoom() {
         return zoom;
     }
+
+    public static final Codec<PathNode> CODEC = RecordCodecBuilder.create(i ->
+            i.group(
+                Codec.DOUBLE.listOf().fieldOf("Position").forGetter((PathNode o) -> SerializationUtils.vec3dToList(o.getPosition())),
+                Codec.FLOAT.listOf().fieldOf("Rotation").forGetter((PathNode o) -> SerializationUtils.vector3fToList(o.getRotation())),
+                Codec.FLOAT.fieldOf("Zoom").forGetter(PathNode::getZoom))
+            .apply(i, (pos, rot, zoom) -> new PathNode(SerializationUtils.listToVec3d(pos), SerializationUtils.listToVector3f(rot), zoom)));
 }

@@ -4,7 +4,9 @@ package studio.archetype.shutter.client.extensions.mixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.network.ClientConnection;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,11 +17,18 @@ import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.ClientCommandInternals;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
+import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 @Mixin(MinecraftClient.class)
 abstract class MinecraftClientMixin {
 
     @Shadow @Nullable public ClientWorld world;
+
+    @Shadow public abstract boolean isIntegratedServerRunning();
+
+    @Shadow @Nullable private ClientConnection connection;
+
+    @Shadow @Nullable public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onConstruct(RunArgs args, CallbackInfo info) {
@@ -29,14 +38,32 @@ abstract class MinecraftClientMixin {
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
     private void onDisconnect(Screen screen, CallbackInfo info) {
         try {
-            ShutterClient.INSTANCE.getPathManager(this.world).clearPath(CameraPathManager.DEFAULT_PATH);
-        } catch(PathEmptyException ignored) { }
+            ShutterClient client = ShutterClient.INSTANCE;
+            if(isIntegratedServerRunning() || connection != null) {
+                if (client.getPathManager(this.world).isVisualizing())
+                    client.getPathManager(this.world).togglePathVisualization();
+                if (client.getPathFollower().isFollowing())
+                    client.getPathFollower().end();
+                if (client.getPathIterator().isIterating())
+                    client.getPathIterator().end();
+            }
+            client.getSaveFile().save();
+        } catch(PathTooSmallException ignored) { }
     }
 
     @Inject(method = "joinWorld", at = @At("HEAD"))
     private void onWorldChange(ClientWorld w, CallbackInfo info) {
         try {
-            ShutterClient.INSTANCE.getPathManager(this.world).clearPath(CameraPathManager.DEFAULT_PATH);
-        } catch(PathEmptyException ignored) { }
+            ShutterClient client = ShutterClient.INSTANCE;
+            if(isIntegratedServerRunning() || connection != null) {
+                if (client.getPathManager(this.world).isVisualizing())
+                    client.getPathManager(this.world).togglePathVisualization();
+                if (client.getPathFollower().isFollowing())
+                    client.getPathFollower().end();
+                if (client.getPathIterator().isIterating())
+                    client.getPathIterator().end();
+            }
+            client.getSaveFile().save();
+        } catch(PathTooSmallException ignored) { }
     }
 }

@@ -1,14 +1,25 @@
 package studio.archetype.shutter.client;
 
+import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.realms.util.JsonUtils;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.commons.io.IOUtils;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.camera.PathIterator;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
@@ -17,11 +28,13 @@ import studio.archetype.shutter.client.cmd.PathVisualCommands;
 import studio.archetype.shutter.client.cmd.handler.ClientCommandManager;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
 import studio.archetype.shutter.pathing.CameraPathManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +51,7 @@ public class ShutterClient implements ClientModInitializer {
     private PathFollower follower;
     private PathIterator iterator;
 
-    private Map<World, CameraPathManager> pathManagers;
+    private SaveFile saveFile;
 
     private double zoom, prevZoom;
 
@@ -52,9 +65,10 @@ public class ShutterClient implements ClientModInitializer {
         this.commandFilter = new CommandFilter();
         this.pathRenderer = new CameraPathRenderer();
         this.nodeRenderer = new CameraNodeRenderer();
-        this.pathManagers = new HashMap<>();
         this.follower = new PathFollower();
         this.iterator = new PathIterator();
+
+        this.saveFile = SaveFile.getSaveFile();
 
         CommandDispatcher<FabricClientCommandSource> dis = ClientCommandManager.DISPATCHER;
         PathControlCommand.register(dis);
@@ -67,7 +81,12 @@ public class ShutterClient implements ClientModInitializer {
     }
 
     public CameraPathManager getPathManager(World w) {
-        return pathManagers.computeIfAbsent(w, world -> new CameraPathManager());
+        if(MinecraftClient.getInstance().isIntegratedServerRunning())
+            return saveFile.getLocalWorldSaves(MinecraftClient.getInstance().getServer().getSaveProperties().getLevelName())
+                    .computeIfAbsent(w.getRegistryKey().getValue(), world -> new CameraPathManager());
+        else
+            return saveFile.getRemoteServerSaves(MinecraftClient.getInstance().getNetworkHandler().getConnection().getAddress().toString())
+                    .computeIfAbsent(w.getRegistryKey().getValue(), world -> new CameraPathManager());
     }
 
     public CommandFilter getCommandFilter() { return commandFilter; }
@@ -75,6 +94,7 @@ public class ShutterClient implements ClientModInitializer {
     public CameraNodeRenderer getNodeRenderer() { return nodeRenderer; }
     public PathFollower getPathFollower() { return follower; }
     public PathIterator getPathIterator() { return iterator; }
+    public SaveFile getSaveFile() { return saveFile; }
 
     public double getZoom() {
         return this.zoom;

@@ -167,9 +167,8 @@ public class InputHandler {
             }
 
             if(visualizePath.wasPressed()) {
-                Identifier id = CameraPathManager.DEFAULT_PATH;
                 try {
-                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(id))
+                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization())
                         if(!shutter.getPathFollower().isFollowing())
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
@@ -200,7 +199,7 @@ public class InputHandler {
                     shutter.getPathManager(c.world).stopCameraPath();
                 } catch(PathNotFollowingException e) {
                     try {
-                        shutter.getPathManager(c.world).startCameraPath(CameraPathManager.DEFAULT_PATH, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime);
+                        shutter.getPathManager(c.world).startCameraPath(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime);
                     } catch(PathTooSmallException ex) {
                         Messaging.sendMessage(
                                 new TranslatableText("msg.shutter.headline.cmd.failed"),

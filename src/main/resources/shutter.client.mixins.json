@@ -11,7 +11,7 @@
     "ClientCommandSourceMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
-    "MinecraftClientMixin",
+
     "LivingEntityRendererMixin"
   ],
   "injectors": {
