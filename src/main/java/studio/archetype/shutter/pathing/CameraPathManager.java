@@ -46,14 +46,30 @@ public class CameraPathManager {
 
     public CameraPath getCurrentPath() { return getPath(currentSelection); }
 
-    public void setCurrentPath(Identifier id) {
+    public boolean setCurrentPath(Identifier id) {
         CameraPath path = getPath(id);
+
+        if(id.equals(this.currentSelection))
+            return false;
 
         this.currentSelection = id;
         if(isVisualizing) {
-            ShutterClient.INSTANCE.getPathRenderer().setPath(path);
-            ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
+            if(path.getNodes().size() < 2) {
+                ShutterClient.INSTANCE.getPathRenderer().disable();
+                ShutterClient.INSTANCE.getNodeRenderer().disable();
+                this.isVisualizing = false;
+            } else {
+                ShutterClient.INSTANCE.getPathRenderer().setPath(path);
+                ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
+            }
         }
+
+        if(ShutterClient.INSTANCE.getPathFollower().isFollowing())
+            ShutterClient.INSTANCE.getPathFollower().end();
+        if(ShutterClient.INSTANCE.getPathIterator().isIterating())
+            ShutterClient.INSTANCE.getPathIterator().end();
+
+        return true;
     }
 
     public CameraPath getPath(Identifier id) {
@@ -75,6 +91,7 @@ public class CameraPathManager {
                     .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
                     .append(new LiteralText(String.format("%.2f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE)),
                 Messaging.MessageType.POSITIVE);
+        ShutterClient.INSTANCE.getSaveFile().save();
     }
 
     public void startCameraPath(double pathTime) throws PathTooSmallException {
