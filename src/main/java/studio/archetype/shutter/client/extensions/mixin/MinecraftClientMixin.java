@@ -15,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.ClientCommandInternals;
-import studio.archetype.shutter.pathing.CameraPathManager;
-import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 @Mixin(MinecraftClient.class)
@@ -39,7 +37,7 @@ abstract class MinecraftClientMixin {
     private void onDisconnect(Screen screen, CallbackInfo info) {
         try {
             ShutterClient client = ShutterClient.INSTANCE;
-            if(isIntegratedServerRunning() || connection != null) {
+            if((isIntegratedServerRunning() || connection != null) && this.world != null) {
                 if (client.getPathManager(this.world).isVisualizing())
                     client.getPathManager(this.world).togglePathVisualization();
                 if (client.getPathFollower().isFollowing())
@@ -55,7 +53,7 @@ abstract class MinecraftClientMixin {
     private void onWorldChange(ClientWorld w, CallbackInfo info) {
         try {
             ShutterClient client = ShutterClient.INSTANCE;
-            if(isIntegratedServerRunning() || connection != null) {
+            if((isIntegratedServerRunning() || connection != null) && this.world != null) {
                 if (client.getPathManager(this.world).isVisualizing())
                     client.getPathManager(this.world).togglePathVisualization();
                 if (client.getPathFollower().isFollowing())

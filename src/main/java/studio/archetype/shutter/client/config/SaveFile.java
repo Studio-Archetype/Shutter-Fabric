@@ -4,14 +4,11 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.core.Logger;
-import org.lwjgl.system.CallbackI;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.util.SerializationUtils;
 
@@ -47,21 +44,25 @@ public class SaveFile {
     }
 
     private SaveFile(Map<String, Map<Identifier, CameraPathManager>> remote, Map<String, Map<Identifier, CameraPathManager>> local) {
-        this.remoteServerSaves = remote;
-        this.localWorldSaves = local;
+        this.remoteServerSaves = new HashMap<>(remote);
+        this.localWorldSaves = new HashMap<>(local);
     }
 
     public Map<Identifier, CameraPathManager> getLocalWorldSaves(String saveFile) {
-        return localWorldSaves.computeIfAbsent(saveFile, s -> new HashMap<>());
+        if(!localWorldSaves.containsKey(saveFile))
+            localWorldSaves.put(saveFile, new HashMap<>());
+        return localWorldSaves.get(saveFile);
     }
 
     public Map<Identifier, CameraPathManager> getRemoteServerSaves(String ip) {
-        return remoteServerSaves.computeIfAbsent(ip, s -> new HashMap<>());
+        if(!remoteServerSaves.containsKey(ip))
+            remoteServerSaves.put(ip, new HashMap<>());
+        return remoteServerSaves.get(ip);
     }
 
     public void save() {
         try {
-            Optional<Tag> nbt = NbtOps.INSTANCE.withEncoder(CODEC).apply(this).result();
+            Optional<Tag> nbt = NbtOps.INSTANCE.withEncoder(CODEC).apply(this).resultOrPartial(System.out::println);
             if(nbt.isPresent()) {
                 CompoundTag tag = new CompoundTag();
                 tag.put("Shutter", nbt.get());

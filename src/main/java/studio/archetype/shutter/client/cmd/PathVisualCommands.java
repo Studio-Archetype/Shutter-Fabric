@@ -5,7 +5,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.ui.Messaging;

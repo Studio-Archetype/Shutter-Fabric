@@ -1,25 +1,13 @@
 package studio.archetype.shutter.client;
 
-import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.realms.util.JsonUtils;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.apache.commons.io.IOUtils;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.camera.PathIterator;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
@@ -33,10 +21,6 @@ import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
 import studio.archetype.shutter.pathing.CameraPathManager;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ShutterClient implements ClientModInitializer {
 
@@ -81,12 +65,20 @@ public class ShutterClient implements ClientModInitializer {
     }
 
     public CameraPathManager getPathManager(World w) {
-        if(MinecraftClient.getInstance().isIntegratedServerRunning())
-            return saveFile.getLocalWorldSaves(MinecraftClient.getInstance().getServer().getSaveProperties().getLevelName())
-                    .computeIfAbsent(w.getRegistryKey().getValue(), world -> new CameraPathManager());
-        else
-            return saveFile.getRemoteServerSaves(MinecraftClient.getInstance().getNetworkHandler().getConnection().getAddress().toString())
-                    .computeIfAbsent(w.getRegistryKey().getValue(), world -> new CameraPathManager());
+        if(MinecraftClient.getInstance().isIntegratedServerRunning()) {
+            String worldFileName = MinecraftClient.getInstance().getServer()
+                    .getSavePath(WorldSavePath.ROOT)
+                    .toFile()
+                    .getParentFile()
+                    .getName();
+            return saveFile.getLocalWorldSaves(worldFileName).computeIfAbsent(w.getRegistryKey().getValue(), world -> new CameraPathManager());
+        } else {
+            String ip = MinecraftClient.getInstance().getNetworkHandler()
+                    .getConnection()
+                    .getAddress()
+                    .toString();
+            return saveFile.getRemoteServerSaves(ip).computeIfAbsent(w.getRegistryKey().getValue(), world -> new CameraPathManager());
+        }
     }
 
     public CommandFilter getCommandFilter() { return commandFilter; }

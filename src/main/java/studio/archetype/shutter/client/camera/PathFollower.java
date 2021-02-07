@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
 import studio.archetype.shutter.client.CommandFilter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.entities.FreecamEntity;

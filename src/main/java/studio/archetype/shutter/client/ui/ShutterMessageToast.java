@@ -2,15 +2,10 @@ package studio.archetype.shutter.client.ui;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.toast.AdvancementToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.core.config.Order;
 
 import java.util.List;
 

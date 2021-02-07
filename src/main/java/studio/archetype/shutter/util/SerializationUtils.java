@@ -10,10 +10,7 @@ import java.util.List;
 
 public final class SerializationUtils {
 
-    public static final Codec<Identifier> CODEC_IDENTIFIER = Codec.STRING
-            .fieldOf("Id")
-            .codec()
-            .xmap(Identifier::new, Identifier::toString);
+    public static final Codec<Identifier> CODEC_IDENTIFIER = Codec.STRING.xmap(Identifier::new, Identifier::toString);
 
     public static List<Double> vec3dToList(Vec3d vec) {
         return Lists.newArrayList(vec.getX(), vec.getY(), vec.getZ());

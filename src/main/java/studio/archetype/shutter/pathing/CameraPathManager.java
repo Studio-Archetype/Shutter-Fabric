@@ -9,8 +9,8 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.Shutter;
-import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.ShutterClient;
+import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
@@ -35,7 +35,7 @@ public class CameraPathManager {
     }
 
     private CameraPathManager(Map<Identifier, CameraPath> paths, Identifier selection) {
-        this.cameraPaths = paths;
+        this.cameraPaths = new HashMap<>(paths);
         this.currentSelection = selection;
         this.isVisualizing = false;
     }

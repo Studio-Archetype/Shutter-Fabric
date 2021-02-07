@@ -5,14 +5,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.CommandSource;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.MessageType;
 import net.minecraft.network.packet.s2c.play.CommandTreeS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
-import net.minecraft.server.command.GameModeCommand;
-import net.minecraft.server.command.TeleportCommand;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Final;
@@ -25,8 +20,6 @@ import studio.archetype.shutter.client.CommandFilter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.ClientCommandInternals;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
-
-import javax.xml.soap.Text;
 
 @Mixin(ClientPlayNetworkHandler.class)
 abstract class ClientPlayNetworkHandlerMixin {
