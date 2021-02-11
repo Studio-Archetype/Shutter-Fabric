@@ -52,6 +52,11 @@ public final class PathControlCommand {
 
     private static int printHelp(CommandContext<FabricClientCommandSource> ctx) {
         ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.header"));
+
+        sendCommandHelpLine(ctx.getSource(),
+                "/s select",
+                "msg.shutter.help.cmd.select",
+                Collections.singletonMap("msg.shutter.help.arg.path", "msg.shutter.help.arg.path.desc"));
         sendCommandHelpLine(ctx.getSource(),
                 "/s start",
                 "msg.shutter.help.cmd.start",
@@ -74,10 +79,12 @@ public final class PathControlCommand {
         sendCommandHelpLine(ctx.getSource(),
                 "/s set",
                 "msg.shutter.help.cmd.set",
-                Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));        sendCommandHelpLine(ctx.getSource(),
+                Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));
+        sendCommandHelpLine(ctx.getSource(),
                 "/s remove",
                 "msg.shutter.help.cmd.remove",
-                Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));        sendCommandHelpLine(ctx.getSource(),
+                Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));
+        sendCommandHelpLine(ctx.getSource(),
                 "/s goto",
                 "msg.shutter.help.cmd.goto",
                 Collections.singletonMap("msg.shutter.help.arg.index", "msg.shutter.help.arg.index.desc"));
@@ -88,7 +95,6 @@ public final class PathControlCommand {
                 "/s show",
                 "msg.shutter.help.cmd.show",
                 null);
-
         sendCommandHelpLine(ctx.getSource(),
                 "/s hide",
                 "msg.shutter.help.cmd.hide",
@@ -97,11 +103,29 @@ public final class PathControlCommand {
                 "/s toggle",
                 "msg.shutter.help.cmd.toggle",
                 null);
-
         sendCommandHelpLine(ctx.getSource(),
                 "/s config",
                 "msg.shutter.help.cmd.config",
                 null);
+
+        ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.line"));
+
+        sendCommandHelpLine(ctx.getSource(),
+                "/s export",
+                "msg.shutter.help.cmd.export",
+                Collections.singletonMap("msg.shutter.help.arg.file", "msg.shutter.help.arg.file.desc"));
+        sendCommandHelpLine(ctx.getSource(),
+                "/s upload",
+                "msg.shutter.help.cmd.upload",
+                Collections.singletonMap("msg.shutter.help.arg.file", "msg.shutter.help.arg.file.desc"));
+        sendCommandHelpLine(ctx.getSource(),
+                "/s import",
+                "msg.shutter.help.cmd.import",
+                Collections.singletonMap("msg.shutter.help.arg.file", "msg.shutter.help.arg.file.desc"));
+        sendCommandHelpLine(ctx.getSource(),
+                "/s download",
+                "msg.shutter.help.cmd.download",
+                Collections.singletonMap("msg.shutter.help.arg.url", "msg.shutter.help.arg.url.desc"));
 
         ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.line"));
 

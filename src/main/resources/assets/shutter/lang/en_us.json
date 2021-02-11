@@ -104,7 +104,14 @@
   "msg.shutter.help.arg.time.desc": "Path duration time.",
   "msg.shutter.help.arg.index": "index",
   "msg.shutter.help.arg.index.desc": "Target node index, node count starts with 0.",
+  "msg.shutter.help.arg.file": "file",
+  "msg.shutter.help.arg.file.desc": "Filename of the path to be targeted.",
+  "msg.shutter.help.arg.path": "path",
+  "msg.shutter.help.arg.path.desc": "Name of the path to be targeted.",
+  "msg.shutter.help.arg.url": "url",
+  "msg.shutter.help.arg.url.desc": "URL of the target web location.",
 
+  "msg.shutter.help.cmd.select": "Sets or creates the desired path as current path.",
   "msg.shutter.help.cmd.start": "Begin following the defined camera path.",
   "msg.shutter.help.cmd.stop": "End following the defined camera path.",
   "msg.shutter.help.cmd.clear": "Deletes the current camera path.",
@@ -115,6 +122,10 @@
   "msg.shutter.help.cmd.show": "Visualizes the current path.",
   "msg.shutter.help.cmd.hide": "Hides the current path's visualization.",
   "msg.shutter.help.cmd.toggle": "Toggles the path's visualization.",
-  "msg.shutter.help.cmd.config": "Opens the Shutter Config Screen."
+  "msg.shutter.help.cmd.config": "Opens the Shutter Config Screen.",
+  "msg.shutter.help.cmd.export": "Exports the current path to a named JSON file.",
+  "msg.shutter.help.cmd.upload": "Uploads the current path to a named pastebin.",
+  "msg.shutter.help.cmd.import": "Imports a JSON file with the specified name as path.",
+  "msg.shutter.help.cmd.download": "Downloads a pastebin with the specified URL as path."
 
 }
