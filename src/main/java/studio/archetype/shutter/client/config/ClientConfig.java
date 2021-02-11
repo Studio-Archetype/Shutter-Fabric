@@ -53,6 +53,9 @@ public class ClientConfig implements ConfigData {
 
         @ConfigEntry.Gui.Tooltip
         public boolean hideArmorStands = true;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean hideEntityLabels = false;
     }
 
     public enum PathStyle {

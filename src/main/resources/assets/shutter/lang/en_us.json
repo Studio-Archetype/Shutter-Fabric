@@ -31,6 +31,8 @@
   "config.shutter.genSettings.pathTime.@Tooltip": "Sets the default time the path takes to complete. Overwritten by the start command. In ticks.",
   "config.shutter.genSettings.curveDetail": "Path Detail Level",
   "config.shutter.genSettings.curveDetail.@Tooltip": "Set the detail level of the curve interpolation for generated paths.",
+  "config.shutter.genSettings.hideEntityLabels": "Hide Entity Labels",
+  "config.shutter.genSettings.hideEntityLabels.@Tooltip": "Set whether entity labels are shown during path following.",
   "config.shutter.genSettings.hideArmorStands": "Hide Armor Stands",
   "config.shutter.genSettings.hideArmorStands.@Tooltip": "Set whether invisible armor stands show up as translucent in spectator.",
   "config.shutter.pathSettings": "Visualization",
