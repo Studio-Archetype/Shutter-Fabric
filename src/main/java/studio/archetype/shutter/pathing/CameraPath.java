@@ -1,16 +1,27 @@
 package studio.archetype.shutter.pathing;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Vec3d;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpResponseException;
+import studio.archetype.shutter.Shutter;
+import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.pathing.exceptions.PathSerializationException;
 import studio.archetype.shutter.util.InterpolationMath;
 import studio.archetype.shutter.util.SerializationUtils;
+import studio.archetype.shutter.util.WebUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
 
 public class CameraPath {
 
@@ -118,6 +129,34 @@ public class CameraPath {
         nodes.clear();
         interpolation.clear();
         needsInterpolationRebuilt = false;
+    }
+
+    public boolean export(String filename) {
+        try {
+            return ShutterClient.INSTANCE.getSaveFile().exportJson(filename, toJson(filename));
+        } catch(PathSerializationException e) {
+            System.out.println("Failed to encode path data!");
+            return false;
+        }
+    }
+
+    public boolean exportHastebin(String filename) {
+        try {
+            WebUtils.createPaste(toJson(filename).toString());
+            return true;
+        } catch(PathSerializationException e) {
+            return false;
+        }
+    }
+
+    private JsonElement toJson(String filename) throws PathSerializationException {
+        Optional<JsonElement> json = JsonOps.INSTANCE.withEncoder(CODEC).apply(this).resultOrPartial(System.out::println);
+        if(json.isPresent()) {
+            JsonObject obj = json.get().getAsJsonObject();
+            obj.addProperty("Id", Shutter.id(filename).toString());
+            return obj;
+        } else
+            throw new PathSerializationException("");
     }
 
     private PathNode getWrapped(int cur, int offset) {

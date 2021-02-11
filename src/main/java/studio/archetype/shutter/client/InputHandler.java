@@ -160,7 +160,7 @@ public class InputHandler {
                 if(createNode.wasPressed()) {
                     Camera cam = c.gameRenderer.getCamera();
                     PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
-                    shutter.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
+                    shutter.getPathManager(c.world).addNode(node);
                 }
             }
 
@@ -209,7 +209,7 @@ public class InputHandler {
 
             if(clearPath.wasPressed()) {
                 try {
-                    ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(CameraPathManager.DEFAULT_PATH);
+                    ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(false);
                     Messaging.sendMessage(
                             new TranslatableText("msg.shutter.headline.cmd.success"),
                             new TranslatableText("msg.shutter.ok.path_cleared"),
@@ -226,7 +226,7 @@ public class InputHandler {
                 if(shutter.getPathIterator().isIterating())
                     shutter.getPathIterator().end();
                 else
-                    shutter.getPathIterator().begin(shutter.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH));
+                    shutter.getPathIterator().begin(shutter.getPathManager(c.world).getCurrentPath());
             }
 
             if(shutter.getPathIterator().isIterating()) {

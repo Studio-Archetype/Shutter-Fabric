@@ -39,13 +39,13 @@ public final class PathVisualCommands {
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.error.showing_path"),
-                        Messaging.MessageType.NEUTRAL);
+                        Messaging.MessageType.POSITIVE);
             else {
                 manager.togglePathVisualization();
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.failed"),
                         new TranslatableText("msg.shutter.ok.showing_path"),
-                        Messaging.MessageType.NEUTRAL);
+                        Messaging.MessageType.POSITIVE);
             }
 
             return 1;
@@ -53,7 +53,7 @@ public final class PathVisualCommands {
             Messaging.sendMessage(
                     new TranslatableText("msg.shutter.headline.cmd.failed"),
                     new TranslatableText("msg.shutter.error.not_enough_show"),
-                    Messaging.MessageType.NEGATIVE);
+                    Messaging.MessageType.NEUTRAL);
             return 0;
         }
     }
@@ -67,7 +67,7 @@ public final class PathVisualCommands {
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.hiding_path"),
-                        Messaging.MessageType.NEUTRAL);
+                        Messaging.MessageType.POSITIVE);
             } else
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.failed"),
@@ -87,12 +87,12 @@ public final class PathVisualCommands {
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.showing_path"),
-                        Messaging.MessageType.NEUTRAL);
+                        Messaging.MessageType.POSITIVE);
             else
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.hiding_path"),
-                        Messaging.MessageType.NEUTRAL);
+                        Messaging.MessageType.POSITIVE);
 
             return 1;
         } catch(PathTooSmallException e) {

@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.camera.PathIterator;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
+import studio.archetype.shutter.client.cmd.PathManagementCommand;
 import studio.archetype.shutter.client.cmd.PathNodeCommand;
 import studio.archetype.shutter.client.cmd.PathVisualCommands;
 import studio.archetype.shutter.client.cmd.handler.ClientCommandManager;
@@ -58,6 +59,7 @@ public class ShutterClient implements ClientModInitializer {
         PathControlCommand.register(dis);
         PathNodeCommand.register(dis);
         PathVisualCommands.register(dis);
+        PathManagementCommand.register(dis);
 
         EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, (disp, ctx) -> new PlayerEntityRenderer(disp));
 

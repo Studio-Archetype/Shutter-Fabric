@@ -68,7 +68,7 @@ public class CameraPathRenderer {
 
                 previous = p;
             }
-            if (config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED)
+            if (config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED && !config.pathSettings.showNodeHead)
                 DrawUtils.renderCube(
                         node.getPosition(),
                         .2F,
@@ -76,7 +76,7 @@ public class CameraPathRenderer {
                         consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE),
                         stack.peek().getModel());
 
-            if(config.pathSettings.showDirectionalBeam || config.pathSettings.showNodeHead)
+            if(config.pathSettings.showDirectionalBeam)
                 DrawUtils.renderLine(
                         node.getPosition(),
                         DrawUtils.getOffsetPoint(node.getPosition(), node.getPitch(), node.getYaw(), 2F),
@@ -87,7 +87,7 @@ public class CameraPathRenderer {
 
         PathNode last = camPath.getNodes().getLast();
 
-        if(config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED)
+        if(config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED && !config.pathSettings.showNodeHead)
             DrawUtils.renderCube(
                     last.getPosition(),
                     .2F,

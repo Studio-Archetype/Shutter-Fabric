@@ -21,7 +21,7 @@ public class ClientConfigManager {
                 shutter.getPathFollower().end();
 
             CameraPathManager manager = shutter.getPathManager(MinecraftClient.getInstance().world);
-            CameraPath path = manager.getPath(CameraPathManager.DEFAULT_PATH);
+            CameraPath path = manager.getCurrentPath();
             path.calculatePath();
 
             return ActionResult.PASS;

@@ -47,14 +47,15 @@ public final class PathNodeCommand {
     private static int addNode(CommandContext<FabricClientCommandSource> ctx) {
         MinecraftClient c = ctx.getSource().getClient();
         Camera cam = c.gameRenderer.getCamera();
-        PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)ShutterClient.INSTANCE.getZoom());
-        ShutterClient.INSTANCE.getPathManager(c.world).addNode(CameraPathManager.DEFAULT_PATH, node);
+        ShutterClient shutter = ShutterClient.INSTANCE;
+        PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
+        shutter.getPathManager(c.world).addNode(node);
         return 1;
     }
 
     private static int removeNode(CommandContext<FabricClientCommandSource> ctx, int index) {
         MinecraftClient c = ctx.getSource().getClient();
-        CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH);
+        CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getCurrentPath();
         try {
             path.removeNode(index);
             Messaging.sendMessage(
@@ -73,7 +74,7 @@ public final class PathNodeCommand {
 
     private static int setNode(CommandContext<FabricClientCommandSource> ctx, int index) {
         MinecraftClient c = ctx.getSource().getClient();
-        CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH);
+        CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getCurrentPath();
         try {
             Camera cam = c.gameRenderer.getCamera();
             PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)ShutterClient.INSTANCE.getZoom());
@@ -100,7 +101,7 @@ public final class PathNodeCommand {
 
     private static int gotoNode(CommandContext<FabricClientCommandSource> ctx, int index) {
         MinecraftClient c = ctx.getSource().getClient();
-        CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getPath(CameraPathManager.DEFAULT_PATH);
+        CameraPath path = ShutterClient.INSTANCE.getPathManager(c.world).getCurrentPath();
         try {
             PathNode node = path.getNodes().get(index);
             Vec3d position = node.getPosition().add(0, -1.62, 0);
@@ -110,7 +111,7 @@ public final class PathNodeCommand {
             Messaging.sendMessage(
                     new TranslatableText("msg.shutter.headline.cmd.success"),
                     new TranslatableText("msg.shutter.ok.go_to_node", index),
-                    Messaging.MessageType.NEUTRAL);
+                    Messaging.MessageType.POSITIVE);
             return 1;
         } catch(IndexOutOfBoundsException e) {
             Messaging.sendMessage(

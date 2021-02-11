@@ -1,5 +1,6 @@
 package studio.archetype.shutter.client.config;
 
+import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,26 +10,36 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Identifier;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.ClientProtocolException;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.util.SerializationUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class SaveFile {
 
-    private static final File PATH_FILE = FabricLoader.getInstance().getGameDir().resolve("shutter_paths.nbt").toFile();
+    private static final Path SHUTTER_DIR = FabricLoader.getInstance().getGameDir().resolve("shutter");
+    private static final File PATH_FILE = SHUTTER_DIR.resolve("shutter_paths.nbt").toFile();
 
     private final Map<String, Map<Identifier, CameraPathManager>> remoteServerSaves;
     private final Map<String, Map<Identifier, CameraPathManager>> localWorldSaves;
 
     public static SaveFile getSaveFile() {
         try {
-            if(!PATH_FILE.exists())
+            if(!PATH_FILE.exists()) {
+                SHUTTER_DIR.toFile().mkdirs();
                 return new SaveFile();
+            }
+
             Tag shutter = NbtIo.readCompressed(PATH_FILE).get("Shutter");
             return NbtOps.INSTANCE.withDecoder(CODEC).apply(shutter).result().orElse(new Pair<>(new SaveFile(), new CompoundTag())).getFirst();
         } catch(IOException e) {
@@ -58,6 +69,17 @@ public class SaveFile {
         if(!remoteServerSaves.containsKey(ip))
             remoteServerSaves.put(ip, new HashMap<>());
         return remoteServerSaves.get(ip);
+    }
+
+    public boolean exportJson(String id, JsonElement json) {
+        try(OutputStream stream = new FileOutputStream(SHUTTER_DIR.resolve(id + ".json").toFile())) {
+            IOUtils.write(json.toString(), stream, Charset.defaultCharset());
+            return true;
+        } catch(IOException e) {
+            System.out.println("Failed to export path!");
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void save() {

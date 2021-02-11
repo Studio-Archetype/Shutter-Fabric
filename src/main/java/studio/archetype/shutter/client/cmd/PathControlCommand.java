@@ -143,7 +143,7 @@ public final class PathControlCommand {
 
     private static int clearPath(CommandContext<FabricClientCommandSource> ctx) {
         try {
-            ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(CameraPathManager.DEFAULT_PATH);
+            ShutterClient.INSTANCE.getPathManager(MinecraftClient.getInstance().world).clearPath(false);
             Messaging.sendMessage(
                     new TranslatableText("msg.shutter.headline.cmd.success"),
                     new TranslatableText("msg.shutter.ok.path_cleared"),

@@ -40,6 +40,10 @@ public class CameraPathManager {
         this.isVisualizing = false;
     }
 
+    public boolean hasPath(Identifier id) {
+        return cameraPaths.containsKey(id);
+    }
+
     public List<CameraPath> getPaths() {
         return Lists.newArrayList(cameraPaths.values());
     }
@@ -48,6 +52,7 @@ public class CameraPathManager {
 
     public boolean setCurrentPath(Identifier id) {
         CameraPath path = getPath(id);
+        CameraPath current = getCurrentPath();
 
         if(id.equals(this.currentSelection))
             return false;
@@ -69,6 +74,9 @@ public class CameraPathManager {
         if(ShutterClient.INSTANCE.getPathIterator().isIterating())
             ShutterClient.INSTANCE.getPathIterator().end();
 
+        if(current.getNodes().size() == 0 && !current.getId().equals(DEFAULT_PATH))
+            cameraPaths.remove(current.getId());
+
         return true;
     }
 
@@ -78,8 +86,8 @@ public class CameraPathManager {
 
     public boolean isVisualizing() { return isVisualizing; }
 
-    public void addNode(Identifier cameraPathId, PathNode node) {
-        CameraPath path = cameraPaths.computeIfAbsent(cameraPathId, CameraPath::new);
+    public void addNode(PathNode node) {
+        CameraPath path = getCurrentPath();
         path.addNode(node);
         Messaging.sendMessage(
                 new TranslatableText("msg.shutter.headline.cmd.success"),
@@ -112,25 +120,28 @@ public class CameraPathManager {
             throw new PathNotFollowingException();
     }
 
-    public void clearPath(Identifier id) throws PathEmptyException {
+    public void clearPath(boolean remove) throws PathEmptyException {
+        clearPath(currentSelection, remove);
+    }
+
+    public void clearPath(Identifier id, boolean remove) throws PathEmptyException {
         CameraPath path = getPath(id);
         if(path.getNodes().isEmpty())
             throw new PathEmptyException();
 
-        if(this.currentSelection == id) {
+        if(ShutterClient.INSTANCE.getPathFollower().isFollowing())
+            ShutterClient.INSTANCE.getPathFollower().end();
+        if(ShutterClient.INSTANCE.getPathIterator().isIterating())
+            ShutterClient.INSTANCE.getPathIterator().end();
+
+        if(isVisualizing) {
+            this.isVisualizing = false;
+            ShutterClient.INSTANCE.getPathRenderer().disable();
+            ShutterClient.INSTANCE.getNodeRenderer().disable();
+        }
+
+        if(remove) {
             this.currentSelection = DEFAULT_PATH;
-
-            if(ShutterClient.INSTANCE.getPathFollower().isFollowing())
-                ShutterClient.INSTANCE.getPathFollower().end();
-            if(ShutterClient.INSTANCE.getPathIterator().isIterating())
-                ShutterClient.INSTANCE.getPathIterator().end();
-
-            if(isVisualizing) {
-                this.isVisualizing = false;
-                ShutterClient.INSTANCE.getPathRenderer().disable();
-                ShutterClient.INSTANCE.getNodeRenderer().disable();
-            }
-        } else {
             cameraPaths.remove(id);
         }
 
