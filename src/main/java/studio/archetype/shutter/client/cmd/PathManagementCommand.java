@@ -1,5 +1,6 @@
 package studio.archetype.shutter.client.cmd;
 
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -15,6 +16,9 @@ import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
+import studio.archetype.shutter.pathing.exceptions.PathException;
+
+import java.io.IOException;
 
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
@@ -32,9 +36,12 @@ public final class PathManagementCommand {
                     .then(literal("export")
                         .then(argument("filename", StringArgumentType.word())
                             .executes(ctx -> exportFile(ctx, StringArgumentType.getString(ctx, "filename")))))
-                    .then(literal("upload")
+                    /*.then(literal("upload")
                         .then(argument("filename", StringArgumentType.word())
-                            .executes(ctx -> uploadFile(ctx, StringArgumentType.getString(ctx, "filename"))))));
+                            .executes(ctx -> uploadFile(ctx, StringArgumentType.getString(ctx, "filename")))))*/
+                    .then(literal("import")
+                        .then(argument("filename", StringArgumentType.word())
+                            .executes(ctx -> importFile(ctx, StringArgumentType.getString(ctx, "filename"))))));
 
         dispatcher.register(
                 literal("shutter")
@@ -99,6 +106,26 @@ public final class PathManagementCommand {
                     new TranslatableText("msg.shutter.error.upload"),
                     Messaging.MessageType.NEGATIVE);
             ctx.getSource().sendError(new TranslatableText("msg.shutter.error.hastebin", "Failed to encode Path!"));
+        }
+
+        return 1;
+    }
+
+    private static int importFile(CommandContext<FabricClientCommandSource> ctx, String name) {
+        try {
+            JsonElement e = ShutterClient.INSTANCE.getSaveFile().importJson(name);
+            ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld()).importJson(e);
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.success"),
+                    new TranslatableText("msg.shutter.ok.import", name),
+                    Messaging.MessageType.POSITIVE);
+        } catch(IOException | PathException e) {
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.import"),
+                    Messaging.MessageType.NEGATIVE);
+            ctx.getSource().sendError(new TranslatableText("msg.shutter.error.io", e.getMessage()));
+            e.printStackTrace();
         }
 
         return 1;

@@ -1,25 +1,40 @@
 package studio.archetype.shutter.pathing;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.apache.commons.io.IOUtils;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
+import studio.archetype.shutter.pathing.exceptions.PathException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 import studio.archetype.shutter.util.SerializationUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CameraPathManager {
 
@@ -38,6 +53,19 @@ public class CameraPathManager {
         this.cameraPaths = new HashMap<>(paths);
         this.currentSelection = selection;
         this.isVisualizing = false;
+    }
+
+    public void importJson(JsonElement e) throws PathException {
+        Optional<Pair<CameraPath, JsonElement>> path = JsonOps.INSTANCE.withDecoder(CameraPath.CODEC).apply(e).resultOrPartial(System.out::println);
+        if(path.isPresent()) {
+            CameraPath p = path.get().getFirst();
+            Identifier id = p.getId();
+            if(hasPath(id))
+                throw new PathException("A path by that name already exists!");
+
+            cameraPaths.put(id, p);
+        } else
+            throw new PathException("Unable to parse path file!");
     }
 
     public boolean hasPath(Identifier id) {

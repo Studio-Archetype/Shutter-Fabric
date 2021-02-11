@@ -78,6 +78,8 @@
   "msg.shutter.error.export": "Failed to export current path!",
   "msg.shutter.error.upload": "Failed to upload current path!",
   "msg.shutter.error.pastebin": "Upload Error! %s",
+  "msg.shutter.error.io": "Import Error! %s",
+  "msg.shutter.error.import": "Failed to import path!",
   "msg.shutter.ok.stopped_following": "Stopped following the path.",
   "msg.shutter.ok.path_cleared": "Path has been cleared.",
   "msg.shutter.ok.go_to_node": "Moving to Node #%d.",
@@ -92,6 +94,7 @@
   "msg.shutter.ok.export": "Exported current path as \"%s\".",
   "msg.shutter.ok.upload": "Uploaded current path as \"%s\".",
   "msg.shutter.ok.pastebin": "Upload Successful! URL: %s",
+  "msg.shutter.ok.import": "Successfully imported path \"%s\".",
 
   "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",
   "msg.shutter.help.line": "§8+---------------------------------------------------+",
