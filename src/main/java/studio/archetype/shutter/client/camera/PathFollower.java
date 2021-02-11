@@ -17,6 +17,7 @@ import java.util.LinkedList;
 public class PathFollower {
 
     private CameraPath path;
+    private boolean loop;
 
     private FreecamEntity entity;
 
@@ -38,9 +39,10 @@ public class PathFollower {
         });
     }
 
-    public void start(CameraPath path, double pathTime) {
+    public void start(CameraPath path, double pathTime, boolean loop) {
         MinecraftClient c = MinecraftClient.getInstance();
         this.path = path;
+        this.loop = loop;
 
         assert c.interactionManager != null;
         this.oldGamemode = CommandFilter.GameMode.getFromVanilla(c.interactionManager.getCurrentGameMode());
@@ -53,8 +55,8 @@ public class PathFollower {
         tickCounter = 0;
         segmentIndex = 1;
         currentNode = path.getNodes().get(0);
-        currentSegmentData = path.getInterpolatedData().get(currentNode);
-        segmentTime = (pathTime / path.getInterpolatedData().size()) / (currentSegmentData.size() - 1);
+        currentSegmentData = path.getInterpolatedData(loop).get(currentNode);
+        segmentTime = (pathTime / path.getInterpolatedData(loop).size()) / (currentSegmentData.size() - 1);
         ShutterClient.INSTANCE.getCommandFilter().changeGameMode(CommandFilter.GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
@@ -111,7 +113,7 @@ public class PathFollower {
                     end();
                 } else {
                     currentNode = path.getNodes().get(nodeIndex);
-                    currentSegmentData = path.getInterpolatedData().get(currentNode);
+                    currentSegmentData = path.getInterpolatedData(loop).get(currentNode);
                 }
             }
         }

@@ -6,10 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.Vec3d;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpResponseException;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
@@ -29,7 +26,8 @@ public class CameraPath {
     private final LinkedList<PathNode> nodes;
 
     private final Map<PathNode, LinkedList<InterpolationData>> interpolation = new HashMap<>();
-    private boolean needsInterpolationRebuilt = true;
+    private final Map<PathNode, LinkedList<InterpolationData>> loopedInterpolation = new HashMap<>();
+    private boolean needsInterpolationRebuilt, needsLoopedRebuilt;
 
     public CameraPath(Identifier id) {
         this(id, new LinkedList<>());
@@ -38,6 +36,7 @@ public class CameraPath {
     private CameraPath(Identifier id, LinkedList<PathNode> nodes) {
         this.id = id;
         this.nodes = nodes;
+        this.needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
     }
 
     public Identifier getId() {
@@ -50,7 +49,7 @@ public class CameraPath {
 
     public void addNode(PathNode node) {
         this.nodes.add(node);
-        needsInterpolationRebuilt = true;
+        needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
     }
 
     public void setNode(PathNode node, int index) throws IndexOutOfBoundsException {
@@ -58,7 +57,7 @@ public class CameraPath {
             throw new IndexOutOfBoundsException();
 
         nodes.set(index, node);
-        this.needsInterpolationRebuilt = true;
+        needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
     }
 
     public void removeNode(int index) throws IndexOutOfBoundsException {
@@ -66,22 +65,36 @@ public class CameraPath {
             throw new IndexOutOfBoundsException();
 
         nodes.remove(index);
-        this.needsInterpolationRebuilt = true;
+        needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
     }
 
-    public Map<PathNode, LinkedList<InterpolationData>> getInterpolatedData() {
-        if(needsInterpolationRebuilt)
-            calculatePath();
-        return interpolation;
+    public Map<PathNode, LinkedList<InterpolationData>> getInterpolatedData(boolean looped) {
+        if(looped) {
+            if(needsLoopedRebuilt)
+                calculatePath(true);
+            return loopedInterpolation;
+        } else {
+            if(needsInterpolationRebuilt)
+                calculatePath(false);
+            return interpolation;
+        }
     }
 
-    public void calculatePath() {
-        interpolation.clear();
-        for (int i = 0; i < nodes.size() - 1; i++) {
+    public void calculatePath(boolean looped) {
+        if(looped)
+            loopedInterpolation.clear();
+        else
+            interpolation.clear();
+
+        for (int i = 0; i < nodes.size() - (looped ? 0 : 1); i++) {
             PathNode start = getWrapped(i, 0);
             PathNode end = getWrapped(i, 1);
-            PathNode c1 = getWrapped(i, i == 0 ? 0 : -1);
-            PathNode c2 = getWrapped(i, i == 0 ? 1 : 2);
+            PathNode c1 = getWrapped(i, -1);
+            PathNode c2 = getWrapped(i, 2);
+            if(!looped && i == 0) {
+                c1 = getWrapped(i, 0);
+                c2 = getWrapped(i, 1);
+            }
 
             LinkedList<InterpolationData> splinePoints = new LinkedList<>();
 
@@ -114,15 +127,18 @@ public class CameraPath {
 
                     zoom = (float)InterpolationMath.interpolateHermite(new double[]{c1.getZoom(), start.getZoom(), end.getZoom(), c2.getZoom()}, j, 0, 1);
                 }
-
                 splinePoints.add(new InterpolationData(spline, rotation, zoom));
             }
-
-            PathNode node = nodes.get(i + 1);
-            splinePoints.add(new InterpolationData(end.getPosition(), new Vec3d(node.getPitch(), node.getYaw(), node.getRoll()), node.getZoom()));
-            interpolation.put(nodes.get(i), splinePoints);
+            if(looped)
+                loopedInterpolation.put(nodes.get(i), splinePoints);
+            else
+                interpolation.put(nodes.get(i), splinePoints);
         }
-        needsInterpolationRebuilt = false;
+
+        if(looped)
+            needsLoopedRebuilt = false;
+        else
+            needsInterpolationRebuilt = false;
     }
 
     public void clear() {

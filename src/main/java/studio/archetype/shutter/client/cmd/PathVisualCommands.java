@@ -1,6 +1,7 @@
 package studio.archetype.shutter.client.cmd;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -11,6 +12,7 @@ import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
+import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
 
 public final class PathVisualCommands {
@@ -20,18 +22,22 @@ public final class PathVisualCommands {
                 literal("s")
                         .requires(src -> src.hasPermissionLevel(4))
                         .then(literal("show")
-                                .executes(PathVisualCommands::showPath))
+                            .executes(ctx -> showPath(ctx, false))
+                            .then(argument("loop", BoolArgumentType.bool()))
+                                .executes(ctx -> showPath(ctx, BoolArgumentType.getBool(ctx, "loop"))))
                         .then(literal("hide")
-                                .executes(PathVisualCommands::hidePath))
+                            .executes(PathVisualCommands::hidePath))
                         .then(literal("toggle")
-                                .executes(PathVisualCommands::togglePath)));
+                            .executes(ctx -> togglePath(ctx, false))
+                            .then(argument("loop", BoolArgumentType.bool()))
+                                .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop")))));
 
         dispatcher.register(
                 literal("shutter")
                         .redirect(node));
     }
 
-    private static int showPath(CommandContext<FabricClientCommandSource> ctx) {
+    private static int showPath(CommandContext<FabricClientCommandSource> ctx, boolean loop) {
         ClientPlayerEntity p = ctx.getSource().getPlayer();
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
@@ -41,7 +47,7 @@ public final class PathVisualCommands {
                         new TranslatableText("msg.shutter.error.showing_path"),
                         Messaging.MessageType.POSITIVE);
             else {
-                manager.togglePathVisualization();
+                manager.togglePathVisualization(loop);
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.failed"),
                         new TranslatableText("msg.shutter.ok.showing_path"),
@@ -63,7 +69,7 @@ public final class PathVisualCommands {
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
             if(manager.isVisualizing()) {
-                manager.togglePathVisualization();
+                manager.togglePathVisualization(false);
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.hiding_path"),
@@ -79,11 +85,11 @@ public final class PathVisualCommands {
         return 0;
     }
 
-    private static int togglePath(CommandContext<FabricClientCommandSource> ctx) {
+    private static int togglePath(CommandContext<FabricClientCommandSource> ctx, boolean loop) {
         ClientPlayerEntity p = ctx.getSource().getPlayer();
         CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(p.getEntityWorld());
         try {
-            if(manager.togglePathVisualization())
+            if(manager.togglePathVisualization(loop))
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.showing_path"),

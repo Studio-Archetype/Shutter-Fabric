@@ -19,13 +19,15 @@ import java.util.Map;
 public class CameraPathRenderer {
 
     private CameraPath camPath;
+    private boolean loop;
 
     public void disable() {
         camPath = null;
     }
 
-    public void setPath(CameraPath path) {
+    public void setPath(CameraPath path, boolean loop) {
         this.camPath = path;
+        this.loop = loop;
     }
 
     public void render(MatrixStack stack, OutlineVertexConsumerProvider consume, Vec3d camera) {
@@ -37,13 +39,15 @@ public class CameraPathRenderer {
         stack.push();
         stack.translate(-camera.getX(), -camera.getY(), -camera.getZ());
 
-        Map<PathNode, LinkedList<InterpolationData>> pathData = camPath.getInterpolatedData();
+        Map<PathNode, LinkedList<InterpolationData>> pathData = camPath.getInterpolatedData(loop);
 
         pathData.forEach((node, points) -> {
             Vec3d previous = points.get(0).getPosition();
 
             Color c = Color.ofOpaque(config.pathSettings.pathColour);
             Vec3d colour = new Vec3d(c.getRed() / 256F, c.getGreen() / 256F, c.getBlue() / 256F);
+            if(node.equals(camPath.getNodes().getLast()))
+                colour = new Vec3d(1, 0 ,0);
 
             for (InterpolationData point : points) {
                 Vec3d p = point.getPosition();

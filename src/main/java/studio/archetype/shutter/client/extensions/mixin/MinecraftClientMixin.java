@@ -39,7 +39,7 @@ abstract class MinecraftClientMixin {
             ShutterClient client = ShutterClient.INSTANCE;
             if((isIntegratedServerRunning() || connection != null) && this.world != null) {
                 if (client.getPathManager(this.world).isVisualizing())
-                    client.getPathManager(this.world).togglePathVisualization();
+                    client.getPathManager(this.world).togglePathVisualization(false);
                 if (client.getPathFollower().isFollowing())
                     client.getPathFollower().end();
                 if (client.getPathIterator().isIterating())
@@ -55,7 +55,7 @@ abstract class MinecraftClientMixin {
             ShutterClient client = ShutterClient.INSTANCE;
             if((isIntegratedServerRunning() || connection != null) && this.world != null) {
                 if (client.getPathManager(this.world).isVisualizing())
-                    client.getPathManager(this.world).togglePathVisualization();
+                    client.getPathManager(this.world).togglePathVisualization(false);
                 if (client.getPathFollower().isFollowing())
                     client.getPathFollower().end();
                 if (client.getPathIterator().isIterating())

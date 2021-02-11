@@ -43,6 +43,7 @@ public class CameraPathManager {
     private final Map<Identifier, CameraPath> cameraPaths;
     private Identifier currentSelection;
     private boolean isVisualizing;
+    private boolean visualizeLooped;
 
     public CameraPathManager() {
         this(new HashMap<>(), DEFAULT_PATH);
@@ -92,7 +93,7 @@ public class CameraPathManager {
                 ShutterClient.INSTANCE.getNodeRenderer().disable();
                 this.isVisualizing = false;
             } else {
-                ShutterClient.INSTANCE.getPathRenderer().setPath(path);
+                ShutterClient.INSTANCE.getPathRenderer().setPath(path, visualizeLooped);
                 ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
             }
         }
@@ -130,13 +131,13 @@ public class CameraPathManager {
         ShutterClient.INSTANCE.getSaveFile().save();
     }
 
-    public void startCameraPath(double pathTime) throws PathTooSmallException {
+    public void startCameraPath(double pathTime, boolean loop) throws PathTooSmallException {
         CameraPath path = getCurrentPath();
 
         if(path.getNodes().size() < 2 || MinecraftClient.getInstance().player == null)
             throw new PathTooSmallException();
 
-        ShutterClient.INSTANCE.getPathFollower().start(path, pathTime);
+        ShutterClient.INSTANCE.getPathFollower().start(path, pathTime, loop);
     }
 
     public void stopCameraPath() throws PathNotFollowingException {
@@ -176,7 +177,7 @@ public class CameraPathManager {
         path.clear();
     }
 
-    public boolean togglePathVisualization() throws PathTooSmallException {
+    public boolean togglePathVisualization(boolean loop) throws PathTooSmallException {
         CameraPath path = getCurrentPath();
 
         if(path.getNodes().size() < 2)
@@ -184,12 +185,14 @@ public class CameraPathManager {
 
         if(isVisualizing) {
             isVisualizing = false;
+            visualizeLooped = false;
             ShutterClient.INSTANCE.getPathRenderer().disable();
             ShutterClient.INSTANCE.getNodeRenderer().disable();
             return false;
         } else {
             isVisualizing = true;
-            ShutterClient.INSTANCE.getPathRenderer().setPath(path);
+            visualizeLooped = loop;
+            ShutterClient.INSTANCE.getPathRenderer().setPath(path, loop);
             ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
             return true;
         }

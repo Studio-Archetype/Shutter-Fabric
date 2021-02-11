@@ -1,6 +1,7 @@
 package studio.archetype.shutter.client.cmd;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
@@ -35,9 +36,11 @@ public final class PathControlCommand {
                     .then(literal("?")
                             .executes(PathControlCommand::printHelp))
                     .then(literal("start")
-                            .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime))
+                            .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false))
                             .then(argument("time", PathTimeArgumentType.pathTime())
-                                    .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time")))))
+                                    .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time"), false))
+                                        .then(argument("loop", BoolArgumentType.bool())
+                                            .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time"), BoolArgumentType.getBool(ctx, "loop"))))))
                     .then(literal("stop")
                             .executes(PathControlCommand::stopPath))
                     .then(literal("clear")
@@ -132,11 +135,11 @@ public final class PathControlCommand {
         return 1;
     }
 
-    private static int startPath(CommandContext<FabricClientCommandSource> ctx, double pathTime) {
+    private static int startPath(CommandContext<FabricClientCommandSource> ctx, double pathTime, boolean loop) {
         try {
             CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld());
             ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime = pathTime;
-            manager.startCameraPath(pathTime);
+            manager.startCameraPath(pathTime, loop);
             return 1;
         } catch(PathTooSmallException e) {
             Messaging.sendMessage(
