@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
@@ -109,7 +110,7 @@ public class CameraPath {
 
                     rotation = new Vec3d(
                             InterpolationMath.interpolateLinear(start.getPitch(), end.getPitch(), j),
-                            InterpolationMath.interpolateLinear(start.getYaw(), end.getYaw(), j),
+                            MathHelper.wrapDegrees(InterpolationMath.interpolateLinear(MathHelper.wrapDegrees(start.getYaw()), MathHelper.wrapDegrees(end.getYaw()), j)),
                             InterpolationMath.interpolateLinear(start.getRoll(), end.getRoll(), j));
 
                     zoom = (float)InterpolationMath.interpolateLinear(start.getZoom(), end.getZoom(), j);
@@ -122,7 +123,7 @@ public class CameraPath {
 
                     rotation = new Vec3d(
                             InterpolationMath.interpolateHermite(new double[]{c1.getPitch(), start.getPitch(), end.getPitch(), c2.getPitch()}, j, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getYaw(), start.getYaw(), end.getYaw(), c2.getYaw()}, j, 0, 1),
+                            MathHelper.wrapDegrees(InterpolationMath.interpolateHermite(new double[]{MathHelper.wrapDegrees(c1.getYaw()), MathHelper.wrapDegrees(start.getYaw()), MathHelper.wrapDegrees(end.getYaw()), MathHelper.wrapDegrees(c2.getYaw())}, j, 0, 1)),
                             InterpolationMath.interpolateHermite(new double[]{c1.getRoll(), start.getRoll(), end.getRoll(), c2.getRoll()}, j, 0, 1));
 
                     zoom = (float)InterpolationMath.interpolateHermite(new double[]{c1.getZoom(), start.getZoom(), end.getZoom(), c2.getZoom()}, j, 0, 1);

@@ -23,14 +23,14 @@ public final class PathVisualCommands {
                         .requires(src -> src.hasPermissionLevel(4))
                         .then(literal("show")
                             .executes(ctx -> showPath(ctx, false))
-                            .then(argument("loop", BoolArgumentType.bool()))
-                                .executes(ctx -> showPath(ctx, BoolArgumentType.getBool(ctx, "loop"))))
+                            .then(argument("loop", BoolArgumentType.bool())
+                                .executes(ctx -> showPath(ctx, BoolArgumentType.getBool(ctx, "loop")))))
                         .then(literal("hide")
                             .executes(PathVisualCommands::hidePath))
                         .then(literal("toggle")
                             .executes(ctx -> togglePath(ctx, false))
-                            .then(argument("loop", BoolArgumentType.bool()))
-                                .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop")))));
+                            .then(argument("loop", BoolArgumentType.bool())
+                                .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop"))))));
 
         dispatcher.register(
                 literal("shutter")

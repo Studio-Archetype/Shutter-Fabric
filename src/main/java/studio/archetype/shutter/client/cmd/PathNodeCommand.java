@@ -9,6 +9,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
@@ -48,7 +49,7 @@ public final class PathNodeCommand {
         MinecraftClient c = ctx.getSource().getClient();
         Camera cam = c.gameRenderer.getCamera();
         ShutterClient shutter = ShutterClient.INSTANCE;
-        PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
+        PathNode node = new PathNode(cam.getPos(), cam.getPitch(), MathHelper.wrapDegrees(cam.getYaw()), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
         shutter.getPathManager(c.world).addNode(node);
         return 1;
     }

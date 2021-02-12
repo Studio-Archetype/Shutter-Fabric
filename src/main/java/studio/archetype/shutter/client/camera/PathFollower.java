@@ -11,6 +11,7 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.InterpolationData;
 import studio.archetype.shutter.pathing.PathNode;
+import studio.archetype.shutter.util.InterpolationMath;
 
 import java.util.LinkedList;
 
@@ -79,7 +80,7 @@ public class PathFollower {
     }
 
     public void tick(float tickDelta) {
-        double delta = Math.min((float)tickCounter / segmentTime, 1);
+        float delta = (float)Math.min((float)tickCounter / segmentTime, 1);
         InterpolationData cur = currentSegmentData.get(segmentIndex);
         InterpolationData prev = currentSegmentData.get(segmentIndex - 1);
 
@@ -87,9 +88,9 @@ public class PathFollower {
                 MathHelper.lerp(delta, prev.getPosition().getX(), cur.getPosition().getX()),
                 MathHelper.lerp(delta, prev.getPosition().getY(), cur.getPosition().getY()),
                 MathHelper.lerp(delta, prev.getPosition().getZ(), cur.getPosition().getZ()));
-        float pitch = (float)MathHelper.lerp(delta, prev.getRotation().getX(), cur.getRotation().getX());
-        float yaw = (float)MathHelper.lerp(delta, prev.getRotation().getY(), cur.getRotation().getY());
-        float roll = (float)MathHelper.lerp(delta, prev.getRotation().getZ(), cur.getRotation().getZ());
+        float pitch = MathHelper.lerpAngleDegrees(delta, (float)prev.getRotation().getX(), (float)cur.getRotation().getX());
+        float yaw = MathHelper.lerpAngleDegrees(delta, (float)prev.getRotation().getY(), (float)cur.getRotation().getY());
+        float roll = MathHelper.lerpAngleDegrees(delta, (float)prev.getRotation().getZ(), (float)cur.getRotation().getZ());
         double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
 
         entity.prevX = entity.getX();
@@ -101,6 +102,9 @@ public class PathFollower {
         entity.setPos(target.x, target.y, target.z);
         entity.setRotation(pitch, yaw, roll);
 
+        if(nodeIndex == 1)
+            System.out.printf("%.2f: %.2f/%.2f = %.2f%n", delta, prev.getRotation().getY(), cur.getRotation().getY(), yaw);
+
         tickCounter += 1 + tickDelta;
 
         if(delta >= 1 || tickCounter >= segmentTime) {
@@ -109,8 +113,16 @@ public class PathFollower {
             if(segmentIndex >= currentSegmentData.size()) {
                 segmentIndex = 1;
                 nodeIndex++;
-                if(nodeIndex >= path.getNodes().size() - 1) {
-                    end();
+                if(nodeIndex >= path.getNodes().size() - (loop ? 0 : 1)) {
+                    if(!loop)
+                        end();
+                    else {
+                        nodeIndex = 0;
+                        tickCounter = 0;
+                        segmentIndex = 1;
+                        currentNode = path.getNodes().get(0);
+                        currentSegmentData = path.getInterpolatedData(loop).get(currentNode);
+                    }
                 } else {
                     currentNode = path.getNodes().get(nodeIndex);
                     currentSegmentData = path.getInterpolatedData(loop).get(currentNode);
