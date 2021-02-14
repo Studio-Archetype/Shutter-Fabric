@@ -128,7 +128,6 @@ public class CameraPathManager {
                     .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
                     .append(new LiteralText(String.format("%.2f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE)),
                 Messaging.MessageType.POSITIVE);
-        ShutterClient.INSTANCE.getSaveFile().save();
     }
 
     public void startCameraPath(double pathTime, boolean loop) throws PathTooSmallException {

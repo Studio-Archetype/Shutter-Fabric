@@ -88,9 +88,9 @@ public class PathFollower {
                 MathHelper.lerp(delta, prev.getPosition().getX(), cur.getPosition().getX()),
                 MathHelper.lerp(delta, prev.getPosition().getY(), cur.getPosition().getY()),
                 MathHelper.lerp(delta, prev.getPosition().getZ(), cur.getPosition().getZ()));
-        float pitch = MathHelper.lerpAngleDegrees(delta, (float)prev.getRotation().getX(), (float)cur.getRotation().getX());
-        float yaw = MathHelper.lerpAngleDegrees(delta, (float)prev.getRotation().getY(), (float)cur.getRotation().getY());
-        float roll = MathHelper.lerpAngleDegrees(delta, (float)prev.getRotation().getZ(), (float)cur.getRotation().getZ());
+        float pitch = MathHelper.lerp(delta, (float)prev.getRotation().getX(), (float)cur.getRotation().getX());
+        float yaw = MathHelper.lerp(delta, (float)prev.getRotation().getY(), (float)cur.getRotation().getY());
+        float roll = MathHelper.lerp(delta, (float)prev.getRotation().getZ(), (float)cur.getRotation().getZ());
         double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
 
         entity.prevX = entity.getX();
@@ -101,9 +101,6 @@ public class PathFollower {
         ShutterClient.INSTANCE.setZoom(zoom);
         entity.setPos(target.x, target.y, target.z);
         entity.setRotation(pitch, yaw, roll);
-
-        if(nodeIndex == 1)
-            System.out.printf("%.2f: %.2f/%.2f = %.2f%n", delta, prev.getRotation().getY(), cur.getRotation().getY(), yaw);
 
         tickCounter += 1 + tickDelta;
 

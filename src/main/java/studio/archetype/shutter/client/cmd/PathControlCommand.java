@@ -139,6 +139,10 @@ public final class PathControlCommand {
         try {
             CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld());
             ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime = pathTime;
+            if(manager.isVisualizing() && loop) {
+                manager.togglePathVisualization(true);
+                manager.togglePathVisualization(true);
+            }
             manager.startCameraPath(pathTime, loop);
             return 1;
         } catch(PathTooSmallException e) {

@@ -159,7 +159,7 @@ public class InputHandler {
                     shutter.resetZoom();
                 if(createNode.wasPressed()) {
                     Camera cam = c.gameRenderer.getCamera();
-                    PathNode node = new PathNode(cam.getPos(), cam.getPitch(), MathHelper.wrapDegrees(cam.getYaw()), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
+                    PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
                     shutter.getPathManager(c.world).addNode(node);
                 }
             }

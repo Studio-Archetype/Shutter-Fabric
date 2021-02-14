@@ -18,6 +18,7 @@ import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
+import studio.archetype.shutter.util.InterpolationMath;
 
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;

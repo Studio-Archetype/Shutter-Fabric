@@ -6,7 +6,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
@@ -51,14 +50,16 @@ public class CameraPath {
     public void addNode(PathNode node) {
         this.nodes.add(node);
         needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
+        ShutterClient.INSTANCE.getSaveFile().save();
     }
 
     public void setNode(PathNode node, int index) throws IndexOutOfBoundsException {
         if(index >= nodes.size())
             throw new IndexOutOfBoundsException();
 
-        nodes.set(index, node);
+        nodes.set(index, InterpolationMath.getYawDifferenceNode(node, nodes.get(index - 1)));
         needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
+        ShutterClient.INSTANCE.getSaveFile().save();
     }
 
     public void removeNode(int index) throws IndexOutOfBoundsException {
@@ -67,6 +68,7 @@ public class CameraPath {
 
         nodes.remove(index);
         needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
+        ShutterClient.INSTANCE.getSaveFile().save();
     }
 
     public Map<PathNode, LinkedList<InterpolationData>> getInterpolatedData(boolean looped) {
@@ -95,6 +97,8 @@ public class CameraPath {
             if(!looped && i == 0) {
                 c1 = getWrapped(i, 0);
                 c2 = getWrapped(i, 1);
+            }if(looped && i == nodes.size() - 1) {
+                end = InterpolationMath.getYawDifferenceNode(start, end);
             }
 
             LinkedList<InterpolationData> splinePoints = new LinkedList<>();
@@ -110,7 +114,7 @@ public class CameraPath {
 
                     rotation = new Vec3d(
                             InterpolationMath.interpolateLinear(start.getPitch(), end.getPitch(), j),
-                            MathHelper.wrapDegrees(InterpolationMath.interpolateLinear(MathHelper.wrapDegrees(start.getYaw()), MathHelper.wrapDegrees(end.getYaw()), j)),
+                            InterpolationMath.interpolateLinear(start.getYaw(), end.getYaw(), j),
                             InterpolationMath.interpolateLinear(start.getRoll(), end.getRoll(), j));
 
                     zoom = (float)InterpolationMath.interpolateLinear(start.getZoom(), end.getZoom(), j);
@@ -123,13 +127,16 @@ public class CameraPath {
 
                     rotation = new Vec3d(
                             InterpolationMath.interpolateHermite(new double[]{c1.getPitch(), start.getPitch(), end.getPitch(), c2.getPitch()}, j, 0, 1),
-                            MathHelper.wrapDegrees(InterpolationMath.interpolateHermite(new double[]{MathHelper.wrapDegrees(c1.getYaw()), MathHelper.wrapDegrees(start.getYaw()), MathHelper.wrapDegrees(end.getYaw()), MathHelper.wrapDegrees(c2.getYaw())}, j, 0, 1)),
+                            InterpolationMath.interpolateHermite(new double[]{c1.getYaw(), start.getYaw(), end.getYaw(), c2.getYaw()}, j, 0, 1),
                             InterpolationMath.interpolateHermite(new double[]{c1.getRoll(), start.getRoll(), end.getRoll(), c2.getRoll()}, j, 0, 1));
 
                     zoom = (float)InterpolationMath.interpolateHermite(new double[]{c1.getZoom(), start.getZoom(), end.getZoom(), c2.getZoom()}, j, 0, 1);
                 }
                 splinePoints.add(new InterpolationData(spline, rotation, zoom));
             }
+
+            splinePoints.add(new InterpolationData(end.getPosition(), new Vec3d(end.getPitch(), end.getYaw(), end.getRoll()), end.getZoom()));
+
             if(looped)
                 loopedInterpolation.put(nodes.get(i), splinePoints);
             else
