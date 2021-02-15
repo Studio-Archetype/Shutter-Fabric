@@ -50,7 +50,7 @@ public final class PathNodeCommand {
         MinecraftClient c = ctx.getSource().getClient();
         Camera cam = c.gameRenderer.getCamera();
         ShutterClient shutter = ShutterClient.INSTANCE;
-        PathNode node = new PathNode(cam.getPos(), cam.getPitch(), MathHelper.wrapDegrees(cam.getYaw()), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
+        PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
         shutter.getPathManager(c.world).addNode(node);
         return 1;
     }
@@ -67,7 +67,7 @@ public final class PathNodeCommand {
             return 1;
         } catch(IndexOutOfBoundsException e) {
             Messaging.sendMessage(
-                    new TranslatableText("msg.shutter.headline.cmd.failure"),
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
                     new TranslatableText("msg.shutter.error.remove_node", index),
                     Messaging.MessageType.NEGATIVE);
             return 0;

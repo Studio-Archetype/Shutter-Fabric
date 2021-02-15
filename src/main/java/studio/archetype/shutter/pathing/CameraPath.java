@@ -172,6 +172,25 @@ public class CameraPath {
             return false;
         }
     }
+    
+    public void offset(Vec3d origin) {
+        LinkedList<PathNode> newNodes = new LinkedList<>();
+        PathNode previous = nodes.get(0);
+        for(int i = 0; i < nodes.size(); i++) {
+            PathNode o = nodes.get(i);
+            if(i == 0) {
+                newNodes.add(new PathNode(origin, o.getPitch(), o.getYaw(), o.getRoll(), o.getZoom()));
+                continue;
+            }
+            Vec3d offset = o.getPosition().subtract(previous.getPosition());
+            newNodes.add(new PathNode(origin.add(offset), o.getPitch(), o.getYaw(), o.getRoll(), o.getZoom()));
+        }
+
+        nodes.clear();
+        nodes.addAll(newNodes);
+
+        this.needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
+    }
 
     private JsonElement toJson(String filename) throws PathSerializationException {
         Optional<JsonElement> json = JsonOps.INSTANCE.withEncoder(CODEC).apply(this).resultOrPartial(System.out::println);

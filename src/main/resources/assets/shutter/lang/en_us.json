@@ -80,6 +80,7 @@
   "msg.shutter.error.pastebin": "Upload Error! %s",
   "msg.shutter.error.io": "Import Error! %s",
   "msg.shutter.error.import": "Failed to import path!",
+  "msg.shutter.error.offset_empty": "Current path is empty!",
   "msg.shutter.ok.stopped_following": "Stopped following the path.",
   "msg.shutter.ok.path_cleared": "Path has been cleared.",
   "msg.shutter.ok.go_to_node": "Moving to Node #%d.",
@@ -95,6 +96,7 @@
   "msg.shutter.ok.upload": "Uploaded current path as \"%s\".",
   "msg.shutter.ok.pastebin": "Upload Successful! URL: %s",
   "msg.shutter.ok.import": "Successfully imported path \"%s\".",
+  "msg.shutter.ok.offset": "Offset Path.",
 
   "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",
   "msg.shutter.help.line": "§8+---------------------------------------------------+",
@@ -110,6 +112,10 @@
   "msg.shutter.help.arg.path.desc": "Name of the path to be targeted.",
   "msg.shutter.help.arg.url": "url",
   "msg.shutter.help.arg.url.desc": "URL of the target web location.",
+  "msg.shutter.help.arg.loop": "looped",
+  "msg.shutter.help.arg.loop.desc": "Whether or not the command should account for looping.",
+  "msg.shutter.help.arg.relative": "relative",
+  "msg.shutter.help.arg.relative.desc": "Whether or not to import the path at the current position.",
 
   "msg.shutter.help.cmd.select": "Sets or creates the desired path as current path.",
   "msg.shutter.help.cmd.start": "Begin following the defined camera path.",
@@ -126,6 +132,6 @@
   "msg.shutter.help.cmd.export": "Exports the current path to a named JSON file.",
   "msg.shutter.help.cmd.upload": "Uploads the current path to a named pastebin.",
   "msg.shutter.help.cmd.import": "Imports a JSON file with the specified name as path.",
-  "msg.shutter.help.cmd.download": "Downloads a pastebin with the specified URL as path."
-
+  "msg.shutter.help.cmd.download": "Downloads a pastebin with the specified URL as path.",
+  "msg.shutter.help.cmd.offset": "Moves the current path to the camera's current position."
 }

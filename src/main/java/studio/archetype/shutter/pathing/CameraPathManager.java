@@ -15,6 +15,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import org.apache.commons.io.IOUtils;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
@@ -26,15 +27,7 @@ import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 import studio.archetype.shutter.util.SerializationUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class CameraPathManager {
 
@@ -56,10 +49,12 @@ public class CameraPathManager {
         this.isVisualizing = false;
     }
 
-    public void importJson(JsonElement e) throws PathException {
+    public void importJson(JsonElement e, boolean relative) throws PathException {
         Optional<Pair<CameraPath, JsonElement>> path = JsonOps.INSTANCE.withDecoder(CameraPath.CODEC).apply(e).resultOrPartial(System.out::println);
         if(path.isPresent()) {
             CameraPath p = path.get().getFirst();
+            if(relative)
+                p.offset(MinecraftClient.getInstance().gameRenderer.getCamera().getPos());
             Identifier id = p.getId();
             if(hasPath(id))
                 throw new PathException("A path by that name already exists!");

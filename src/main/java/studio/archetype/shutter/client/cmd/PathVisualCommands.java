@@ -43,13 +43,13 @@ public final class PathVisualCommands {
         try {
             if(manager.isVisualizing())
                 Messaging.sendMessage(
-                        new TranslatableText("msg.shutter.headline.cmd.success"),
+                        new TranslatableText("msg.shutter.headline.cmd.failed"),
                         new TranslatableText("msg.shutter.error.showing_path"),
                         Messaging.MessageType.POSITIVE);
             else {
                 manager.togglePathVisualization(loop);
                 Messaging.sendMessage(
-                        new TranslatableText("msg.shutter.headline.cmd.failed"),
+                        new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.showing_path"),
                         Messaging.MessageType.POSITIVE);
             }

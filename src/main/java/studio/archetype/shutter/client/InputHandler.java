@@ -171,13 +171,13 @@ public class InputHandler {
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
                                     new TranslatableText("msg.shutter.ok.showing_path"),
-                                    Messaging.MessageType.NEUTRAL);
+                                    Messaging.MessageType.POSITIVE);
                     else
                         if(!shutter.getPathFollower().isFollowing())
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
                                     new TranslatableText("msg.shutter.ok.hiding_path"),
-                                    Messaging.MessageType.NEUTRAL);
+                                    Messaging.MessageType.POSITIVE);
                 } catch(PathTooSmallException e) {
                     Messaging.sendMessage(
                             new TranslatableText("msg.shutter.headline.cmd.failed"),
