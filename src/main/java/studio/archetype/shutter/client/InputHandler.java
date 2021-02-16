@@ -16,7 +16,6 @@ import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.Messaging;
-import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
@@ -29,7 +28,7 @@ public class InputHandler {
 
     private static KeyBinding rollLeft, rollRight, rollReset;
     private static KeyBinding zoomIn, zoomOut, zoomReset;
-    private static KeyBinding rotateModifier;
+    private static KeyBinding actionKey;
     private static KeyBinding createNode, visualizePath, startPath, clearPath;
     private static KeyBinding /*openScreen,*/ openConfig;
     private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
@@ -125,7 +124,7 @@ public class InputHandler {
                 GLFW.GLFW_KEY_KP_ADD,
                 "category.shutter.keybinds"
         ));
-        rotateModifier = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        actionKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.shutter.cam.factor_mod",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,
@@ -146,13 +145,13 @@ public class InputHandler {
 
             if(!shutter.getPathFollower().isFollowing() && !shutter.getPathIterator().isIterating()) {
                 if (rollLeft.isPressed())
-                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (rotateModifier.isPressed() ? 10 : 1));
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
                 if (rollRight.isPressed())
-                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (rotateModifier.isPressed() ? 10 : 1));
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
                 if (zoomIn.isPressed())
-                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() - ZOOM_FACTOR * (rotateModifier.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
+                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() - ZOOM_FACTOR * (actionKey.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
                 if (zoomOut.isPressed())
-                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() + ZOOM_FACTOR * (rotateModifier.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
+                    shutter.setZoom(MathHelper.clamp(shutter.getZoom() + ZOOM_FACTOR * (actionKey.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
                 if (rollReset.wasPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).setRoll(0);
                 if (zoomReset.wasPressed())
@@ -166,7 +165,7 @@ public class InputHandler {
 
             if(visualizePath.wasPressed()) {
                 try {
-                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(c.player.isSneaking()))
+                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(actionKey.isPressed()))
                         if(!shutter.getPathFollower().isFollowing())
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
@@ -197,7 +196,7 @@ public class InputHandler {
                     shutter.getPathManager(c.world).stopCameraPath();
                 } catch(PathNotFollowingException e) {
                     try {
-                        shutter.getPathManager(c.world).startCameraPath(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, c.player.isSneaking());
+                        shutter.getPathManager(c.world).startCameraPath(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, actionKey.isPressed());
                     } catch(PathTooSmallException ex) {
                         Messaging.sendMessage(
                                 new TranslatableText("msg.shutter.headline.cmd.failed"),

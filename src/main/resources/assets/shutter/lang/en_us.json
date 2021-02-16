@@ -13,7 +13,7 @@
   "key.shutter.cam.open_config": "Open Config",
   "key.shutter.cam.start_path": "Start/Stop Path",
   "key.shutter.cam.toggle_iteration": "Toggle Scrubbing Mode",
-  "key.shutter.cam.factor_mod": "Rotation/Zoom Boost",
+  "key.shutter.cam.factor_mod": "Action Key",
   "key.shutter.cam.next_node": "Scrub Forward",
   "key.shutter.cam.previous_node": "Scrub Back",
   "key.shutter.cam.clear_path": "Clear Path",
