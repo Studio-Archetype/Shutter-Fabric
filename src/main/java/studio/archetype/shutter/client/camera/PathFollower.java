@@ -11,7 +11,6 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.InterpolationData;
 import studio.archetype.shutter.pathing.PathNode;
-import studio.archetype.shutter.util.InterpolationMath;
 
 import java.util.LinkedList;
 

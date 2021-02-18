@@ -17,7 +17,6 @@ import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.ui.Messaging;
-import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;

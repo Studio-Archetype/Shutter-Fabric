@@ -9,16 +9,13 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPath;
-import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.PathNode;
-import studio.archetype.shutter.util.InterpolationMath;
 
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
 import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;

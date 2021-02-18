@@ -2,21 +2,15 @@ package studio.archetype.shutter.pathing;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-import org.apache.commons.io.IOUtils;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.camera.PathFollower;
@@ -27,7 +21,10 @@ import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 import studio.archetype.shutter.util.SerializationUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class CameraPathManager {
 

@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
@@ -13,10 +12,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.ClientProtocolException;
-import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
-import studio.archetype.shutter.pathing.exceptions.PathException;
 import studio.archetype.shutter.util.SerializationUtils;
 
 import java.io.*;

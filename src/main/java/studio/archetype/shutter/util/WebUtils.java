@@ -7,11 +7,9 @@ import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import org.apache.commons.io.Charsets;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -19,7 +17,6 @@ import org.apache.http.util.EntityUtils;
 import studio.archetype.shutter.client.ui.Messaging;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,7 +25,7 @@ public class WebUtils {
 
     private static final ExecutorService EXECUTORS = Executors.newFixedThreadPool(3);
     private static final String PASTEBIN_URL = "https://pastebin.com/api/api_post.php";
-    private static final String API_KEY = "0b44c61a5421b90a72317de87bdb623a";
+    private static final String API_KEY = "<OBFUSCATED>";
 
     public static void createPaste(String content) {
         EXECUTORS.execute(() -> {
