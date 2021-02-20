@@ -43,4 +43,19 @@ public final class InterpolationMath {
 
         return new PathNode(position, first.getPitch(), newYaw, first.getRoll(), zoom);
     }
+
+    public static float getDelta(float current, float target) {
+        target = circle(target);
+        current = circle(current);
+
+        float delta = circle(target - current);
+        if(delta > 180) // excessive turning
+            delta = 180 - delta;
+        return current + delta;
+    }
+
+    private static float circle(float deg) {
+        float circ = deg % 360;
+        return circ < 0 ? 360 + circ : circ;
+    }
 }

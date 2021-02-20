@@ -89,6 +89,9 @@ public class CameraPath {
         else
             interpolation.clear();
 
+        boolean wasWrapped = false;
+        float wrapEnd = 0;
+
         for (int i = 0; i < nodes.size() - (looped ? 0 : 1); i++) {
             PathNode start = getWrapped(i, 0);
             PathNode end = getWrapped(i, 1);
@@ -97,45 +100,67 @@ public class CameraPath {
             if(!looped && i == 0) {
                 c1 = getWrapped(i, 0);
                 c2 = getWrapped(i, 1);
-            }if(looped && i == nodes.size() - 1) {
-                end = InterpolationMath.getYawDifferenceNode(start, end);
             }
 
             LinkedList<InterpolationData> splinePoints = new LinkedList<>();
 
-            for(float j = 0; j <= 1; j += ClientConfigManager.CLIENT_CONFIG.genSettings.curveDetail.detail) {
+            float startYaw = start.getYaw();
+            float endYaw = end.getYaw();
+
+            if(wasWrapped) {
+                startYaw = wrapEnd;
+                wasWrapped = false;
+            }
+
+            while(Math.abs(startYaw - endYaw) > 180) {
+                if(endYaw > startYaw) {
+                    float newEnd = startYaw + 360;
+                    startYaw  = endYaw;
+                    endYaw = newEnd;
+                } else if(endYaw < startYaw) {
+                    endYaw += 360;
+                }
+
+                wasWrapped = true;
+                wrapEnd = endYaw;
+            }
+
+            for(float ii = 0; ii <= 1; ii += ClientConfigManager.CLIENT_CONFIG.genSettings.curveDetail.detail) {
                 Vec3d spline, rotation;
                 float zoom;
                 if(nodes.size() == 2) {
                     spline = new Vec3d(
-                            InterpolationMath.interpolateLinear(start.getPosition().getX(), end.getPosition().getX(), j),
-                            InterpolationMath.interpolateLinear(start.getPosition().getY(), end.getPosition().getY(), j),
-                            InterpolationMath.interpolateLinear(start.getPosition().getZ(), end.getPosition().getZ(), j));
+                            InterpolationMath.interpolateLinear(start.getPosition().getX(), end.getPosition().getX(), ii),
+                            InterpolationMath.interpolateLinear(start.getPosition().getY(), end.getPosition().getY(), ii),
+                            InterpolationMath.interpolateLinear(start.getPosition().getZ(), end.getPosition().getZ(), ii));
 
                     rotation = new Vec3d(
-                            InterpolationMath.interpolateLinear(start.getPitch(), end.getPitch(), j),
-                            InterpolationMath.interpolateLinear(start.getYaw(), end.getYaw(), j),
-                            InterpolationMath.interpolateLinear(start.getRoll(), end.getRoll(), j));
+                            InterpolationMath.interpolateLinear(start.getPitch(), end.getPitch(), ii),
+                            InterpolationMath.interpolateLinear(startYaw, endYaw, ii),
+                            InterpolationMath.interpolateLinear(start.getRoll(), end.getRoll(), ii));
 
-                    zoom = (float)InterpolationMath.interpolateLinear(start.getZoom(), end.getZoom(), j);
+                    zoom = (float)InterpolationMath.interpolateLinear(start.getZoom(), end.getZoom(), ii);
 
                 } else {
                     spline = new Vec3d(
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getX(), start.getPosition().getX(), end.getPosition().getX(), c2.getPosition().getX()}, j, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getY(), start.getPosition().getY(), end.getPosition().getY(), c2.getPosition().getY()}, j, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getZ(), start.getPosition().getZ(), end.getPosition().getZ(), c2.getPosition().getZ()}, j, 0, 1));
+                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getX(), start.getPosition().getX(), end.getPosition().getX(), c2.getPosition().getX()}, ii, 0, 1),
+                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getY(), start.getPosition().getY(), end.getPosition().getY(), c2.getPosition().getY()}, ii, 0, 1),
+                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getZ(), start.getPosition().getZ(), end.getPosition().getZ(), c2.getPosition().getZ()}, ii, 0, 1));
 
                     rotation = new Vec3d(
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPitch(), start.getPitch(), end.getPitch(), c2.getPitch()}, j, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getYaw(), start.getYaw(), end.getYaw(), c2.getYaw()}, j, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getRoll(), start.getRoll(), end.getRoll(), c2.getRoll()}, j, 0, 1));
+                            InterpolationMath.interpolateHermite(new double[]{c1.getPitch(), start.getPitch(), end.getPitch(), c2.getPitch()}, ii, 0, 1),
+                            InterpolationMath.interpolateHermite(new double[]{c1.getYaw(), startYaw, endYaw, c2.getYaw()}, ii, 0, 1),
+                            InterpolationMath.interpolateHermite(new double[]{c1.getRoll(), start.getRoll(), end.getRoll(), c2.getRoll()}, ii, 0, 1));
 
-                    zoom = (float)InterpolationMath.interpolateHermite(new double[]{c1.getZoom(), start.getZoom(), end.getZoom(), c2.getZoom()}, j, 0, 1);
+                    zoom = (float)InterpolationMath.interpolateHermite(new double[]{c1.getZoom(), start.getZoom(), end.getZoom(), c2.getZoom()}, ii, 0, 1);
                 }
                 splinePoints.add(new InterpolationData(spline, rotation, zoom));
+
+                System.out.println(String.format("%.2f(%.2f) -> %.2f(%.2f) = %.2f @ %.2f", start.getYaw(), startYaw, end.getYaw(), endYaw, rotation.getY(), ii));
             }
 
-            splinePoints.add(new InterpolationData(end.getPosition(), new Vec3d(end.getPitch(), end.getYaw(), end.getRoll()), end.getZoom()));
+            splinePoints.add(new InterpolationData(end.getPosition(), new Vec3d(end.getPitch(), endYaw, end.getRoll()), end.getZoom()));
+            System.out.println(String.format("End Segment: %.2f", endYaw));
 
             if(looped)
                 loopedInterpolation.put(nodes.get(i), splinePoints);

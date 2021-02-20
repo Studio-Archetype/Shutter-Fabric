@@ -15,7 +15,8 @@ public class PathNode {
     public PathNode(Vec3d pos, float pitch, float yaw, float roll, float zoom) {
         this.position = pos;
         this.pitch = pitch;
-        this.yaw = yaw;
+        float yawAdj = yaw % 360;
+        this.yaw = yawAdj < 0 ? 360 + yawAdj : yawAdj;
         this.roll = roll;
         this.zoom = zoom;
     }

@@ -2,9 +2,13 @@ package studio.archetype.shutter.client;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -64,6 +68,16 @@ public class ShutterClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, (disp, ctx) -> new PlayerEntityRenderer(disp));
 
         this.zoom = this.prevZoom = 0;
+
+        ClientTickEvents.START_CLIENT_TICK.register(t -> {
+            if(t == null || t.player == null)
+                return;
+
+            float yawAdj = t.player.headYaw % 360;
+            yawAdj = yawAdj < 0 ? 360 + yawAdj : yawAdj;
+
+            t.player.sendMessage(new LiteralText(String.format("Yaw: %.2f", yawAdj)), true);
+        });
     }
 
     public CameraPathManager getPathManager(World w) {
