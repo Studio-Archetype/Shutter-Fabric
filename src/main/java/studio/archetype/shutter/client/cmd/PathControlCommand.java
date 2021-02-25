@@ -127,18 +127,18 @@ public final class PathControlCommand {
                 "/s export",
                 "msg.shutter.help.cmd.export",
                 Collections.singletonMap("file", true));
-        sendCommandHelpLine(ctx.getSource(),
+        /*sendCommandHelpLine(ctx.getSource(),
                 "/s upload",
                 "msg.shutter.help.cmd.upload",
-                Collections.singletonMap("file", true));
+                Collections.singletonMap("file", true));*/
         sendCommandHelpLine(ctx.getSource(),
                 "/s import",
                 "msg.shutter.help.cmd.import",
                  ImmutableMap.of("file", false, "relative", true));
-        sendCommandHelpLine(ctx.getSource(),
+        /*sendCommandHelpLine(ctx.getSource(),
                 "/s download",
                 "msg.shutter.help.cmd.download",
-                Collections.singletonMap("url", false));
+                Collections.singletonMap("url", false));*/
 
         ctx.getSource().sendFeedback(new TranslatableText("msg.shutter.help.line"));
 

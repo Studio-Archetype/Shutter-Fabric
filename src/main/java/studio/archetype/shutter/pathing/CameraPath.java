@@ -57,7 +57,7 @@ public class CameraPath {
         if(index >= nodes.size())
             throw new IndexOutOfBoundsException();
 
-        nodes.set(index, InterpolationMath.getYawDifferenceNode(node, nodes.get(index - 1)));
+        nodes.set(index, node);
         needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
         ShutterClient.INSTANCE.getSaveFile().save();
     }
@@ -155,12 +155,9 @@ public class CameraPath {
                     zoom = (float)InterpolationMath.interpolateHermite(new double[]{c1.getZoom(), start.getZoom(), end.getZoom(), c2.getZoom()}, ii, 0, 1);
                 }
                 splinePoints.add(new InterpolationData(spline, rotation, zoom));
-
-                System.out.println(String.format("%.2f(%.2f) -> %.2f(%.2f) = %.2f @ %.2f", start.getYaw(), startYaw, end.getYaw(), endYaw, rotation.getY(), ii));
             }
 
             splinePoints.add(new InterpolationData(end.getPosition(), new Vec3d(end.getPitch(), endYaw, end.getRoll()), end.getZoom()));
-            System.out.println(String.format("End Segment: %.2f", endYaw));
 
             if(looped)
                 loopedInterpolation.put(nodes.get(i), splinePoints);

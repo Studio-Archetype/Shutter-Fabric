@@ -5,15 +5,15 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "CameraMixin",
-    "GameRendererMixin",
-    "WorldRendererMixin",
-    "DebugHudMixin",
     "ClientCommandSourceMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
-    "MinecraftClientMixin",
+    "DebugHudMixin",
     "EntityRendererMixin",
-    "LivingEntityRendererMixin"
+    "GameRendererMixin",
+    "LivingEntityRendererMixin",
+    "MinecraftClientMixin",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

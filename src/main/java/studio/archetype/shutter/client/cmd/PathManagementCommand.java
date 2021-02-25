@@ -35,10 +35,10 @@ public final class PathManagementCommand {
                         .executes(ctx -> exportFile(ctx, null))
                         .then(argument("filename", StringArgumentType.word())
                             .executes(ctx -> exportFile(ctx, StringArgumentType.getString(ctx, "filename")))))
-                    .then(literal("upload")
+                    /*.then(literal("upload")
                         .executes(ctx -> uploadFile(ctx, null))
                         .then(argument("filename", StringArgumentType.word())
-                            .executes(ctx -> uploadFile(ctx, StringArgumentType.getString(ctx, "filename")))))
+                            .executes(ctx -> uploadFile(ctx, StringArgumentType.getString(ctx, "filename")))))*/
                     .then(literal("import")
                         .then(argument("filename", StringArgumentType.word())
                             .executes(ctx -> importFile(ctx, StringArgumentType.getString(ctx, "filename"), false))
