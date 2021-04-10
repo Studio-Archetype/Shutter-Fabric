@@ -1,4 +1,5 @@
-{
+
+  {
   "required": true,
   "minVersion": "0.8",
   "package": "studio.archetype.shutter.client.extensions.mixin",
@@ -13,9 +14,11 @@
     "GameRendererMixin",
     "LivingEntityRendererMixin",
     "MinecraftClientMixin",
-    "WorldRendererMixin"
+    "WorldRendererMixin",
+    "OptifineShaderBullshitMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   }
 }
+

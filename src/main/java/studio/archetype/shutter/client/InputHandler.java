@@ -33,11 +33,7 @@ public class InputHandler {
     private static KeyBinding /*openScreen,*/ openConfig;
     private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
 
-    public InputHandler() {
-        setupKeybinds();
-    }
-
-    private void setupKeybinds() {
+    public static void setupKeybinds() {
         rollLeft = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.shutter.cam.roll_left",
                 InputUtil.Type.KEYSYM,

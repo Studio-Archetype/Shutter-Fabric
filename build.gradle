@@ -39,6 +39,8 @@ dependencies {
     modImplementation "me.shedaniel.cloth:config-2:${project.cloth_version}"
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { transitive false }
 
+    implementation "com.github.kokorin.jaffree:jaffree:${project.ffmpeg_version}"
+
     include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_version}"
 }

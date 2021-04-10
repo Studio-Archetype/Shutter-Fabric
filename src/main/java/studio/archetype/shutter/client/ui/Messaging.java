@@ -7,10 +7,10 @@ import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 
-public class Messaging {
-
+public final class Messaging {
 
     public static void sendMessage(MutableText headline, MutableText text, MutableText text2, MessageType type) {
+        assert MinecraftClient.getInstance().player != null;
         switch(ClientConfigManager.CLIENT_CONFIG.notificationTarget) {
             case CHAT:
                 MutableText t = text2 == null ? text : text.append(text2);

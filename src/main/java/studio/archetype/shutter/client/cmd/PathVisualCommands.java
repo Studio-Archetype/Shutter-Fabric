@@ -2,6 +2,7 @@ package studio.archetype.shutter.client.cmd;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -30,7 +31,14 @@ public final class PathVisualCommands {
                         .then(literal("toggle")
                             .executes(ctx -> togglePath(ctx, false))
                             .then(argument("loop", BoolArgumentType.bool())
-                                .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop"))))));
+                                .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop")))))
+                        .then(literal("framerate")
+                            .then(argument("frames", IntegerArgumentType.integer(0))
+                                .executes(ctx -> {
+                                    int framerate = IntegerArgumentType.getInteger(ctx, "frames");
+                                    ShutterClient.INSTANCE.getFramerateHandler().syncRenderingAndTicks(framerate);
+                                    return 1;
+                                }))));
 
         dispatcher.register(
                 literal("shutter")

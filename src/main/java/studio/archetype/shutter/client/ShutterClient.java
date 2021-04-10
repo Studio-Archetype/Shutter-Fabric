@@ -18,6 +18,7 @@ import studio.archetype.shutter.client.cmd.handler.ClientCommandManager;
 import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.SaveFile;
+import studio.archetype.shutter.client.encoding.FramerateHandler;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
@@ -27,7 +28,6 @@ public class ShutterClient implements ClientModInitializer {
 
     public static ShutterClient INSTANCE;
 
-    private InputHandler inputHandler;
     private CommandFilter commandFilter;
 
     private CameraPathRenderer pathRenderer;
@@ -38,6 +38,8 @@ public class ShutterClient implements ClientModInitializer {
 
     private SaveFile saveFile;
 
+    private FramerateHandler framerateHandler;
+
     private double zoom, prevZoom;
 
     @Override
@@ -45,8 +47,8 @@ public class ShutterClient implements ClientModInitializer {
         INSTANCE = this;
 
         ClientConfigManager.register();
+        InputHandler.setupKeybinds();
 
-        this.inputHandler = new InputHandler();
         this.commandFilter = new CommandFilter();
         this.pathRenderer = new CameraPathRenderer();
         this.nodeRenderer = new CameraNodeRenderer();
@@ -54,6 +56,8 @@ public class ShutterClient implements ClientModInitializer {
         this.iterator = new PathIterator();
 
         this.saveFile = SaveFile.getSaveFile();
+
+        this.framerateHandler = new FramerateHandler();
 
         CommandDispatcher<FabricClientCommandSource> dis = ClientCommandManager.DISPATCHER;
         PathControlCommand.register(dis);
@@ -84,11 +88,18 @@ public class ShutterClient implements ClientModInitializer {
     }
 
     public CommandFilter getCommandFilter() { return commandFilter; }
+
     public CameraPathRenderer getPathRenderer() { return pathRenderer; }
+
     public CameraNodeRenderer getNodeRenderer() { return nodeRenderer; }
+
     public PathFollower getPathFollower() { return follower; }
+
     public PathIterator getPathIterator() { return iterator; }
+
     public SaveFile getSaveFile() { return saveFile; }
+
+    public FramerateHandler getFramerateHandler() { return framerateHandler; }
 
     public double getZoom() {
         return this.zoom;
