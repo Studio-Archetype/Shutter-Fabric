@@ -62,6 +62,7 @@ public class PathFollower {
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
         c.setCameraEntity(entity);
         c.player.teleport(currentNode.getPosition().getX(), currentNode.getPosition().getY(), currentNode.getPosition().getZ());
+        ShutterClient.INSTANCE.getRecorder().start("testvideo", 60, MinecraftClient.getInstance().getWindow().getWidth(), MinecraftClient.getInstance().getWindow().getWidth());
     }
 
     public void end() {
@@ -76,6 +77,7 @@ public class PathFollower {
         ShutterClient.INSTANCE.getCommandFilter().changeGameMode(oldGamemode);
         ShutterClient.INSTANCE.setZoom(this.oldFov);
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
+        ShutterClient.INSTANCE.getRecorder().stop();
     }
 
     public void tick(float tickDelta) {

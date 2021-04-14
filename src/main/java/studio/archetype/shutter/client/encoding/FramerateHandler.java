@@ -1,5 +1,8 @@
 package studio.archetype.shutter.client.encoding;
 
+import com.github.kokorin.jaffree.ffmpeg.FFmpeg;
+import com.github.kokorin.jaffree.ffmpeg.FrameInput;
+import com.github.kokorin.jaffree.ffmpeg.UrlOutput;
 import net.minecraft.client.render.RenderTickCounter;
 
 public class FramerateHandler {
