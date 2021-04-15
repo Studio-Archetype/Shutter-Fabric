@@ -1,8 +1,5 @@
 package studio.archetype.shutter.client.encoding;
 
-import com.github.kokorin.jaffree.ffmpeg.FFmpeg;
-import com.github.kokorin.jaffree.ffmpeg.FrameInput;
-import com.github.kokorin.jaffree.ffmpeg.UrlOutput;
 import net.minecraft.client.render.RenderTickCounter;
 
 public class FramerateHandler {
@@ -10,34 +7,37 @@ public class FramerateHandler {
     private int targetFramerate, currentFramecounter;
     private int savedTicks;
     private float savedDelta;
+    private boolean isFrameQueued, hasTicked = false;
 
     public FramerateHandler() {
         this.targetFramerate = this.currentFramecounter = 0;
     }
 
     public void syncRenderingAndTicks(int framerate) {
-        this.targetFramerate = framerate / 20;
+        this.targetFramerate = framerate;
         this.currentFramecounter = 0;
     }
 
-    public int modifyTick(RenderTickCounter renderTickCounter, long timeMillis) {
-        if(targetFramerate == 0)
-            return renderTickCounter.beginRenderTick(timeMillis);
-
-        if(currentFramecounter == 0) {
+    public void updateTickTracker(RenderTickCounter renderTickCounter, long timeMillis) {
+        if(!isFrameQueued) {
             this.savedTicks = renderTickCounter.beginRenderTick(timeMillis);
             this.savedDelta = renderTickCounter.tickDelta;
         }
+    }
 
-        if(currentFramecounter < targetFramerate) {
-            currentFramecounter++;
-            renderTickCounter.tickDelta = 0;
-            return 0;
-        } else {
-            currentFramecounter = 0;
-            renderTickCounter.beginRenderTick(timeMillis);
-            renderTickCounter.tickDelta = savedDelta;
-            return savedTicks;
+    public int processTick(RenderTickCounter tickCounter, long timeMillis) {
+        if(targetFramerate == 0)
+            return tickCounter.beginRenderTick(timeMillis);
+
+        if(currentFramecounter % (targetFramerate / 20) == 0 && !hasTicked) {
+            hasTicked = true;
+            return 1;
         }
+
+        return 0;
+    }
+
+    public boolean shouldSkipRender() {
+        return targetFramerate != 0 && isFrameQueued;
     }
 }

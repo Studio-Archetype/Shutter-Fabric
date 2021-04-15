@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotUtils;
 import org.lwjgl.opengl.GL;
@@ -52,6 +53,11 @@ public class PathFrameProducer implements FrameProducer {
     public Frame produce() {
         if(!running)
             return null;
+
+        Frame frame = new Frame(0, nextVideoTimecode, bufferToImage(MinecraftClient.getInstance().getFramebuffer()));
+        this.nextVideoTimecode++;
+
+        return frame;
     }
 
     private BufferedImage bufferToImage(Framebuffer buffer) {
@@ -64,8 +70,15 @@ public class PathFrameProducer implements FrameProducer {
         int size = width * height;
         long pointer = MemoryUtil.nmemAlloc((long)size * 4);
 
-        RenderSystem.bindTexture(buffer.getColorAttachment());
-        GlStateManager.getTexImage(3553, 0, NativeImage.Format.ABGR.getChannelCount(), 5121, pointer);
+        if(RenderSystem.isOnRenderThread()) {
+            RenderSystem.bindTexture(buffer.getColorAttachment());
+            GlStateManager.getTexImage(3553, 0, NativeImage.Format.ABGR.getChannelCount(), 5121, pointer);
+        } else {
+            RenderSystem.recordRenderCall(() -> {
+                RenderSystem.bindTexture(buffer.getColorAttachment());
+                GlStateManager.getTexImage(3553, 0, NativeImage.Format.ABGR.getChannelCount(), 5121, pointer);
+            });
+        }
 
         return MemoryUtil.memIntBuffer(pointer, size).array();
     }
