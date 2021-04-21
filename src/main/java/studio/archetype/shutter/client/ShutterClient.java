@@ -25,8 +25,6 @@ import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
 import studio.archetype.shutter.pathing.CameraPathManager;
 
-import java.awt.*;
-
 public class ShutterClient implements ClientModInitializer {
 
     public static ShutterClient INSTANCE;

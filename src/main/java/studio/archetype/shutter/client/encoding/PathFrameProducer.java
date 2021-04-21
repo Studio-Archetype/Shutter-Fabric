@@ -7,15 +7,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.util.ScreenshotUtils;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.nio.IntBuffer;
 import java.util.Collections;
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package studio.archetype.shutter.client.extensions.mixin;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.TickDurationMonitor;
 import net.minecraft.util.Util;
 import net.minecraft.util.profiler.Profiler;

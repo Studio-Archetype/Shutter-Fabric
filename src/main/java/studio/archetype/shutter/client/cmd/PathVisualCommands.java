@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import studio.archetype.shutter.client.ShutterClient;
@@ -22,27 +23,32 @@ public final class PathVisualCommands {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                         .requires(src -> src.hasPermissionLevel(4))
-                        .then(literal("show")
-                            .executes(ctx -> showPath(ctx, false))
-                            .then(argument("loop", BoolArgumentType.bool())
-                                .executes(ctx -> showPath(ctx, BoolArgumentType.getBool(ctx, "loop")))))
-                        .then(literal("hide")
-                            .executes(PathVisualCommands::hidePath))
-                        .then(literal("toggle")
-                            .executes(ctx -> togglePath(ctx, false))
-                            .then(argument("loop", BoolArgumentType.bool())
-                                .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop")))))
-                        .then(literal("framerate")
-                            .then(argument("frames", IntegerArgumentType.integer(0))
-                                .executes(ctx -> {
-                                    int framerate = IntegerArgumentType.getInteger(ctx, "frames");
-                                    //ShutterClient.INSTANCE.getRecorder().syncRenderingAndTicks(framerate);
-                                    return 1;
-                                }))));
+                            .then(literal("show")
+                                .executes(ctx -> showPath(ctx, false))
+                                .then(argument("loop", BoolArgumentType.bool())
+                                    .executes(ctx -> showPath(ctx, BoolArgumentType.getBool(ctx, "loop")))))
+                            .then(literal("hide")
+                                .executes(PathVisualCommands::hidePath))
+                            .then(literal("toggle")
+                                .executes(ctx -> togglePath(ctx, false))
+                                .then(argument("loop", BoolArgumentType.bool())
+                                    .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop"))))));
 
-        dispatcher.register(
-                literal("shutter")
-                        .redirect(node));
+        if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            LiteralCommandNode<FabricClientCommandSource> frame = dispatcher.register(
+                    literal("s")
+                        .requires(src -> src.hasPermissionLevel(4))
+                            .then(literal("framerate")
+                                    .then(argument("frames", IntegerArgumentType.integer(0))
+                                            .executes(ctx -> {
+                                                int framerate = IntegerArgumentType.getInteger(ctx, "frames");
+                                                ShutterClient.INSTANCE.getFramerateHandler().syncRenderingAndTicks(framerate);
+                                                return 1;
+                                            }))));
+            dispatcher.register(literal("shutter").redirect(frame));
+        }
+
+        dispatcher.register(literal("shutter").redirect(node));
     }
 
     private static int showPath(CommandContext<FabricClientCommandSource> ctx, boolean loop) {
