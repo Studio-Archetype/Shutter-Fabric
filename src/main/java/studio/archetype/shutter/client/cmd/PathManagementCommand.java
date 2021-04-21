@@ -6,11 +6,11 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
-import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.CameraPathManager;
@@ -18,8 +18,8 @@ import studio.archetype.shutter.pathing.exceptions.PathException;
 
 import java.io.IOException;
 
-import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
-import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.argument;
+import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
 public final class PathManagementCommand {
 

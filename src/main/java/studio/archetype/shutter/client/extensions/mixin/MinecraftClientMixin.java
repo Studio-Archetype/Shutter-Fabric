@@ -1,7 +1,6 @@
 package studio.archetype.shutter.client.extensions.mixin;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.RunArgs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.world.ClientWorld;
@@ -14,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import studio.archetype.shutter.client.ShutterClient;
-import studio.archetype.shutter.client.cmd.handler.ClientCommandInternals;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 @Mixin(MinecraftClient.class)
@@ -27,11 +25,6 @@ abstract class MinecraftClientMixin {
     @Shadow public boolean skipGameRender;
     private boolean originalSkip;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void onConstruct(RunArgs args, CallbackInfo info) {
-        ClientCommandInternals.checkDispatcher();
-    }
-
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderTickCounter;beginRenderTick(J)I"))
     private int modifyScheduledTicks(RenderTickCounter renderTickCounter, long timeMillis) {
         return ShutterClient.INSTANCE.getFramerateHandler().processTick(renderTickCounter, timeMillis);
@@ -40,7 +33,7 @@ abstract class MinecraftClientMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableCull()V", shift = At.Shift.BEFORE))
     private void gameRenderSkip(boolean tick, CallbackInfo info) {
         originalSkip = this.skipGameRender;
-        this.skipGameRender = ShutterClient.INSTANCE.getFramerateHandler().shouldSkip();
+        this.skipGameRender = ShutterClient.INSTANCE.getFramerateHandler().skipRenderTick();
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/Framebuffer;endWrite()V", shift = At.Shift.BEFORE))

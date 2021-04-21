@@ -7,13 +7,13 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
-import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.ui.Messaging;
@@ -24,8 +24,8 @@ import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 
 import java.util.*;
 
-import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.argument;
-import static studio.archetype.shutter.client.cmd.handler.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.argument;
+import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
 public final class PathControlCommand {
 

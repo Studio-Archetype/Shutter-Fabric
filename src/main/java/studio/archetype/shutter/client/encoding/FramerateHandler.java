@@ -6,7 +6,7 @@ public class FramerateHandler {
 
     private int targetFramerate, currentFramecounter;
     private float tickDelta;
-    private boolean isFrameQueued, hasTicked = false;
+    private boolean isFrameQueued, hasTicked, hasServerTicked = false;
 
     public FramerateHandler() {
         this.targetFramerate = this.currentFramecounter = 0;
@@ -40,8 +40,20 @@ public class FramerateHandler {
         return 0;
     }
 
-    public boolean shouldSkip() {
+    public boolean skipRenderTick() {
         return targetFramerate != 0 && isFrameQueued;
+    }
+
+    public boolean isServerTickValid() {
+        if(targetFramerate == 0)
+            return true;
+
+        if(currentFramecounter % (targetFramerate / 20) == 0 && !hasServerTicked) {
+            hasServerTicked = true;
+            return true;
+        }
+
+        return false;
     }
 
     public void updateBufferCapture() {
@@ -50,7 +62,7 @@ public class FramerateHandler {
 
         //Do the thing to queue frame capture
         //isFrameQueued = true;
-        hasTicked = false;
+        hasTicked = hasServerTicked = false;
         currentFramecounter++;
 
         if(currentFramecounter >= targetFramerate)

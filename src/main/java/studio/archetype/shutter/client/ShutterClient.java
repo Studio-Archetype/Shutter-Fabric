@@ -2,6 +2,8 @@ package studio.archetype.shutter.client;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -14,8 +16,6 @@ import studio.archetype.shutter.client.cmd.PathControlCommand;
 import studio.archetype.shutter.client.cmd.PathManagementCommand;
 import studio.archetype.shutter.client.cmd.PathNodeCommand;
 import studio.archetype.shutter.client.cmd.PathVisualCommands;
-import studio.archetype.shutter.client.cmd.handler.ClientCommandManager;
-import studio.archetype.shutter.client.cmd.handler.FabricClientCommandSource;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.encoding.FramerateHandler;

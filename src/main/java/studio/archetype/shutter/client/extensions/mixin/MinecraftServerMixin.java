@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import studio.archetype.shutter.client.ShutterClient;
 
 import java.util.function.BooleanSupplier;
 
@@ -40,9 +41,14 @@ public abstract class MinecraftServerMixin {
         return false;
     }
 
-    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setFavicon(Lnet/minecraft/server/ServerMetadata;)V", ordinal = 1, shift = At.Shift.AFTER))
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setFavicon(Lnet/minecraft/server/ServerMetadata;)V", shift = At.Shift.AFTER))
     public void stopTicking(CallbackInfo info) {
         while(this.isRunning()) {
+            if(!ShutterClient.INSTANCE.getFramerateHandler().isServerTickValid()) {
+                this.lastTimeReference = this.timeReference = Util.getMeasuringTimeMs();
+                continue;
+            }
+
             long l = Util.getMeasuringTimeMs() - this.timeReference;
 
             if (l > 2000L && this.timeReference - this.lastTimeReference >= 15000L) {
