@@ -7,9 +7,11 @@ import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.camera.PathIterator;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
@@ -18,12 +20,12 @@ import studio.archetype.shutter.client.cmd.PathNodeCommand;
 import studio.archetype.shutter.client.cmd.PathVisualCommands;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.SaveFile;
-import studio.archetype.shutter.client.encoding.FramerateHandler;
-import studio.archetype.shutter.client.encoding.ShutterRecording;
+import studio.archetype.shutter.client.encoding.RecordingManager;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
 import studio.archetype.shutter.pathing.CameraPathManager;
+import studio.archetype.shutter.util.CliUtils;
 
 public class ShutterClient implements ClientModInitializer {
 
@@ -39,8 +41,7 @@ public class ShutterClient implements ClientModInitializer {
 
     private SaveFile saveFile;
 
-    private ShutterRecording recorder;
-    private FramerateHandler framerateHandler;
+    private RecordingManager recordingManager;
 
     private double zoom, prevZoom;
 
@@ -59,8 +60,7 @@ public class ShutterClient implements ClientModInitializer {
 
         this.saveFile = SaveFile.getSaveFile();
 
-        this.recorder = new ShutterRecording();
-        this.framerateHandler = new FramerateHandler();
+        this.recordingManager = new RecordingManager();
 
         CommandDispatcher<FabricClientCommandSource> dis = ClientCommandManager.DISPATCHER;
         PathControlCommand.register(dis);
@@ -102,9 +102,7 @@ public class ShutterClient implements ClientModInitializer {
 
     public SaveFile getSaveFile() { return saveFile; }
 
-    public ShutterRecording getRecorder() { return recorder; }
-
-    public FramerateHandler getFramerateHandler() { return framerateHandler; }
+    public RecordingManager getFramerateHandler() { return recordingManager; }
 
     public double getZoom() {
         return this.zoom;

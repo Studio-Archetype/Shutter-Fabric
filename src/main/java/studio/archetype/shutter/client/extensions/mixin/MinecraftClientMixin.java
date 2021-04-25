@@ -1,11 +1,13 @@
 package studio.archetype.shutter.client.extensions.mixin;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.ClientConnection;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,10 +21,12 @@ import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 abstract class MinecraftClientMixin {
 
     @Shadow @Nullable public ClientWorld world;
-    @Shadow public abstract boolean isIntegratedServerRunning();
     @Shadow @Nullable private ClientConnection connection;
-
     @Shadow public boolean skipGameRender;
+    @Shadow @Final private Framebuffer framebuffer;
+
+    @Shadow public abstract boolean isIntegratedServerRunning();
+
     private boolean originalSkip;
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderTickCounter;beginRenderTick(J)I"))
@@ -39,7 +43,7 @@ abstract class MinecraftClientMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/Framebuffer;endWrite()V", shift = At.Shift.BEFORE))
     private void injectAfterRender(boolean tick, CallbackInfo info) {
         this.skipGameRender = originalSkip;
-        ShutterClient.INSTANCE.getFramerateHandler().updateBufferCapture();
+        ShutterClient.INSTANCE.getFramerateHandler().updateTimings(this.framebuffer);
     }
 
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
