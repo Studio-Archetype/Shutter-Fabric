@@ -17,6 +17,7 @@ import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.util.CliUtils;
 import studio.archetype.shutter.util.FramebufferUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -110,8 +111,22 @@ public class RecordingManager {
             this.currentFramecounter = this.totalFramecount = 0;
             if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode != ClientConfig.RecordingMode.FRAMES) {
                 //TODO: Actual parameters
+                int width = MinecraftClient.getInstance().getWindow().getWidth();
+                int height = MinecraftClient.getInstance().getWindow().getHeight();
+                Path output = RECORD_DIR;
+                if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode == ClientConfig.RecordingMode.BOTH)
+                    output = output.resolve(this.filename);
                 this.currentEncodingJob = CliUtils.runCommandAsync("ffmpeg",
-                        FfmpegProperties.FRAMERATE.get(60));
+                        FfmpegProperties.FRAMERATE.get(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.framerate),
+                        FfmpegProperties.FORMAT.get(),
+                        FfmpegProperties.RESOLUTION.get(String.format("%dx%d", width, height)),
+                        FfmpegProperties.INPUT.get(RECORD_DIR.resolve(this.filename).toAbsolutePath() + File.separator + "frame_%04d.png"),
+                        FfmpegProperties.CODEC.get(),
+                        FfmpegProperties.QUALITY.get(),
+                        FfmpegProperties.PIXEL_FORMAT.get(),
+                        FfmpegProperties.OVERWRITE.get(),
+                        CommandProperty.flag(output.resolve(this.filename + ".mp4").toAbsolutePath().toString()));
+
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.cmd.success"),
                         new TranslatableText("msg.shutter.ok.recording_start"),
@@ -151,7 +166,7 @@ public class RecordingManager {
 
     private void applyCapture(Framebuffer buffer) {
         this.isFrameQueued = false;
-        String filename = "frame_" + StringUtils.leftPad(String.valueOf(totalFramecount), 6, '0') + ".png";
+        String filename = "frame_" + StringUtils.leftPad(String.valueOf(totalFramecount), 4, '0') + ".png";
         FramebufferUtils.framebufferToFile(buffer, RECORD_DIR.resolve(this.filename).toFile(), filename);
         totalFramecount++;
     }
