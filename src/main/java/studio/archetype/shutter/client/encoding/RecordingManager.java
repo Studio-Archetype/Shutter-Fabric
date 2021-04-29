@@ -1,38 +1,61 @@
 package studio.archetype.shutter.client.encoding;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import studio.archetype.shutter.client.ShutterClient;
+import studio.archetype.shutter.client.config.ClientConfig;
+import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.util.CliUtils;
 import studio.archetype.shutter.util.FramebufferUtils;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class RecordingManager {
 
     private static final Path RECORD_DIR = FabricLoader.getInstance().getGameDir().resolve("shutter").resolve("recordings");
 
-    private boolean hasFoundFfmpeg;
-
-    private int targetFramerate, currentFramecounter;
+    private int targetFramerate, currentFramecounter, totalFramecount;
     private float tickDelta;
     private boolean isFrameQueued, hasTicked, hasServerTicked = false;
+    private String filename;
+    private volatile CompletableFuture<Integer> currentEncodingJob;
 
     public RecordingManager() {
         this.targetFramerate = this.currentFramecounter = 0;
-        this.hasFoundFfmpeg = CliUtils.isCommandAvailable("ffmpeg");
+        ClientTickEvents.START_CLIENT_TICK.register((e) -> onTick());
     }
 
-    public void syncRenderingAndTicks(int framerate) {
+    public void initRecording(int framerate, String filename) {
         this.targetFramerate = framerate;
-        this.currentFramecounter = 0;
+        this.currentFramecounter = this.totalFramecount = 0;
         this.tickDelta = 1.0F / targetFramerate;
+        this.filename = filename;
+        if(!filename.equals(""))
+            RECORD_DIR.resolve(filename).toFile().mkdirs();
+    }
+
+    public boolean isRecording() {
+        return targetFramerate != 0;
+    }
+
+    public boolean isEncoding() {
+        return currentEncodingJob != null;
     }
 
     public int processTick(RenderTickCounter tickCounter, long timeMillis) {
-        if(targetFramerate == 0)
+        if(!isRecording())
             return tickCounter.beginRenderTick(timeMillis);
 
         tickCounter.beginRenderTick(timeMillis);
@@ -54,11 +77,11 @@ public class RecordingManager {
     }
 
     public boolean skipRenderTick() {
-        return targetFramerate != 0 && isFrameQueued;
+        return isRecording() && isFrameQueued;
     }
 
     public boolean isServerTickValid() {
-        if(targetFramerate == 0)
+        if(!isRecording())
             return true;
 
         if(currentFramecounter % (targetFramerate / 20) == 0 && !hasServerTicked) {
@@ -70,7 +93,7 @@ public class RecordingManager {
     }
 
     public void updateTimings(Framebuffer buffer) {
-        if(isFrameQueued || targetFramerate == 0)
+        if(isFrameQueued || !isRecording())
             return;
 
         scheduleCapture(buffer);
@@ -81,17 +104,55 @@ public class RecordingManager {
             this.currentFramecounter = 0;
     }
 
+    public void finishRecording() {
+        if(isRecording()) {
+            this.targetFramerate = 0;
+            this.currentFramecounter = this.totalFramecount = 0;
+            if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode != ClientConfig.RecordingMode.FRAMES) {
+                //TODO: Actual parameters
+                this.currentEncodingJob = CliUtils.runCommandAsync("ffmpeg",
+                        FfmpegProperties.FRAMERATE.get(60));
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.success"),
+                        new TranslatableText("msg.shutter.ok.recording_start"),
+                        Messaging.MessageType.NEUTRAL);
+            }
+        }
+    }
+
+    private void onTick() {
+        if(isEncoding()) {
+            if(currentEncodingJob.isDone()){
+                try {
+                    if(this.currentEncodingJob.get() == 0)
+                        Messaging.sendMessage(
+                                new TranslatableText("msg.shutter.headline.cmd.success"),
+                                new TranslatableText("msg.shutter.ok.recording_done"),
+                                Messaging.MessageType.POSITIVE);
+                    else
+                        Messaging.sendMessage(
+                                new TranslatableText("msg.shutter.headline.cmd.failed"),
+                                new TranslatableText("msg.shutter.error.recording_error", this.currentEncodingJob.get()),
+                                Messaging.MessageType.NEGATIVE);
+
+                    if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode == ClientConfig.RecordingMode.VIDEO)
+                        FileUtils.deleteDirectory(RECORD_DIR.resolve(this.filename).toFile());
+                    this.currentEncodingJob.cancel(true);
+                    this.currentEncodingJob = null;
+                } catch(IOException | InterruptedException | ExecutionException ignored) { }
+            }
+        }
+    }
 
     private void scheduleCapture(Framebuffer buffer) {
         this.isFrameQueued = true;
         RenderSystem.recordRenderCall(() -> ShutterClient.INSTANCE.getFramerateHandler().applyCapture(buffer));
     }
 
-    private int imageCount = 0;
     private void applyCapture(Framebuffer buffer) {
         this.isFrameQueued = false;
-        if(imageCount % 5 == 0)
-            FramebufferUtils.framebufferToFile(buffer, RECORD_DIR.toFile(), "frame_" + imageCount / 5 + ".png");
-        imageCount++;
+        String filename = "frame_" + StringUtils.leftPad(String.valueOf(totalFramecount), 6, '0') + ".png";
+        FramebufferUtils.framebufferToFile(buffer, RECORD_DIR.resolve(this.filename).toFile(), filename);
+        totalFramecount++;
     }
 }

@@ -3,24 +3,31 @@ package studio.archetype.shutter.client.cmd;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.datafixers.util.Pair;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.command.TitleCommand;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.encoding.RecordingManager;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
+import studio.archetype.shutter.util.CliUtils;
 
 import java.util.*;
 
@@ -28,6 +35,8 @@ import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.arg
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
 public final class PathControlCommand {
+
+    private static Pair<Integer, String> countdown;
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
@@ -37,6 +46,11 @@ public final class PathControlCommand {
                             .executes(PathControlCommand::printHelp))
                     .then(literal("?")
                             .executes(PathControlCommand::printHelp))
+                    .then(literal("record")
+                            .then(argument("filename", StringArgumentType.word())
+                                .executes(ctx -> initRecording(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, StringArgumentType.getString(ctx, "filename")))
+                                .then(argument("pathTime", PathTimeArgumentType.pathTime())
+                                        .executes(ctx -> initRecording(ctx, PathTimeArgumentType.getTicks(ctx, "pathTime"), StringArgumentType.getString(ctx, "filename"))))))
                     .then(literal("start")
                             .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false))
                             .then(argument("loop", BoolArgumentType.bool())
@@ -57,6 +71,33 @@ public final class PathControlCommand {
         dispatcher.register(
                 literal("shutter")
                     .redirect(node));
+
+        ClientTickEvents.START_CLIENT_TICK.register(PathControlCommand::onTick);
+    }
+
+    private static void onTick(MinecraftClient c) {
+        if(countdown != null) {
+            int ticks = countdown.getFirst();
+            if(ticks == 0) {
+                c.inGameHud.setTitles(null, null, -1, -1, -1);
+                startRecording(c.world, countdown.getSecond());
+                countdown = null;
+            } else {
+                if(ticks == 60)
+                    displayCountdownTitle(c, 3);
+                if(ticks == 40)
+                    displayCountdownTitle(c, 2);
+                if(ticks == 20)
+                    displayCountdownTitle(c, 1);
+                countdown = new Pair<>(ticks - 1, countdown.getSecond());
+            }
+        }
+    }
+
+    private static void displayCountdownTitle(MinecraftClient c, int seconds) {
+        Text title = new TranslatableText("ui.shutter.recording.countdown1").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.GOLD));
+        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2", seconds).setStyle(Style.EMPTY.withItalic(true).withColor(Formatting.GRAY));
+        c.inGameHud.setTitles(title, subtitle, -1, 20, -1);
     }
 
     private static int printHelp(CommandContext<FabricClientCommandSource> ctx) {
@@ -74,6 +115,10 @@ public final class PathControlCommand {
                 "/s stop",
                 "msg.shutter.help.cmd.stop",
                 null);
+        sendCommandHelpLine(ctx.getSource(),
+                "/s record",
+                "msg.shutter.help.cmd.record",
+                ImmutableMap.of("file", false, "time", true));
         sendCommandHelpLine(ctx.getSource(),
                 "/s clear",
                 "msg.shutter.help.cmd.clear",
@@ -195,6 +240,41 @@ public final class PathControlCommand {
                     new TranslatableText("msg.shutter.headline.cmd.failed"),
                     new TranslatableText("msg.shutter.error.path_empty"),
                     Messaging.MessageType.NEUTRAL);
+            return 0;
+        }
+    }
+
+    private static int initRecording(CommandContext<FabricClientCommandSource> ctx, double pathTime, String name) {
+        if(!CliUtils.isCommandAvailable("ffmpeg")) {
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.no_ffmpeg"),
+                    Messaging.MessageType.NEGATIVE);
+            return 0;
+        }
+
+        ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime = pathTime;
+        if(ClientConfigManager.CLIENT_CONFIG.recSettings.skipCountdown)
+            return startRecording(ctx.getSource().getWorld(), name);
+        else
+            countdown = new Pair<>(20 * 3, name);
+        return 1;
+    }
+
+    private static int startRecording(World w, String name) {
+        try {
+            RecordingManager red = ShutterClient.INSTANCE.getFramerateHandler();
+            CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(w);
+            if(manager.isVisualizing())
+                manager.togglePathVisualization(false);
+            manager.startCameraPath(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false);
+            red.initRecording(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.framerate, name);
+            return 1;
+        } catch(PathTooSmallException e) {
+            Messaging.sendMessage(
+                    new TranslatableText("msg.shutter.headline.cmd.failed"),
+                    new TranslatableText("msg.shutter.error.not_enough_start"),
+                    Messaging.MessageType.NEGATIVE);
             return 0;
         }
     }

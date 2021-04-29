@@ -15,6 +15,10 @@ public class ClientConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.CollapsibleObject
+    public RecordingSettings recSettings = new RecordingSettings();
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.CollapsibleObject
     public final PathGenerationSettings genSettings = new PathGenerationSettings();
 
     @ConfigEntry.Gui.Tooltip
@@ -52,10 +56,27 @@ public class ClientConfig implements ConfigData {
         public double pathTime = 100;
 
         @ConfigEntry.Gui.Tooltip
+        public boolean hideUi = false;
+
+        @ConfigEntry.Gui.Tooltip
         public boolean hideArmorStands = true;
 
         @ConfigEntry.Gui.Tooltip
         public boolean hideEntityLabels = false;
+    }
+
+    public static class RecordingSettings {
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public RecordingMode renderMode = RecordingMode.VIDEO;
+
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
+        public RecordingFramerate framerate = RecordingFramerate.F60;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean skipCountdown = false;
     }
 
     public enum PathStyle {
@@ -102,6 +123,43 @@ public class ClientConfig implements ConfigData {
         String key;
 
         NotificationTarget(String key) {
+            this.key = key;
+        }
+
+        public String toString() {
+            return I18n.translate(this.key);
+        }
+    }
+
+    public enum RecordingFramerate {
+        F20("config.shutter.framerate.20", 20),
+        F40("config.shutter.framerate.40", 40),
+        F60("config.shutter.framerate.60", 60),
+        F80("config.shutter.framerate.80", 80),
+        F100("config.shutter.framerate.100", 100),
+        F120("config.shutter.framerate.120", 120);
+
+        public int framerate;
+        String key;
+
+        RecordingFramerate(String key, int framerate) {
+            this.key = key;
+            this.framerate = framerate;
+        }
+
+        public String toString() {
+            return I18n.translate(this.key);
+        }
+    }
+
+    public enum RecordingMode {
+        FRAMES("config.shutter.recording.frames"),
+        VIDEO("config.shutter.recording.video"),
+        BOTH("config.shutter.recording.both");
+
+        String key;
+
+        RecordingMode(String key) {
             this.key = key;
         }
 

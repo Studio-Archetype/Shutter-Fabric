@@ -41,7 +41,6 @@ public class PathIterator {
 
         MinecraftClient c = MinecraftClient.getInstance();
         PlayerEntity p = c.player;
-        assert p != null;
 
         PathNode node = this.currentPath.getNodes().get(index);
         this.oldGamemode = CommandFilter.GameMode.getFromVanilla(c.interactionManager.getCurrentGameMode());

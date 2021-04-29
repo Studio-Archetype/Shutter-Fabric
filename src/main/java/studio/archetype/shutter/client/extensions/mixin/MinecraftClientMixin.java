@@ -57,7 +57,7 @@ abstract class MinecraftClientMixin {
                     client.getPathFollower().end();
                 if (client.getPathIterator().isIterating())
                     client.getPathIterator().end();
-                client.getFramerateHandler().syncRenderingAndTicks(0);
+                client.getFramerateHandler().initRecording(0, "");
             }
             client.getSaveFile().save();
         } catch(PathTooSmallException ignored) { }
@@ -74,7 +74,7 @@ abstract class MinecraftClientMixin {
                     client.getPathFollower().end();
                 if (client.getPathIterator().isIterating())
                     client.getPathIterator().end();
-                client.getFramerateHandler().syncRenderingAndTicks(0);
+                client.getFramerateHandler().initRecording(0, "");
             }
             client.getSaveFile().save();
         } catch(PathTooSmallException ignored) { }

@@ -42,7 +42,7 @@ public final class PathVisualCommands {
                                     .then(argument("frames", IntegerArgumentType.integer(0))
                                             .executes(ctx -> {
                                                 int framerate = IntegerArgumentType.getInteger(ctx, "frames");
-                                                ShutterClient.INSTANCE.getFramerateHandler().syncRenderingAndTicks(framerate);
+                                                ShutterClient.INSTANCE.getFramerateHandler().initRecording(framerate, "test");
                                                 return 1;
                                             }))));
             dispatcher.register(literal("shutter").redirect(frame));

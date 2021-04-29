@@ -6,6 +6,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.CommandFilter;
 import studio.archetype.shutter.client.ShutterClient;
+import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.pathing.CameraPath;
@@ -30,6 +31,7 @@ public class PathFollower {
     private Vec3d oldPos;
     private double oldFov;
     private float oldRoll;
+    private boolean oldHideHud;
 
     public PathFollower() {
         ClientTickEvents.END_CLIENT_TICK.register((e) -> {
@@ -44,12 +46,11 @@ public class PathFollower {
         this.path = path;
         this.loop = loop;
 
-        assert c.interactionManager != null;
         this.oldGamemode = CommandFilter.GameMode.getFromVanilla(c.interactionManager.getCurrentGameMode());
-        assert c.player != null;
         this.oldPos = c.player.getPos();
         this.oldFov = ShutterClient.INSTANCE.getZoom();
         this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
+        this.oldHideHud = c.options.hudHidden;
 
         nodeIndex = 0;
         tickCounter = 0;
@@ -57,11 +58,15 @@ public class PathFollower {
         currentNode = path.getNodes().get(0);
         currentSegmentData = path.getInterpolatedData(loop).get(currentNode);
         segmentTime = (pathTime / path.getInterpolatedData(loop).size()) / (currentSegmentData.size() - 1);
+        if(!this.oldHideHud && ClientConfigManager.CLIENT_CONFIG.genSettings.hideUi)
+            c.options.hudHidden = true;
         ShutterClient.INSTANCE.getCommandFilter().changeGameMode(CommandFilter.GameMode.SPECTATOR);
 
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
         c.setCameraEntity(entity);
         c.player.teleport(currentNode.getPosition().getX(), currentNode.getPosition().getY(), currentNode.getPosition().getZ());
+
+
     }
 
     public void end() {
@@ -70,11 +75,11 @@ public class PathFollower {
 
         MinecraftClient c = MinecraftClient.getInstance();
         c.setCameraEntity(c.player);
-        assert c.player != null;
         c.player.setPos(oldPos.getX(), oldPos.getY(), oldPos.getZ());
-        assert c.interactionManager != null;
+        c.options.hudHidden = this.oldHideHud;
         ShutterClient.INSTANCE.getCommandFilter().changeGameMode(oldGamemode);
         ShutterClient.INSTANCE.setZoom(this.oldFov);
+        ShutterClient.INSTANCE.getFramerateHandler().finishRecording();
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
     }
 

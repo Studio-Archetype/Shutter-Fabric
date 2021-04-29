@@ -22,6 +22,9 @@
   "ui.shutter.pathList.entryName": "Camera Path Name",
   "ui.shutter.pathList.none": "No Paths available.",
 
+  "ui.shutter.recording.countdown1": "Preparing to record!",
+  "ui.shutter.recording.countdown2": "Starting in %d...",
+
   "text.autoconfig.shutter.title": "Shutter Configuration",
   "config.shutter.notificationTarget": "Notifications",
   "config.shutter.notificationTarget.@Tooltip": "Set where notifications are displayed.",
@@ -47,6 +50,14 @@
   "config.shutter.pathSettings.pathStyle.@Tooltip": "Set the style in which the path between nodes is rendered during visualization.",
   "config.shutter.pathSettings.pathColour": "Path Colour",
   "config.shutter.pathSettings.pathColour.@Tooltip": "Set the colour in which the path between nodes is rendered during visualization.",
+  "config.shutter.recSettings": "Recording Settings",
+  "config.shutter.recSettings.@Tooltip": "Settings related to recording and encoding.",
+  "config.shutter.recSettings.renderMode": "Render Mode",
+  "config.shutter.recSettings.renderMode.@Tooltip": "Defines wether to encode the video, keep the frames, or both.",
+  "config.shutter.recSettings.framerate": "Recording Framerate",
+  "config.shutter.recSettings.framerate.@Tooltip": "Set the framerate with which the path will be rendered.",
+  "config.shutter.recSettings.skipCountdown": "Skip Countdown",
+  "config.shutter.recSettings.skipCountdown.@Tooltip": "Whether or not to skip the countdown when starting a recording.",
 
   "config.shutter.pathStyle.line": "Lines",
   "config.shutter.pathStyle.cubes": "Cubes",
@@ -61,6 +72,17 @@
   "config.shutter.notification.action_bar": "Action Bar",
   "config.shutter.notification.toasts": "Toast Popups",
   "config.shutter.notification.chat": "Chat Messages",
+
+  "config.shutter.framerate.20": "20 FPS",
+  "config.shutter.framerate.40": "40 FPS",
+  "config.shutter.framerate.60": "60 FPS",
+  "config.shutter.framerate.80": "80 FPS",
+  "config.shutter.framerate.100": "100 FPS",
+  "config.shutter.framerate.120": "120 FPS",
+
+  "config.shutter.recording.frames": "Frames",
+  "config.shutter.recording.video": "Video",
+  "config.shutter.recording.both": "Both",
 
   "msg.shutter.headline.cmd.failed": "Command failed",
   "msg.shutter.headline.cmd.success": "Command succeeded",
@@ -81,6 +103,8 @@
   "msg.shutter.error.io": "Import Error! %s",
   "msg.shutter.error.import": "Failed to import path!",
   "msg.shutter.error.offset_empty": "Current path is empty!",
+  "msg.shutter.error.recording_error": "FFMPEG Error! Code: %d",
+  "msg.shutter.error.no_ffmpeg": "FFMPEG not found!",
   "msg.shutter.ok.stopped_following": "Stopped following the path.",
   "msg.shutter.ok.path_cleared": "Path has been cleared.",
   "msg.shutter.ok.go_to_node": "Moving to Node #%d.",
@@ -97,6 +121,8 @@
   "msg.shutter.ok.pastebin": "Upload Successful! URL: %s",
   "msg.shutter.ok.import": "Successfully imported path \"%s\".",
   "msg.shutter.ok.offset": "Offset Path.",
+  "msg.shutter.ok.recording_start": "Encoding in progress...",
+  "msg.shutter.ok.recording_done": "Encoding successful!",
 
   "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",
   "msg.shutter.help.line": "§8+---------------------------------------------------+",
@@ -133,5 +159,6 @@
   "msg.shutter.help.cmd.upload": "Uploads the current path to a named pastebin.",
   "msg.shutter.help.cmd.import": "Imports a JSON file with the specified name as path.",
   "msg.shutter.help.cmd.download": "Downloads a pastebin with the specified URL as path.",
-  "msg.shutter.help.cmd.offset": "Moves the current path to the camera's current position."
+  "msg.shutter.help.cmd.offset": "Moves the current path to the camera's current position.",
+  "msg.shutter.help.cmd.record": "Starts a recording of the current path."
 }
