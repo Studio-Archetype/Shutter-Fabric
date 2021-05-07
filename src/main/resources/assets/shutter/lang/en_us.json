@@ -122,6 +122,7 @@
   "msg.shutter.ok.import": "Successfully imported path \"%s\".",
   "msg.shutter.ok.offset": "Offset Path.",
   "msg.shutter.ok.recording_start": "Encoding in progress...",
+  "msg.shutter.ok.recording_wait": "Do not quit the game!",
   "msg.shutter.ok.recording_done": "Encoding successful!",
 
   "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",

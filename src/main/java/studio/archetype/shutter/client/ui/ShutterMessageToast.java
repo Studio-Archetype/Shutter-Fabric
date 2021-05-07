@@ -59,7 +59,7 @@ public class ShutterMessageToast extends ShutterToast {
 
     public enum Type {
         POSITIVE(ToastGraphics.STRIP_GREEN),
-        NEGATIVE(ToastGraphics.STRIP_RED),
+        NEUTRAL(ToastGraphics.STRIP_RED),
         ERROR(ToastGraphics.STRIP_EXCLAIM);
 
         public ToastGraphics graphic;

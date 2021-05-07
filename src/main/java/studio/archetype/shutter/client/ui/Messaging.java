@@ -43,7 +43,7 @@ public final class Messaging {
 
     public enum MessageType {
         POSITIVE(ShutterMessageToast.Type.POSITIVE),
-        NEUTRAL(ShutterMessageToast.Type.NEGATIVE),
+        NEUTRAL(ShutterMessageToast.Type.NEUTRAL),
         NEGATIVE(ShutterMessageToast.Type.ERROR);
 
         public ShutterMessageToast.Type toastGraphic;

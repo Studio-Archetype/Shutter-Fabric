@@ -7,11 +7,9 @@ import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.camera.PathIterator;
 import studio.archetype.shutter.client.cmd.PathControlCommand;
@@ -25,7 +23,7 @@ import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
 import studio.archetype.shutter.pathing.CameraPathManager;
-import studio.archetype.shutter.util.CliUtils;
+import studio.archetype.shutter.util.AsyncUtils;
 
 public class ShutterClient implements ClientModInitializer {
 
@@ -51,6 +49,7 @@ public class ShutterClient implements ClientModInitializer {
 
         ClientConfigManager.register();
         InputHandler.setupKeybinds();
+        AsyncUtils.init();
 
         this.commandFilter = new CommandFilter();
         this.pathRenderer = new CameraPathRenderer();

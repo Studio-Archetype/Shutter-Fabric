@@ -12,7 +12,6 @@ import me.sargunvohra.mcmods.autoconfig1u.gui.ConfigScreenProvider;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.command.TitleCommand;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
