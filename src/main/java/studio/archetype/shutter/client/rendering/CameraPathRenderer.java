@@ -8,6 +8,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.config.enums.PathStyle;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.InterpolationData;
 import studio.archetype.shutter.pathing.PathNode;
@@ -72,7 +73,7 @@ public class CameraPathRenderer {
 
                 previous = p;
             }
-            if (config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED && !config.pathSettings.showNodeHead)
+            if (config.pathSettings.pathStyle == PathStyle.ADVANCED && !config.pathSettings.showNodeHead)
                 DrawUtils.renderCube(
                         node.getPosition(),
                         .2F,
@@ -91,7 +92,7 @@ public class CameraPathRenderer {
 
         PathNode last = camPath.getNodes().getLast();
 
-        if(config.pathSettings.pathStyle == ClientConfig.PathStyle.ADVANCED && !config.pathSettings.showNodeHead)
+        if(config.pathSettings.pathStyle == PathStyle.ADVANCED && !config.pathSettings.showNodeHead)
             DrawUtils.renderCube(
                     last.getPosition(),
                     .2F,

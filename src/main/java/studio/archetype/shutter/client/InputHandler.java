@@ -16,6 +16,7 @@ import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.Messaging;
+import studio.archetype.shutter.client.ui.RecordingScreen;
 import studio.archetype.shutter.pathing.PathNode;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
@@ -30,7 +31,7 @@ public class InputHandler {
     private static KeyBinding zoomIn, zoomOut, zoomReset;
     private static KeyBinding actionKey;
     private static KeyBinding createNode, visualizePath, startPath, clearPath;
-    private static KeyBinding /*openScreen,*/ openConfig;
+    private static KeyBinding openScreen, openConfig;
     private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
 
     public static void setupKeybinds() {
@@ -88,12 +89,12 @@ public class InputHandler {
                 GLFW.GLFW_KEY_KP_ENTER,
                 "category.shutter.keybinds"
         ));
-        /*openScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        openScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.shutter.cam.open_screen",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_DECIMAL,
                 "category.shutter.keybinds"
-        ));*/
+        ));
 
         openConfig = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.shutter.cam.open_config",
@@ -179,8 +180,8 @@ public class InputHandler {
                             new TranslatableText("msg.shutter.error.not_enough_show"),
                             Messaging.MessageType.NEGATIVE);                }
             }
-            /*if(openScreen.wasPressed())
-                c.openScreen(new PathListScreen(c.world));*/
+            if(openScreen.wasPressed())
+                c.openScreen(new RecordingScreen(ClientConfigManager.CLIENT_CONFIG));
             if(openConfig.wasPressed()) {
                 ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, c.currentScreen);
                 provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());

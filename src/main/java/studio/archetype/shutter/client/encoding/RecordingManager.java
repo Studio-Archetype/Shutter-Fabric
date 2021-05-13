@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.client.ui.ShutterMessageToast;
 import studio.archetype.shutter.client.ui.ShutterWaitingToast;
@@ -144,7 +145,7 @@ public class RecordingManager {
         if(isRecording()) {
             this.targetFramerate = 0;
             this.currentFramecounter = this.totalFramecount = 0;
-            if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode != ClientConfig.RecordingMode.FRAMES) {
+            if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode != RecordingMode.FRAMES) {
                 AsyncUtils.queueAsync(createFfmpegCommand(), onEncodingFinish, onEncodingError);
                 this.toast = new ShutterWaitingToast(
                         ShutterMessageToast.Type.NEUTRAL,
@@ -157,7 +158,7 @@ public class RecordingManager {
     }
 
     private void finishEncoding() {
-        if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode == ClientConfig.RecordingMode.VIDEO) {
+        if(ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode == RecordingMode.VIDEO) {
             try {
                 FileUtils.deleteDirectory(RECORD_DIR.resolve(this.filename).toFile());
             } catch (IOException ignored) { }
@@ -169,7 +170,7 @@ public class RecordingManager {
     private CompletableFuture<Integer> createFfmpegCommand() {
         int width = MinecraftClient.getInstance().getWindow().getWidth();
         int height = MinecraftClient.getInstance().getWindow().getHeight();
-        Path output = ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode == ClientConfig.RecordingMode.BOTH ?
+        Path output = ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode == RecordingMode.BOTH ?
                 RECORD_DIR.resolve(this.filename) : RECORD_DIR;
 
         return CliUtils.runCommandAsync("ffmpeg",

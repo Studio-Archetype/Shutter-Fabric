@@ -20,6 +20,7 @@ import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.client.encoding.RecordingManager;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
@@ -244,7 +245,7 @@ public final class PathControlCommand {
     }
 
     private static int initRecording(CommandContext<FabricClientCommandSource> ctx, double pathTime, String name) {
-        if(!CliUtils.isCommandAvailable("ffmpeg")) {
+        if(!CliUtils.isCommandAvailable("ffmpeg") && ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode != RecordingMode.FRAMES) {
             Messaging.sendMessage(
                     new TranslatableText("msg.shutter.headline.cmd.failed"),
                     new TranslatableText("msg.shutter.error.no_ffmpeg"),

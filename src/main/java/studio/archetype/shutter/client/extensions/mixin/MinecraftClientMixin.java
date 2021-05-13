@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
+import studio.archetype.shutter.util.AsyncUtils;
 
 @Mixin(MinecraftClient.class)
 abstract class MinecraftClientMixin {
@@ -58,6 +59,7 @@ abstract class MinecraftClientMixin {
                 if (client.getPathIterator().isIterating())
                     client.getPathIterator().end();
                 client.getFramerateHandler().initRecording(0, "");
+                AsyncUtils.cancelAll();
             }
             client.getSaveFile().save();
         } catch(PathTooSmallException ignored) { }
@@ -75,6 +77,7 @@ abstract class MinecraftClientMixin {
                 if (client.getPathIterator().isIterating())
                     client.getPathIterator().end();
                 client.getFramerateHandler().initRecording(0, "");
+                AsyncUtils.cancelAll();
             }
             client.getSaveFile().save();
         } catch(PathTooSmallException ignored) { }
