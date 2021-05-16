@@ -24,7 +24,9 @@ import java.util.Optional;
 
 public class SaveFile {
 
-    private static final Path SHUTTER_DIR = FabricLoader.getInstance().getGameDir().resolve("shutter");
+    public static final Path SHUTTER_DIR = FabricLoader.getInstance().getGameDir().resolve("shutter");
+    public static final Path SHUTTER_REC_DIR = SHUTTER_DIR.resolve("recordings");
+
     private static final File PATH_FILE = SHUTTER_DIR.resolve("shutter_paths.nbt").toFile();
 
     private final Map<String, Map<Identifier, CameraPathManager>> remoteServerSaves;

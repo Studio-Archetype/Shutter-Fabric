@@ -18,7 +18,7 @@ import studio.archetype.shutter.client.cmd.PathNodeCommand;
 import studio.archetype.shutter.client.cmd.PathVisualCommands;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.SaveFile;
-import studio.archetype.shutter.client.encoding.RecordingManager;
+import studio.archetype.shutter.client.processing.RecordingManager;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;

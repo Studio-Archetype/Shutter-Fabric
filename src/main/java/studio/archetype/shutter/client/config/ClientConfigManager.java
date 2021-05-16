@@ -11,10 +11,15 @@ import studio.archetype.shutter.pathing.CameraPathManager;
 public class ClientConfigManager {
 
     public static ClientConfig CLIENT_CONFIG;
+    public static FfmpegRecordConfig FFMPEG_CONFIG;
 
     public static void register() {
         AutoConfig.register(ClientConfig.class, JanksonConfigSerializer::new);
         CLIENT_CONFIG = AutoConfig.getConfigHolder(ClientConfig.class).getConfig();
+
+        AutoConfig.register(FfmpegRecordConfig.class, JanksonConfigSerializer::new);
+        FFMPEG_CONFIG = AutoConfig.getConfigHolder(FfmpegRecordConfig.class).getConfig();
+
         AutoConfig.getConfigHolder(ClientConfig.class).registerSaveListener((h, c) -> {
             ShutterClient shutter = ShutterClient.INSTANCE;
             if(shutter.getPathFollower().isFollowing())

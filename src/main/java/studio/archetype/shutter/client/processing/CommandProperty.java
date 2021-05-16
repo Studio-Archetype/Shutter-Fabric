@@ -1,14 +1,15 @@
-package studio.archetype.shutter.client.encoding;
+package studio.archetype.shutter.client.processing;
 
 public class CommandProperty {
 
     private final String key;
-    private final Object defaultValue;
-    private Object value;
+    private final Object value;
 
     public static CommandProperty flag(String flag) {
         return new CommandProperty(flag, null);
     }
+
+    public static CommandProperty value(String value) { return new CommandProperty(null, value); }
 
     public static CommandProperty property(String key, Object defaultValue) {
         return new CommandProperty(key, defaultValue);
@@ -16,23 +17,19 @@ public class CommandProperty {
 
     private CommandProperty(String key, Object defaultValue) {
         this.key = key;
-        this.defaultValue = defaultValue;
+        this.value = defaultValue;
     }
 
     public CommandProperty get(Object value) {
-        CommandProperty c =  new CommandProperty(this.key, this.defaultValue);
-        c.value = value;
-        return c;
-    }
-
-    public CommandProperty get() {
-        return get(this.defaultValue);
+        return new CommandProperty(this.key, value);
     }
 
     @Override
     public String toString() {
-        if(defaultValue == null)
+        if(value == null)
             return key;
+        else if(key == null)
+            return value.toString();
         else
             return key + " " + value;
     }

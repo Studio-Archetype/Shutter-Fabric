@@ -1,16 +1,16 @@
 package studio.archetype.shutter.util;
 
 import com.google.common.collect.Lists;
-import studio.archetype.shutter.client.encoding.CommandProperty;
+import studio.archetype.shutter.client.config.SaveFile;
+import studio.archetype.shutter.client.processing.CommandProperty;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CliUtils {
@@ -26,19 +26,21 @@ public class CliUtils {
     public static boolean isCommandAvailable(String command) {
         for(CommandProperty p : versionFlags) {
             try {
-                if(runCommand(command, p.get()) == 0)
+                if(runBlockingCommand(command,SaveFile.SHUTTER_DIR.toFile(), false, p) == 0)
                     return true;
             } catch(IOException | InterruptedException ignored) { }
         }
         return false;
     }
 
-    public static int runCommand(String command, CommandProperty... properties) throws IOException, InterruptedException {
+    public static Process createCommandProcess(String command, File directory, boolean redirectError, CommandProperty... properties) throws IOException {
         List<String> args = Lists.newArrayList(command);
         Stream.of(properties).forEach(p -> args.addAll(Lists.newArrayList(p.toString().split(" "))));
-        ProcessBuilder builder = new ProcessBuilder(args).redirectErrorStream(true);
+        return new ProcessBuilder(args).redirectErrorStream(redirectError).directory(directory).start();
+    }
 
-        Process process = builder.start();
+    public static int runBlockingCommand(String command, File directory, boolean redirectError, CommandProperty... properties) throws IOException, InterruptedException {
+        Process process = createCommandProcess(command, directory, redirectError, properties);
         try(BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()))) {
             while (process.isAlive())
                 reader.readLine();
@@ -47,14 +49,16 @@ public class CliUtils {
         return process.waitFor();
     }
 
-    public static CompletableFuture<Integer> runCommandAsync(String command, CommandProperty... properties) {
+    public static CompletableFuture<Integer> runCommandAsync(String command, File directory, boolean redirectError, CommandProperty... properties) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return runCommand(command, properties);
+                return runBlockingCommand(command, directory, redirectError, properties);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
                 return -1;
             }
         });
     }
+
+
 }

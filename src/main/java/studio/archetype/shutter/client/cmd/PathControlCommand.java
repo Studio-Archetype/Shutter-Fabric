@@ -21,7 +21,7 @@ import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
-import studio.archetype.shutter.client.encoding.RecordingManager;
+import studio.archetype.shutter.client.processing.RecordingManager;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
@@ -268,7 +268,7 @@ public final class PathControlCommand {
             if(manager.isVisualizing())
                 manager.togglePathVisualization(false);
             manager.startCameraPath(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false);
-            red.initRecording(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.framerate, name);
+            red.initRecording(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value, name);
             return 1;
         } catch(PathTooSmallException e) {
             Messaging.sendMessage(

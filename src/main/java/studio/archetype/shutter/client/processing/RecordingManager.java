@@ -1,4 +1,4 @@
-package studio.archetype.shutter.client.encoding;
+package studio.archetype.shutter.client.processing;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,8 +11,8 @@ import net.minecraft.util.Formatting;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import studio.archetype.shutter.client.ShutterClient;
-import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.client.ui.ShutterMessageToast;
@@ -173,15 +173,15 @@ public class RecordingManager {
         Path output = ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode == RecordingMode.BOTH ?
                 RECORD_DIR.resolve(this.filename) : RECORD_DIR;
 
-        return CliUtils.runCommandAsync("ffmpeg",
-                    FfmpegProperties.FRAMERATE.get(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.framerate),
-                    FfmpegProperties.FORMAT.get(),
+        return CliUtils.runCommandAsync("ffmpeg", SaveFile.SHUTTER_REC_DIR.resolve(this.filename).toFile(), true,
+                    FfmpegProperties.FRAMERATE.get(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value),
+                    FfmpegProperties.FORMAT,
                     FfmpegProperties.RESOLUTION.get(String.format("%dx%d", width, height)),
                     FfmpegProperties.INPUT.get(RECORD_DIR.resolve(this.filename).toAbsolutePath() + File.separator + "frame_%04d.png"),
-                    FfmpegProperties.CODEC.get(),
-                    FfmpegProperties.QUALITY.get(),
-                    FfmpegProperties.PIXEL_FORMAT.get(),
-                    FfmpegProperties.OVERWRITE.get(),
+                    FfmpegProperties.CODEC,
+                    FfmpegProperties.QUALITY,
+                    FfmpegProperties.PIXEL_FORMAT,
+                    FfmpegProperties.OVERWRITE,
                     CommandProperty.flag(output.resolve(this.filename + ".mp4").toAbsolutePath().toString()));
     }
 }

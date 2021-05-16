@@ -11,12 +11,12 @@ public enum RecordingFramerate {
     F100("config.shutter.framerate.100", 100),
     F120("config.shutter.framerate.120", 120);
 
-    public final int framerate;
+    public final int value;
     private final String key;
 
     RecordingFramerate(String key, int framerate) {
         this.key = key;
-        this.framerate = framerate;
+        this.value = framerate;
     }
 
     public String toString() {
