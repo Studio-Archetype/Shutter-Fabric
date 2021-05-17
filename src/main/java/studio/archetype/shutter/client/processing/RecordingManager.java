@@ -117,7 +117,7 @@ public class RecordingManager {
         return false;
     }
 
-    public void updateTimings(Framebuffer buffer) {
+    public void finalizeTick(Framebuffer buffer) {
         if(isFrameQueued || !isRecording())
             return;
 

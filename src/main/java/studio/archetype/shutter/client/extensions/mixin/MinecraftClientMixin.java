@@ -24,7 +24,6 @@ abstract class MinecraftClientMixin {
     @Shadow @Nullable public ClientWorld world;
     @Shadow @Nullable private ClientConnection connection;
     @Shadow public boolean skipGameRender;
-    @Shadow @Final private Framebuffer framebuffer;
 
     @Shadow public abstract boolean isIntegratedServerRunning();
 
@@ -32,19 +31,19 @@ abstract class MinecraftClientMixin {
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderTickCounter;beginRenderTick(J)I"))
     private int modifyScheduledTicks(RenderTickCounter renderTickCounter, long timeMillis) {
-        return ShutterClient.INSTANCE.getFramerateHandler().processTick(renderTickCounter, timeMillis);
+        return ShutterClient.INSTANCE.getFramerateController().processTick(renderTickCounter, timeMillis);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableCull()V", shift = At.Shift.BEFORE))
     private void gameRenderSkip(boolean tick, CallbackInfo info) {
         originalSkip = this.skipGameRender;
-        this.skipGameRender = ShutterClient.INSTANCE.getFramerateHandler().skipRenderTick();
+        this.skipGameRender = ShutterClient.INSTANCE.getFramerateController().skipRenderTick();
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/Framebuffer;endWrite()V", shift = At.Shift.BEFORE))
     private void injectAfterRender(boolean tick, CallbackInfo info) {
         this.skipGameRender = originalSkip;
-        ShutterClient.INSTANCE.getFramerateHandler().updateTimings(this.framebuffer);
+        ShutterClient.INSTANCE.getFramerateController().finalizeTick();
     }
 
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))

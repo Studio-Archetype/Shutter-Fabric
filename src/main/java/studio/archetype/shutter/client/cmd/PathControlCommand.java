@@ -22,6 +22,7 @@ import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.client.processing.RecordingManager;
+import studio.archetype.shutter.client.processing.jobs.ForcedFramerateJob;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
@@ -263,12 +264,13 @@ public final class PathControlCommand {
 
     private static int startRecording(World w, String name) {
         try {
-            RecordingManager red = ShutterClient.INSTANCE.getFramerateHandler();
             CameraPathManager manager = ShutterClient.INSTANCE.getPathManager(w);
             if(manager.isVisualizing())
                 manager.togglePathVisualization(false);
             manager.startCameraPath(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false);
-            red.initRecording(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value, name);
+
+            new ForcedFramerateJob(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime / 20, name);
+
             return 1;
         } catch(PathTooSmallException e) {
             Messaging.sendMessage(

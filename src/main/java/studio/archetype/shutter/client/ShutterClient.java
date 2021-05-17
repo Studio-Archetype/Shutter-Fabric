@@ -18,6 +18,7 @@ import studio.archetype.shutter.client.cmd.PathNodeCommand;
 import studio.archetype.shutter.client.cmd.PathVisualCommands;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.SaveFile;
+import studio.archetype.shutter.client.processing.FramerateController;
 import studio.archetype.shutter.client.processing.RecordingManager;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
@@ -40,6 +41,7 @@ public class ShutterClient implements ClientModInitializer {
     private SaveFile saveFile;
 
     private RecordingManager recordingManager;
+    private FramerateController framerateController;
 
     private double zoom, prevZoom;
 
@@ -60,6 +62,7 @@ public class ShutterClient implements ClientModInitializer {
         this.saveFile = SaveFile.getSaveFile();
 
         this.recordingManager = new RecordingManager();
+        this.framerateController = new FramerateController();
 
         CommandDispatcher<FabricClientCommandSource> dis = ClientCommandManager.DISPATCHER;
         PathControlCommand.register(dis);
@@ -102,6 +105,10 @@ public class ShutterClient implements ClientModInitializer {
     public SaveFile getSaveFile() { return saveFile; }
 
     public RecordingManager getFramerateHandler() { return recordingManager; }
+
+    public FramerateController getFramerateController() {
+        return framerateController;
+    }
 
     public double getZoom() {
         return this.zoom;

@@ -34,20 +34,6 @@ public final class PathVisualCommands {
                                 .then(argument("loop", BoolArgumentType.bool())
                                     .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop"))))));
 
-        if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            LiteralCommandNode<FabricClientCommandSource> frame = dispatcher.register(
-                    literal("s")
-                        .requires(src -> src.hasPermissionLevel(4))
-                            .then(literal("framerate")
-                                    .then(argument("frames", IntegerArgumentType.integer(0))
-                                            .executes(ctx -> {
-                                                int framerate = IntegerArgumentType.getInteger(ctx, "frames");
-                                                ShutterClient.INSTANCE.getFramerateHandler().initRecording(framerate, "test");
-                                                return 1;
-                                            }))));
-            dispatcher.register(literal("shutter").redirect(frame));
-        }
-
         dispatcher.register(literal("shutter").redirect(node));
     }
 
