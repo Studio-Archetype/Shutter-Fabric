@@ -1,14 +1,12 @@
-package studio.archetype.shutter.util;
+package studio.archetype.shutter.util.cli;
 
 import com.google.common.collect.Lists;
 import studio.archetype.shutter.client.config.SaveFile;
-import studio.archetype.shutter.client.processing.CommandProperty;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;

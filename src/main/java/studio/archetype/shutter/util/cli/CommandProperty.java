@@ -1,4 +1,4 @@
-package studio.archetype.shutter.client.processing;
+package studio.archetype.shutter.util.cli;
 
 public class CommandProperty {
 

@@ -1,11 +1,12 @@
-package studio.archetype.shutter.client.processing;
+package studio.archetype.shutter.client;
 
 import net.minecraft.client.render.RenderTickCounter;
 
 public final class FramerateController {
 
     private int targetFramerate, tickFramesPassed, tickFrameThreshold = 0;
-    private boolean allowNextFrame, hasTicked;
+    private volatile boolean allowNextFrame;
+    private boolean hasTicked, hasServerTicked;
 
     private float tickDelta;
 
@@ -13,7 +14,7 @@ public final class FramerateController {
         this.targetFramerate = framerate;
         this.tickDelta = 1.0F / framerate;
         this.tickFrameThreshold = targetFramerate / 20;
-        this.allowNextFrame = this.hasTicked = true;
+        this.allowNextFrame = this.hasTicked = this.hasServerTicked = true;
         this.tickFramesPassed = 0;
     }
 
@@ -51,6 +52,18 @@ public final class FramerateController {
         return 0;
     }
 
+    public boolean isServerTickValid() {
+        if(!isControlling())
+            return true;
+
+        if(tickFramesPassed++ % tickFrameThreshold - 1 == 0 && !hasServerTicked) {
+            hasServerTicked = true;
+            return true;
+        }
+
+        return false;
+    }
+
     public boolean skipRenderTick() {
         return isControlling() && !allowNextFrame;
     }
@@ -59,7 +72,7 @@ public final class FramerateController {
         if(!isControlling())
             return;
 
-        this.allowNextFrame = this.hasTicked = false;
+        this.allowNextFrame = this.hasTicked = this.hasServerTicked = false;
         if(tickFramesPassed >= tickFrameThreshold)
             tickFramesPassed = 0;
     }

@@ -44,7 +44,7 @@ public abstract class MinecraftServerMixin {
     @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setFavicon(Lnet/minecraft/server/ServerMetadata;)V", shift = At.Shift.AFTER))
     public void stopTicking(CallbackInfo info) {
         while(this.isRunning()) {
-            if(!ShutterClient.INSTANCE.getFramerateHandler().isServerTickValid()) {
+            if(!ShutterClient.INSTANCE.getFramerateController().isServerTickValid()) {
                 this.lastTimeReference = this.timeReference = Util.getMeasuringTimeMs();
                 continue;
             }

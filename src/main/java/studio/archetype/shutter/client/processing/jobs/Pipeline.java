@@ -1,4 +1,4 @@
-package studio.archetype.shutter.client.processing;
+package studio.archetype.shutter.client.processing.jobs;
 
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
@@ -8,12 +8,12 @@ import studio.archetype.shutter.client.processing.capturing.EnforcedFramerateCap
 import studio.archetype.shutter.client.processing.converting.DummyConverter;
 import studio.archetype.shutter.client.processing.converting.FrameConverter;
 import studio.archetype.shutter.client.processing.converting.OpenGl2BitmapConverter;
-import studio.archetype.shutter.client.processing.frames.BitmapFrame;
+import studio.archetype.shutter.client.processing.frames.RgbaFrame;
 import studio.archetype.shutter.client.processing.frames.DummyFrame;
 import studio.archetype.shutter.client.processing.frames.Frame;
 import studio.archetype.shutter.client.processing.frames.OpenGlFrame;
 import studio.archetype.shutter.client.processing.processors.DummyProcessor;
-import studio.archetype.shutter.client.processing.processors.FfmpegVideoProcess;
+import studio.archetype.shutter.client.processing.processors.FfmpegVideoProcessor;
 import studio.archetype.shutter.client.processing.processors.FrameProcessor;
 import studio.archetype.shutter.util.ScreenSize;
 
@@ -94,9 +94,8 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
         @Override
         public void run() {
             O outputFrame = frameConverter.convert(this.inputFrame);
-            int frameId = outputFrame.getFrameId();
             synchronized (processorLock) {
-                while(nextFrameId != frameId) {
+                while(nextFrameId != outputFrame.getFrameId()) {
                     try {
                         processorLock.wait();
                     } catch (InterruptedException e) {
@@ -110,7 +109,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
         }
     }
 
-    public static Pipeline<OpenGlFrame, BitmapFrame, EnforcedFramerateCapturer, OpenGl2BitmapConverter, FfmpegVideoProcess> getDefaultPipeline(int framerate, ScreenSize size, FfmpegVideoProcess processor) {
+    public static Pipeline<OpenGlFrame, RgbaFrame, EnforcedFramerateCapturer, OpenGl2BitmapConverter, FfmpegVideoProcessor> getDefaultPipeline(int framerate, ScreenSize size, FfmpegVideoProcessor processor) {
         return new Pipeline<>(new EnforcedFramerateCapturer(framerate, size), new OpenGl2BitmapConverter(), processor);
     }
 

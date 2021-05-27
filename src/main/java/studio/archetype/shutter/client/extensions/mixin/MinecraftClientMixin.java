@@ -57,7 +57,7 @@ abstract class MinecraftClientMixin {
                     client.getPathFollower().end();
                 if (client.getPathIterator().isIterating())
                     client.getPathIterator().end();
-                client.getFramerateHandler().initRecording(0, "");
+                ShutterClient.INSTANCE.getFramerateController().stopControlling();
                 AsyncUtils.cancelAll();
             }
             client.getSaveFile().save();
@@ -75,7 +75,7 @@ abstract class MinecraftClientMixin {
                     client.getPathFollower().end();
                 if (client.getPathIterator().isIterating())
                     client.getPathIterator().end();
-                client.getFramerateHandler().initRecording(0, "");
+                ShutterClient.INSTANCE.getFramerateController().stopControlling();
                 AsyncUtils.cancelAll();
             }
             client.getSaveFile().save();

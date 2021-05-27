@@ -38,6 +38,8 @@
   "config.shutter.genSettings.hideEntityLabels.@Tooltip": "Set whether entity labels are shown during path following.",
   "config.shutter.genSettings.hideArmorStands": "Hide Armor Stands",
   "config.shutter.genSettings.hideArmorStands.@Tooltip": "Set whether invisible armor stands show up as translucent in spectator.",
+  "config.shutter.genSettings.hideUi": "Hide HUD",
+  "config.shutter.genSettings.hideUi.@Tooltip": "Sets whether the HUD gets automatically hidden upon starting a path/recording.",
   "config.shutter.pathSettings": "Visualization",
   "config.shutter.pathSettings.@Tooltip": "Settings regarding the Visualization of the Camera Path .",
   "config.shutter.pathSettings.showNodeHead": "Show Node Heads",
@@ -53,11 +55,13 @@
   "config.shutter.recSettings": "Recording Settings",
   "config.shutter.recSettings.@Tooltip": "Settings related to recording and encoding.",
   "config.shutter.recSettings.renderMode": "Render Mode",
-  "config.shutter.recSettings.renderMode.@Tooltip": "Defines wether to encode the video, keep the frames, or both.",
+  "config.shutter.recSettings.renderMode.@Tooltip": "Defines whether to encode the video, keep the frames, or both.",
   "config.shutter.recSettings.framerate": "Recording Framerate",
   "config.shutter.recSettings.framerate.@Tooltip": "Set the framerate with which the path will be rendered.",
   "config.shutter.recSettings.skipCountdown": "Skip Countdown",
   "config.shutter.recSettings.skipCountdown.@Tooltip": "Whether or not to skip the countdown when starting a recording.",
+  "config.shutter.recSettings.codec": "Video Codec",
+  "config.shutter.recSettings.codec.@Tooltip": "Determines what video codec is used for recording a path.",
 
   "config.shutter.pathStyle.line": "Lines",
   "config.shutter.pathStyle.cubes": "Cubes",
@@ -83,6 +87,9 @@
   "config.shutter.recording.frames": "Frames",
   "config.shutter.recording.video": "Video",
   "config.shutter.recording.both": "Both",
+
+  "config.shutter.recording.hx264": "Hx264",
+  "config.shutter.recording.hx265": "Hx265",
 
   "msg.shutter.headline.cmd.failed": "Command failed",
   "msg.shutter.headline.cmd.success": "Command succeeded",

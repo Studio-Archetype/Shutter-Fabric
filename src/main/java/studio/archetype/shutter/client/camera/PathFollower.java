@@ -79,7 +79,6 @@ public class PathFollower {
         c.options.hudHidden = this.oldHideHud;
         ShutterClient.INSTANCE.getCommandFilter().changeGameMode(oldGamemode);
         ShutterClient.INSTANCE.setZoom(this.oldFov);
-        ShutterClient.INSTANCE.getFramerateHandler().finishRecording();
         ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
     }
 
@@ -93,7 +92,7 @@ public class PathFollower {
                 MathHelper.lerp(delta, prev.getPosition().getY(), cur.getPosition().getY()),
                 MathHelper.lerp(delta, prev.getPosition().getZ(), cur.getPosition().getZ()));
         float pitch = MathHelper.lerp(delta, (float)prev.getRotation().getX(), (float)cur.getRotation().getX());
-        float yaw = MathHelper.lerp(delta, (float)prev.getRotation().getY(), (float)cur.getRotation().getY());
+        float yaw = MathHelper.lerp(delta, (float)prev.getRotation().getY(), (float)cur.getRotation().getY()) % 360;
         float roll = MathHelper.lerp(delta, (float)prev.getRotation().getZ(), (float)cur.getRotation().getZ());
         double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
 

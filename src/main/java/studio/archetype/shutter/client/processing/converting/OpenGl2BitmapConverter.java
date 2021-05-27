@@ -1,17 +1,17 @@
 package studio.archetype.shutter.client.processing.converting;
 
-import studio.archetype.shutter.client.processing.frames.BitmapFrame;
+import studio.archetype.shutter.client.processing.frames.RgbaFrame;
 import studio.archetype.shutter.client.processing.frames.OpenGlFrame;
 import studio.archetype.shutter.util.ScreenSize;
 
 import java.nio.ByteBuffer;
 
-public class OpenGl2BitmapConverter implements FrameConverter<OpenGlFrame, BitmapFrame> {
+public class OpenGl2BitmapConverter implements FrameConverter<OpenGlFrame, RgbaFrame> {
 
     private byte[] row, rowSwap;
 
     @Override
-    public BitmapFrame convert(OpenGlFrame rawFrame) {
+    public RgbaFrame convert(OpenGlFrame rawFrame) {
         ScreenSize size = rawFrame.getSize();
         int rowSize = size.getWidth() * 4;
         if (row == null || row.length < rowSize) {
@@ -35,7 +35,6 @@ public class OpenGl2BitmapConverter implements FrameConverter<OpenGlFrame, Bitma
             buffer.put(rowSwap);
         }
         buffer.rewind();
-        System.out.println("Converted Frame");
-        return new BitmapFrame(rawFrame.getFrameId(), size, buffer);
+        return new RgbaFrame(rawFrame.getFrameId(), size, buffer);
     }
 }

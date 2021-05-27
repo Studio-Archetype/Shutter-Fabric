@@ -21,14 +21,13 @@ import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
-import studio.archetype.shutter.client.processing.RecordingManager;
 import studio.archetype.shutter.client.processing.jobs.ForcedFramerateJob;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
-import studio.archetype.shutter.util.CliUtils;
+import studio.archetype.shutter.util.cli.CliUtils;
 
 import java.util.*;
 
@@ -38,6 +37,8 @@ import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.lit
 public final class PathControlCommand {
 
     private static Pair<Integer, String> countdown;
+
+    private static double rot = 0;
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(

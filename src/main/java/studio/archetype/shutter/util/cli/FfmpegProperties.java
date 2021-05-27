@@ -1,4 +1,4 @@
-package studio.archetype.shutter.client.processing;
+package studio.archetype.shutter.util.cli;
 
 public final class FfmpegProperties {
 
@@ -11,4 +11,5 @@ public final class FfmpegProperties {
     public static CommandProperty OUTPUT = CommandProperty.value("pipe:1");
     public static CommandProperty CODEC = CommandProperty.property("-vcodec", "libx264");
     public static CommandProperty OVERWRITE = CommandProperty.flag("-y");
+    public static CommandProperty HIDE_BANNER = CommandProperty.flag("-hide_banner");
 }
