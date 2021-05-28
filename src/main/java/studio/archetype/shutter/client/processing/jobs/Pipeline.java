@@ -102,7 +102,14 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
                         Thread.currentThread().interrupt();
                     }
                 }
-                frameProcessor.processFrame(outputFrame);
+                try {
+                    if(!abort)
+                        frameProcessor.processFrame(outputFrame);
+                } catch(IOException e) {
+                    System.out.println("Unable to process Frame#" + outputFrame.getFrameId() + "!");
+                    System.out.println("-> " + e.getMessage());
+                    cancel();
+                }
                 nextFrameId++;
                 processorLock.notifyAll();
             }

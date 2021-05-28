@@ -3,8 +3,8 @@ package studio.archetype.shutter.client.processing.processors;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.stb.STBImageWrite;
 import studio.archetype.shutter.client.config.ClientConfigManager;
-import studio.archetype.shutter.client.config.FfmpegRecordConfig;
 import studio.archetype.shutter.client.config.SaveFile;
+import studio.archetype.shutter.client.config.enums.RecordingCodec;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.util.cli.CommandProperty;
 import studio.archetype.shutter.util.cli.FfmpegProperties;
@@ -47,7 +47,18 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
 
         if(encodeVideo) {
             try {
-                ffmpegProcess = CliUtils.createCommandProcess(CMD, this.directory, true, createCommandProperties());
+                CommandProperty[] args;
+                switch(ClientConfigManager.CLIENT_CONFIG.recSettings.codec) {
+                    case Hx264:
+                        args = createX264Properties();
+                        break;
+                    case Hx265:
+                        args = createX265Properties();
+                        break;
+                    default:
+                        args = new CommandProperty[] { null };
+                }
+                ffmpegProcess = CliUtils.createCommandProcess(CMD, this.directory, true, args);
             } catch(IOException ex) {
                 //TODO Catch Errors
                 ex.printStackTrace();
@@ -65,14 +76,12 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
     }
 
     @Override
-    public void processFrame(RgbaFrame frame) {
+    public void processFrame(RgbaFrame frame) throws IOException {
         try {
             if(this.encodeVideo)
                 this.dataChannel.write(frame.getData());
             if(this.writeFrames)
                 writeFrameToImage(frame);
-        } catch(IOException e) {
-            e.printStackTrace();
         } finally {
             ByteBufferPool.release(frame.getData());
         }
@@ -82,7 +91,6 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
     public void close() {
         if(encodeVideo) {
             IOUtils.closeQuietly(toFfmpeg);
-            ffmpegProcess.destroy();
         }
     }
 
@@ -92,21 +100,44 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
         STBImageWrite.stbi_write_png(path.getAbsolutePath(), frame.getSize().getWidth(), frame.getSize().getHeight(), 4, frame.getData(), 0);
     }
 
-    private CommandProperty[] createCommandProperties() {
-        FfmpegRecordConfig config = ClientConfigManager.FFMPEG_CONFIG;
-
+    private CommandProperty[] createX264Properties() {
         return new CommandProperty[] {
                 FfmpegProperties.OVERWRITE,
                 FfmpegProperties.HIDE_BANNER,
+                CommandProperty.property("-loglevel", "+verbose"),
 
-                FfmpegProperties.RESOLUTION.get(String.format("%dx%d", this.size.getWidth(), this.size.getHeight())),
-                FfmpegProperties.FRAMERATE.get(config.framerate.value),
-                FfmpegProperties.FORMAT.get("rawvideo"),
+                FfmpegProperties.CONTAINER.get("rawvideo"),
                 FfmpegProperties.PIXEL_FORMAT.get("rgba"),
+                FfmpegProperties.RESOLUTION.get(String.format("%dx%d", this.size.getWidth(), this.size.getHeight())),
+                FfmpegProperties.FRAMERATE.get(ClientConfigManager.FFMPEG_CONFIG.framerate.value),
                 FfmpegProperties.INPUT,
 
-                FfmpegProperties.CODEC.get(config.codec.value),
-                FfmpegProperties.QUALITY,
+                FfmpegProperties.CODEC.get(RecordingCodec.Hx264.value),
+                FfmpegProperties.PROPS_X264.get("opencl=true"),
+                FfmpegProperties.PRESET.get("slow"),
+                FfmpegProperties.QUALITY.get(23),
+                FfmpegProperties.PIXEL_FORMAT.get("yuv420p"),
+
+                FfmpegProperties.OUTPUT.get(filename + ".mp4")};
+    }
+
+    private CommandProperty[] createX265Properties() {
+        return new CommandProperty[] {
+                FfmpegProperties.OVERWRITE,
+                FfmpegProperties.HIDE_BANNER,
+                CommandProperty.property("-loglevel", "+verbose"),
+
+                FfmpegProperties.CONTAINER.get("rawvideo"),
+                FfmpegProperties.PIXEL_FORMAT.get("rgba"),
+                FfmpegProperties.RESOLUTION.get(String.format("%dx%d", this.size.getWidth(), this.size.getHeight())),
+                FfmpegProperties.FRAMERATE.get(ClientConfigManager.FFMPEG_CONFIG.framerate.value),
+                FfmpegProperties.INPUT,
+
+                FfmpegProperties.CODEC.get(RecordingCodec.Hx265.value),
+                FfmpegProperties.PROPS_X264.get("opencl=true"),
+                FfmpegProperties.PRESET.get("slow"),
+                FfmpegProperties.QUALITY.get(28),
+                FfmpegProperties.PIXEL_FORMAT.get("yuv420p"),
 
                 FfmpegProperties.OUTPUT.get(filename + ".mp4")};
     }

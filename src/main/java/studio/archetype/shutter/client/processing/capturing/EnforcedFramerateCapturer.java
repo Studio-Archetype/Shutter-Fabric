@@ -26,7 +26,6 @@ public class EnforcedFramerateCapturer implements FrameCapturer<OpenGlFrame> {
         this.fb = MinecraftClient.getInstance().getFramebuffer();
         ShutterClient.INSTANCE.getFramerateController().startControlling(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value);
         this.framesDone = 0;
-        System.out.println(targetFrameCount);
     }
 
     @Override
