@@ -17,10 +17,11 @@ import studio.archetype.shutter.client.processing.processors.FfmpegVideoProcesso
 import studio.archetype.shutter.client.processing.processors.FrameProcessor;
 import studio.archetype.shutter.util.ScreenSize;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.*;
 
-public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<I>, K extends FrameConverter<I, O>, P extends FrameProcessor<O>> implements Runnable {
+public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<I>, K extends FrameConverter<I, O>, P extends FrameProcessor<O>> implements Closeable {
 
     private final C frameCapturer;
     private final K frameConverter;
@@ -31,17 +32,18 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
     private int nextFrameId;
     private volatile boolean abort;
 
+    private ExecutorService convertService;
+
     public Pipeline(C capture, K converter, P processor) {
         this.frameCapturer = capture;
         this.frameConverter = converter;
         this.frameProcessor = processor;
     }
 
-    @Override
-    public synchronized void run() {
+    public void setup() {
         this.nextFrameId = 0;
         int availableThreads = Math.max(Runtime.getRuntime().availableProcessors() - 2, 1);
-        ExecutorService convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(2) {
+        this.convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(2) {
             public boolean offer(Runnable runnable) {
                 try {
                     this.put(runnable);
@@ -52,21 +54,28 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
                 return true;
             }
         }, new ThreadPoolExecutor.DiscardPolicy());
+    }
 
+    public boolean onRender() {
         MinecraftClient client = MinecraftClient.getInstance();
-        while(!frameCapturer.isDone() && !abort) {
+        if(!frameCapturer.isDone() && !abort) {
             if (GLFW.glfwWindowShouldClose(client.getWindow().getHandle())) {
                 convertService.shutdown();
-                return;
+                return true;
             }
             I inputFrame = this.frameCapturer.capture();
             if(inputFrame != null)
                 convertService.submit(new ConvertTask(inputFrame));
-        }
+            return false;
+        } else
+            return true;
+    }
 
-        convertService.shutdown();
+    @Override
+    public void close() {
+        this.convertService.shutdown();
         try {
-            convertService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            this.convertService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

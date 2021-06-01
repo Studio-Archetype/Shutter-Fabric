@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.util.WorldSavePath;
@@ -12,13 +13,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.camera.PathIterator;
-import studio.archetype.shutter.client.cmd.PathControlCommand;
-import studio.archetype.shutter.client.cmd.PathManagementCommand;
-import studio.archetype.shutter.client.cmd.PathNodeCommand;
-import studio.archetype.shutter.client.cmd.PathVisualCommands;
+import studio.archetype.shutter.client.cmd.*;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.entities.FreecamEntity;
+import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
 import studio.archetype.shutter.pathing.CameraPathManager;
@@ -49,6 +48,7 @@ public class ShutterClient implements ClientModInitializer {
         ClientConfigManager.register();
         InputHandler.setupKeybinds();
         AsyncUtils.init();
+        Jobs.init();
 
         this.commandFilter = new CommandFilter();
         this.pathRenderer = new CameraPathRenderer();
@@ -57,14 +57,16 @@ public class ShutterClient implements ClientModInitializer {
         this.iterator = new PathIterator();
 
         this.saveFile = SaveFile.getSaveFile();
-
         this.framerateController = new FramerateController();
 
         CommandDispatcher<FabricClientCommandSource> dis = ClientCommandManager.DISPATCHER;
-        PathControlCommand.register(dis);
-        PathNodeCommand.register(dis);
+        PathControlCommands.register(dis);
+        PathNodeCommands.register(dis);
         PathVisualCommands.register(dis);
-        PathManagementCommand.register(dis);
+        PathManagementCommands.register(dis);
+        if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            DebugCommands.register(dis);
+        }
 
         EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, (disp, ctx) -> new PlayerEntityRenderer(disp));
 

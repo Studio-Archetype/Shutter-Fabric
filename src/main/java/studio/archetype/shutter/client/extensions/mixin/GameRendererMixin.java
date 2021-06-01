@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import studio.archetype.shutter.client.ShutterClient;
+import studio.archetype.shutter.client.events.WorldRenderedCallback;
 import studio.archetype.shutter.client.extensions.CameraExt;
 
 @Mixin(GameRenderer.class)
@@ -37,5 +38,10 @@ public abstract class GameRendererMixin {
     @ModifyVariable(method = "getFov", at = @At("STORE"), index = 4)
     public double injectZoom(double d) {
         return this.client.options.fov + ShutterClient.INSTANCE.getZoom(this.client.getTickDelta());
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/Framebuffer;beginWrite(Z)V", shift = At.Shift.BEFORE))
+    public void triggerRenderedEvent(float delta, long startTime, boolean tick, CallbackInfo info) {
+        WorldRenderedCallback.EVENT.invoker().onRendered(this.client.getFramebuffer());
     }
 }

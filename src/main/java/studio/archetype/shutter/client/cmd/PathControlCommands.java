@@ -21,7 +21,7 @@ import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
-import studio.archetype.shutter.client.processing.jobs.ForcedFramerateJob;
+import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
@@ -34,20 +34,18 @@ import java.util.*;
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
-public final class PathControlCommand {
+public final class PathControlCommands {
 
     private static Pair<Integer, String> countdown;
-
-    private static double rot = 0;
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                     .requires(src -> src.hasPermissionLevel(4))
                     .then(literal("help")
-                            .executes(PathControlCommand::printHelp))
+                            .executes(PathControlCommands::printHelp))
                     .then(literal("?")
-                            .executes(PathControlCommand::printHelp))
+                            .executes(PathControlCommands::printHelp))
                     .then(literal("record")
                             .then(argument("filename", StringArgumentType.word())
                                 .executes(ctx -> initRecording(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, StringArgumentType.getString(ctx, "filename")))
@@ -62,19 +60,19 @@ public final class PathControlCommand {
                                         .then(argument("loop", BoolArgumentType.bool())
                                             .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time"), BoolArgumentType.getBool(ctx, "loop"))))))
                     .then(literal("offset")
-                            .executes(PathControlCommand::offsetPath))
+                            .executes(PathControlCommands::offsetPath))
                     .then(literal("stop")
-                            .executes(PathControlCommand::stopPath))
+                            .executes(PathControlCommands::stopPath))
                     .then(literal("clear")
-                            .executes(PathControlCommand::clearPath))
+                            .executes(PathControlCommands::clearPath))
                     .then(literal("config")
-                            .executes(PathControlCommand::openConfig)));
+                            .executes(PathControlCommands::openConfig)));
 
         dispatcher.register(
                 literal("shutter")
                     .redirect(node));
 
-        ClientTickEvents.START_CLIENT_TICK.register(PathControlCommand::onTick);
+        ClientTickEvents.START_CLIENT_TICK.register(PathControlCommands::onTick);
     }
 
     private static void onTick(MinecraftClient c) {
@@ -270,7 +268,7 @@ public final class PathControlCommand {
                 manager.togglePathVisualization(false);
             manager.startCameraPath(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false);
 
-            new ForcedFramerateJob(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime / 20, name);
+            Jobs.createNewJob(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value, name);
 
             return 1;
         } catch(PathTooSmallException e) {

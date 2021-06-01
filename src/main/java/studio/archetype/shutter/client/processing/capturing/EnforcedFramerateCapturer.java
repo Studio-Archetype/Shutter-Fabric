@@ -1,5 +1,6 @@
 package studio.archetype.shutter.client.processing.capturing;
 
+import me.sargunvohra.mcmods.autoconfig1u.ConfigManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import org.lwjgl.opengl.GL11;
@@ -20,11 +21,11 @@ public class EnforcedFramerateCapturer implements FrameCapturer<OpenGlFrame> {
 
     private int framesDone;
 
-    public EnforcedFramerateCapturer(int targetFrameCount, ScreenSize size) {
-        this.targetFrameCount = targetFrameCount;
+    public EnforcedFramerateCapturer(int fps, ScreenSize size) {
+        this.targetFrameCount = fps * (int)(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime / 20);
         this.size = size;
         this.fb = MinecraftClient.getInstance().getFramebuffer();
-        ShutterClient.INSTANCE.getFramerateController().startControlling(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value);
+        ShutterClient.INSTANCE.getFramerateController().startControlling(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value, true);
         this.framesDone = 0;
     }
 
@@ -40,7 +41,7 @@ public class EnforcedFramerateCapturer implements FrameCapturer<OpenGlFrame> {
         GL11.glReadPixels(0, 0, size.getWidth(), size.getHeight(), GL12.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
         fb.endWrite();
         buffer.rewind();
-        ShutterClient.INSTANCE.getFramerateController().allowNextFrame();
+        ShutterClient.INSTANCE.getFramerateController().progressFrame();
         return new OpenGlFrame(framesDone++, size, buffer);
     }
 

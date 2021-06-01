@@ -7,14 +7,12 @@ import studio.archetype.shutter.client.config.enums.RecordingCodec;
 import studio.archetype.shutter.client.config.enums.RecordingFramerate;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
 
-@Config(name = Shutter.MOD_ID)
+@Config(name = Shutter.MOD_ID + "_recording")
 public class FfmpegRecordConfig implements ConfigData {
 
     public RecordingMode renderMode = RecordingMode.VIDEO;
-
     public RecordingFramerate framerate = RecordingFramerate.F60;
-
     public RecordingCodec codec = RecordingCodec.Hx265;
-
+    public int pathTimeTicks = 200;
     public boolean skipCountdown = false;
 }

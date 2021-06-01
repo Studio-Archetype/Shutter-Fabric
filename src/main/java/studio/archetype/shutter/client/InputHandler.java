@@ -181,7 +181,7 @@ public class InputHandler {
                             Messaging.MessageType.NEGATIVE);                }
             }
             if(openScreen.wasPressed())
-                c.openScreen(new RecordingScreen(ClientConfigManager.CLIENT_CONFIG));
+                c.openScreen(new RecordingScreen(ClientConfigManager.FFMPEG_CONFIG));
             if(openConfig.wasPressed()) {
                 ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, c.currentScreen);
                 provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());

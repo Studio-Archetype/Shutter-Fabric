@@ -21,7 +21,7 @@ import java.io.IOException;
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
-public final class PathManagementCommand {
+public final class PathManagementCommands {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(

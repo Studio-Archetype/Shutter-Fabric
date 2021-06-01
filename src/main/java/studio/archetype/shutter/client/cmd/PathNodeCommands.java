@@ -20,14 +20,14 @@ import studio.archetype.shutter.pathing.PathNode;
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
-public final class PathNodeCommand {
+public final class PathNodeCommands {
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                         .requires(src -> src.hasPermissionLevel(4))
                         .then(literal("add")
-                                .executes(PathNodeCommand::addNode))
+                                .executes(PathNodeCommands::addNode))
                         .then(literal("remove")
                                 .then(argument("index", IntegerArgumentType.integer())
                                     .executes(ctx -> removeNode(ctx, IntegerArgumentType.getInteger(ctx, "index")))))
