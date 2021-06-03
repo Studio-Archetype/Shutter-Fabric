@@ -9,13 +9,13 @@ import java.util.function.Consumer;
 
 public class EnumSliderWidget<E extends Enum<E>> extends SliderWidget {
 
-    private final MutableText label;
+    private final String label;
     private final E[] values;
     private final Consumer<E> action;
     private final double stepSize;
     private E currentValue;
 
-    public EnumSliderWidget(MutableText label, int x, int y, int width, int height, E startValue, Consumer<E> action) {
+    public EnumSliderWidget(String label, int x, int y, int width, int height, E startValue, Consumer<E> action) {
         super(x, y, width, height, new LiteralText("none"), 0);
         this.label = label;
         this.values = startValue.getDeclaringClass().getEnumConstants();
@@ -28,7 +28,7 @@ public class EnumSliderWidget<E extends Enum<E>> extends SliderWidget {
 
     @Override
     protected void updateMessage() {
-        setMessage(label.append(": " + this.currentValue.toString()));
+        setMessage(new LiteralText(this.label + ": " + this.currentValue.toString()));
     }
 
     @Override

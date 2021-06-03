@@ -1,4 +1,4 @@
-package studio.archetype.shutter.client.ui;
+package studio.archetype.shutter.client.ui.toasts;
 
 import net.minecraft.text.Text;
 

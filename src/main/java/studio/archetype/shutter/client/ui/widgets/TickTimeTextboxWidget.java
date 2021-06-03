@@ -2,37 +2,30 @@ package studio.archetype.shutter.client.ui.widgets;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.math.NumberUtils;
 import studio.archetype.shutter.util.TimeUnits;
 
-public class TickTimeTextboxWidget extends TextFieldWidget {
+import java.util.function.Predicate;
 
-    private static final int ERROR_COLOUR = 16733525;
-    private static final int VALID_COLOUR = 14737632;
+public class TickTimeTextboxWidget extends PredicateTextboxWidget {
 
     private final EnumButtonWidget<TimeUnits> unitButton;
 
     private float value;
     private TimeUnits currentUnit;
-    private boolean isValid;
 
-    public TickTimeTextboxWidget(int x, int y, int width, int height, float initialValue, TimeUnits initialUnit, Text name) {
-        super(MinecraftClient.getInstance().textRenderer, x, y, width - (height + (height / 4)), height, name);
+    public TickTimeTextboxWidget(int x, int y, int width, int height, Text label, float initialValue, TimeUnits initialUnit) {
+        super(x, y, width - (height + (height / 4)), height, label);
+
         this.currentUnit = initialUnit;
+        this.unitButton = new EnumButtonWidget<>("Unit", x + this.width + this.height / 4, y, height, height, TimeUnits.SECONDS, this::updateUnit);
+        unitButton.setPrefix(false);
 
+        setValidPredicate(this::parseValue);
         setText(String.valueOf(initialValue));
         setMaxLength(32);
-        setChangedListener(s -> this.isValid = parseValue(s));
-        this.unitButton = new EnumButtonWidget<>(new LiteralText("Unit"), x + this.width + this.height / 4, y, height, height, TimeUnits.SECONDS, this::updateUnit);
-        this.unitButton.setPrefix(false);
-        this.isValid = parseValue(getText());
-    }
-
-    public boolean isValid() {
-        return isValid;
     }
 
     public int getTicks() {
@@ -45,16 +38,6 @@ public class TickTimeTextboxWidget extends TextFieldWidget {
 
     public void updateUnit(TimeUnits unit) {
         this.currentUnit = unit;
-        this.isValid = parseValue(getText());
-    }
-
-    @Override
-    public void tick() {
-        if(isValid)
-            setEditableColor(VALID_COLOUR);
-        else
-            setEditableColor(ERROR_COLOUR);
-        super.tick();
     }
 
     private boolean parseValue(String text) {

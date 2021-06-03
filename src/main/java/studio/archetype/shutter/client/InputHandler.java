@@ -16,7 +16,7 @@ import studio.archetype.shutter.client.config.ClientConfig;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.extensions.CameraExt;
 import studio.archetype.shutter.client.ui.Messaging;
-import studio.archetype.shutter.client.ui.RecordingScreen;
+import studio.archetype.shutter.client.ui.screens.RecordingScreen;
 import studio.archetype.shutter.pathing.PathNode;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;

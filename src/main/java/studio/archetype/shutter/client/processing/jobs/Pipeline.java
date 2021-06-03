@@ -67,7 +67,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
             if(inputFrame != null)
                 convertService.submit(new ConvertTask(inputFrame));
             return false;
-        } else
+        }
             return true;
     }
 

@@ -24,6 +24,15 @@
 
   "ui.shutter.recording.countdown1": "Preparing to record!",
   "ui.shutter.recording.countdown2": "Starting in %d...",
+  "ui.shutter.recording.title": "Recording Preparations",
+  "ui.shutter.recording.filename": "Filename",
+  "ui.shutter.recording.pathtime": "Path Time",
+  "ui.shutter.recording.codec": "Codec",
+  "ui.shutter.recording.rendermode": "Render Mode",
+  "ui.shutter.recording.framerate": "Framerate",
+  "ui.shutter.recording.preset": "Encoder Preset",
+  "ui.shutter.recording.skip": "Skip Countdown",
+  "ui.shutter.recording.start": "Start!",
 
   "text.autoconfig.shutter.title": "Shutter Configuration",
   "config.shutter.notificationTarget": "Notifications",
@@ -90,6 +99,16 @@
 
   "config.shutter.recording.hx264": "Hx264",
   "config.shutter.recording.hx265": "Hx265",
+
+  "config.shutter.recording.preset.ultrafast": "Ultra Fast",
+  "config.shutter.recording.preset.superfast": "Super Fast",
+  "config.shutter.recording.preset.veryfast": "Very Fast",
+  "config.shutter.recording.preset.faster": "Faster",
+  "config.shutter.recording.preset.fast": "Fast",
+  "config.shutter.recording.preset.medium": "Medium",
+  "config.shutter.recording.preset.slow": "Slow",
+  "config.shutter.recording.preset.slower": "Slower",
+  "config.shutter.recording.preset.veryslow": "Very Slow",
 
   "msg.shutter.headline.cmd.failed": "Command failed",
   "msg.shutter.headline.cmd.success": "Command succeeded",
@@ -168,5 +187,5 @@
   "msg.shutter.help.cmd.import": "Imports a JSON file with the specified name as path.",
   "msg.shutter.help.cmd.download": "Downloads a pastebin with the specified URL as path.",
   "msg.shutter.help.cmd.offset": "Moves the current path to the camera's current position.",
-  "msg.shutter.help.cmd.record": "Starts a recording of the current path."
+  "msg.shutter.help.cmd.record": "Opens the Recording Preparation Screen to start a recording."
 }

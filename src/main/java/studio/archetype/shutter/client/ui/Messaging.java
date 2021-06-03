@@ -6,6 +6,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.ui.toasts.ShutterMessageToast;
 
 public final class Messaging {
 

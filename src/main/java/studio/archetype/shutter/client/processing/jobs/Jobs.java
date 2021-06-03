@@ -30,7 +30,6 @@ public final class Jobs {
 
     private static void onRenderEvent() {
         if(currentPipeline != null) {
-            System.out.println("Triggering capture!");
             if(currentPipeline.onRender()) {
                 currentPipeline.close();
                 currentPipeline = null;

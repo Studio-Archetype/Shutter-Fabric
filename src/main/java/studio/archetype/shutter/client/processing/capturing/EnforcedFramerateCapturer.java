@@ -22,10 +22,10 @@ public class EnforcedFramerateCapturer implements FrameCapturer<OpenGlFrame> {
     private int framesDone;
 
     public EnforcedFramerateCapturer(int fps, ScreenSize size) {
-        this.targetFrameCount = fps * (int)(ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime / 20);
+        this.targetFrameCount = fps * (ClientConfigManager.FFMPEG_CONFIG.pathTimeTicks / 20);
         this.size = size;
         this.fb = MinecraftClient.getInstance().getFramebuffer();
-        ShutterClient.INSTANCE.getFramerateController().startControlling(ClientConfigManager.CLIENT_CONFIG.recSettings.framerate.value, true);
+        ShutterClient.INSTANCE.getFramerateController().startControlling(ClientConfigManager.FFMPEG_CONFIG.framerate.value, true);
         this.framesDone = 0;
     }
 

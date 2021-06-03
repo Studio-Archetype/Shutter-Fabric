@@ -15,10 +15,6 @@ public class ClientConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.Gui.CollapsibleObject
-    public RecordingSettings recSettings = new RecordingSettings();
-
-    @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.Gui.CollapsibleObject
     public final PathGenerationSettings genSettings = new PathGenerationSettings();
 
     @ConfigEntry.Gui.Tooltip
@@ -63,23 +59,5 @@ public class ClientConfig implements ConfigData {
 
         @ConfigEntry.Gui.Tooltip
         public boolean hideEntityLabels = false;
-    }
-
-    public static class RecordingSettings {
-
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public RecordingMode renderMode = RecordingMode.VIDEO;
-
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public RecordingFramerate framerate = RecordingFramerate.F60;
-
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public RecordingCodec codec = RecordingCodec.Hx265;
-
-        @ConfigEntry.Gui.Tooltip
-        public boolean skipCountdown = false;
     }
 }

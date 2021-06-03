@@ -3,6 +3,7 @@ package studio.archetype.shutter.client.processing.processors;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.stb.STBImageWrite;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.config.FfmpegRecordConfig;
 import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.config.enums.RecordingCodec;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
@@ -37,8 +38,8 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
         this.directory = SaveFile.SHUTTER_REC_DIR.resolve(filename).toFile();
         this.directory.mkdirs();
 
-        this.writeFrames = ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode != RecordingMode.VIDEO;
-        this.encodeVideo = ClientConfigManager.CLIENT_CONFIG.recSettings.renderMode != RecordingMode.FRAMES;
+        this.writeFrames = ClientConfigManager.FFMPEG_CONFIG.renderMode != RecordingMode.VIDEO;
+        this.encodeVideo = ClientConfigManager.FFMPEG_CONFIG.renderMode != RecordingMode.FRAMES;
 
         if(writeFrames) {
             this.frameDirectory = new File(this.directory, "frames");
@@ -48,7 +49,7 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
         if(encodeVideo) {
             try {
                 CommandProperty[] args;
-                switch(ClientConfigManager.CLIENT_CONFIG.recSettings.codec) {
+                switch(ClientConfigManager.FFMPEG_CONFIG.codec) {
                     case Hx264:
                         args = createX264Properties();
                         break;
@@ -101,6 +102,7 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
     }
 
     private CommandProperty[] createX264Properties() {
+        FfmpegRecordConfig config = ClientConfigManager.FFMPEG_CONFIG;
         return new CommandProperty[] {
                 FfmpegProperties.OVERWRITE,
                 FfmpegProperties.HIDE_BANNER,
@@ -109,12 +111,12 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
                 FfmpegProperties.CONTAINER.get("rawvideo"),
                 FfmpegProperties.PIXEL_FORMAT.get("rgba"),
                 FfmpegProperties.RESOLUTION.get(String.format("%dx%d", this.size.getWidth(), this.size.getHeight())),
-                FfmpegProperties.FRAMERATE.get(ClientConfigManager.FFMPEG_CONFIG.framerate.value),
+                FfmpegProperties.FRAMERATE.get(config.framerate.value),
                 FfmpegProperties.INPUT,
 
                 FfmpegProperties.CODEC.get(RecordingCodec.Hx264.value),
                 FfmpegProperties.PROPS_X264.get("opencl=true"),
-                FfmpegProperties.PRESET.get("slow"),
+                FfmpegProperties.PRESET.get(config.preset.value),
                 FfmpegProperties.QUALITY.get(23),
                 FfmpegProperties.PIXEL_FORMAT.get("yuv420p"),
 
@@ -122,6 +124,7 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
     }
 
     private CommandProperty[] createX265Properties() {
+        FfmpegRecordConfig config = ClientConfigManager.FFMPEG_CONFIG;
         return new CommandProperty[] {
                 FfmpegProperties.OVERWRITE,
                 FfmpegProperties.HIDE_BANNER,
@@ -130,12 +133,12 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
                 FfmpegProperties.CONTAINER.get("rawvideo"),
                 FfmpegProperties.PIXEL_FORMAT.get("rgba"),
                 FfmpegProperties.RESOLUTION.get(String.format("%dx%d", this.size.getWidth(), this.size.getHeight())),
-                FfmpegProperties.FRAMERATE.get(ClientConfigManager.FFMPEG_CONFIG.framerate.value),
+                FfmpegProperties.FRAMERATE.get(config.framerate.value),
                 FfmpegProperties.INPUT,
 
                 FfmpegProperties.CODEC.get(RecordingCodec.Hx265.value),
-                FfmpegProperties.PROPS_X264.get("opencl=true"),
-                FfmpegProperties.PRESET.get("slow"),
+                FfmpegProperties.PROPS_X265.get("opencl=true"),
+                FfmpegProperties.PRESET.get(config.preset.value),
                 FfmpegProperties.QUALITY.get(28),
                 FfmpegProperties.PIXEL_FORMAT.get("yuv420p"),
 

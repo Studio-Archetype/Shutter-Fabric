@@ -1,4 +1,4 @@
-package studio.archetype.shutter.client.ui;
+package studio.archetype.shutter.client.ui.screens;
 
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
