@@ -51,7 +51,9 @@ public final class PathControlCommands {
                         .executes(ctx ->  {
                             ctx.getSource().getClient().openScreen(new RecordingScreen(ClientConfigManager.FFMPEG_CONFIG));
                             return 1;
-                        }))
+                        })
+                        .then(literal("abort")
+                            .executes(PathControlCommands::abortRecording)))
                     .then(literal("start")
                             .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false))
                             .then(argument("loop", BoolArgumentType.bool())
@@ -282,6 +284,22 @@ public final class PathControlCommands {
         ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, ctx.getSource().getClient().currentScreen);
         provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());
         ctx.getSource().getClient().openScreen(provider.get());
+        return 1;
+    }
+
+    private static int abortRecording(CommandContext<FabricClientCommandSource> ctx) {
+        try {
+            if(Jobs.abortRecording(ShutterClient.INSTANCE.getPathManager(ctx.getSource().getWorld())))
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.success"),
+                        new TranslatableText("msg.shutter.ok.abort_rec"),
+                        Messaging.MessageType.POSITIVE);
+            else
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.cmd.failed"),
+                        new TranslatableText("msg.shutter.error.abort_fail"),
+                        Messaging.MessageType.NEUTRAL);
+        } catch (PathNotFollowingException ignored) { }
         return 1;
     }
 }

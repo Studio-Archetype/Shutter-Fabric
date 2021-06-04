@@ -90,6 +90,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
 
     public void cancel() {
         abort = true;
+        this.close();
     }
 
     private class ConvertTask implements Runnable {

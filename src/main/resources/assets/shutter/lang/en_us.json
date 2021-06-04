@@ -110,8 +110,9 @@
   "config.shutter.recording.preset.slower": "Slower",
   "config.shutter.recording.preset.veryslow": "Very Slow",
 
-  "msg.shutter.headline.cmd.failed": "Command failed",
-  "msg.shutter.headline.cmd.success": "Command succeeded",
+  "msg.shutter.headline.cmd.failed": "Command failed!",
+  "msg.shutter.headline.rec.failed": "Recording failed!",
+  "msg.shutter.headline.cmd.success": "Command succeeded!",
 
   "msg.shutter.error.not_enough_start": "At least 2 nodes are required to preview the path!",
   "msg.shutter.error.not_enough_show": "At least 2 nodes are required to visualize the path!",
@@ -131,6 +132,7 @@
   "msg.shutter.error.offset_empty": "Current path is empty!",
   "msg.shutter.error.recording_error": "FFMPEG Error! Code: %d",
   "msg.shutter.error.no_ffmpeg": "FFMPEG not found!",
+  "msg.shutter.error.abort_fail": "Currently not recording.",
   "msg.shutter.ok.stopped_following": "Stopped following the path.",
   "msg.shutter.ok.path_cleared": "Path has been cleared.",
   "msg.shutter.ok.go_to_node": "Moving to Node #%d.",
@@ -147,9 +149,7 @@
   "msg.shutter.ok.pastebin": "Upload Successful! URL: %s",
   "msg.shutter.ok.import": "Successfully imported path \"%s\".",
   "msg.shutter.ok.offset": "Offset Path.",
-  "msg.shutter.ok.recording_start": "Encoding in progress...",
-  "msg.shutter.ok.recording_wait": "Do not quit the game!",
-  "msg.shutter.ok.recording_done": "Encoding successful!",
+  "msg.shutter.ok.abort_rec": "Recording aborted.",
 
   "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",
   "msg.shutter.help.line": "§8+---------------------------------------------------+",

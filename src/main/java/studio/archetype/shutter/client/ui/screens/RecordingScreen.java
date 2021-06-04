@@ -19,6 +19,7 @@ import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.FfmpegRecordConfig;
 import studio.archetype.shutter.client.config.enums.RecordingCodec;
+import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.client.ui.widgets.EnumButtonWidget;
@@ -29,6 +30,7 @@ import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathTooSmallException;
 import studio.archetype.shutter.util.AsyncUtils;
 import studio.archetype.shutter.util.TimeUnits;
+import studio.archetype.shutter.util.cli.CliUtils;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -78,6 +80,13 @@ public class RecordingScreen extends Screen {
             this.config.pathTimeTicks = this.pathTime.getTicks();
             MinecraftClient.getInstance().currentScreen = null;
             this.name = this.filename.getText();
+            if(this.config.renderMode == RecordingMode.VIDEO && !CliUtils.isCommandAvailable("ffmpeg")) {
+                Messaging.sendMessage(
+                        new TranslatableText("msg.shutter.headline.rec.failed"),
+                        new TranslatableText("msg.shutter.error.no_ffmpeg"),
+                        Messaging.MessageType.NEGATIVE);
+                return;
+            }
             if(this.skipCountdown.isChecked()) {
                 this.onCountdownDone.accept(null);
             } else {
@@ -139,7 +148,19 @@ public class RecordingScreen extends Screen {
 
     private static void displayCountdownTitle(MinecraftClient c, int seconds) {
         Text title = new TranslatableText("ui.shutter.recording.countdown1").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.GOLD));
-        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2", seconds).setStyle(Style.EMPTY.withItalic(true).withColor(Formatting.GRAY));
-        c.inGameHud.setTitles(title, subtitle, -1, 20, -1);
+        Formatting color = Formatting.GRAY;
+        switch(seconds) {
+            case 3:
+                color = Formatting.GREEN;
+                break;
+            case 2:
+                color = Formatting.YELLOW;
+                break;
+            case 1:
+                color = Formatting.RED;
+                break;
+        }
+        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2", seconds).setStyle(Style.EMPTY.withItalic(true).withColor(color));
+        c.inGameHud.setTitles(subtitle, title, -1, 20, -1);
     }
 }
