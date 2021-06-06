@@ -1,11 +1,14 @@
 package studio.archetype.shutter.client.ui.toasts;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public abstract class ShutterToast implements Toast {
+
+    private static final Identifier TEXTURE = new Identifier("shutter", "textures/ui/toasts.png");
 
     private final int width, height;
     private final long visibilityTime;

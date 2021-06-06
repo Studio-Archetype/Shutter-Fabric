@@ -82,6 +82,8 @@ public class ShutterClient implements ClientModInitializer {
                     .getName();
             return saveFile.getLocalWorldSaves(worldFileName).computeIfAbsent(w.getRegistryKey().getValue(), world -> new CameraPathManager());
         } else {
+            if(MinecraftClient.getInstance().getNetworkHandler() == null)
+                return null;
             String ip = MinecraftClient.getInstance().getNetworkHandler()
                     .getConnection()
                     .getAddress()

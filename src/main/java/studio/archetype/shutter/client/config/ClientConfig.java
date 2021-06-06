@@ -4,7 +4,9 @@ import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 import studio.archetype.shutter.Shutter;
-import studio.archetype.shutter.client.config.enums.*;
+import studio.archetype.shutter.client.config.enums.NotificationTarget;
+import studio.archetype.shutter.client.config.enums.PathDetail;
+import studio.archetype.shutter.client.config.enums.PathStyle;
 
 @Config(name = Shutter.MOD_ID)
 public class ClientConfig implements ConfigData {

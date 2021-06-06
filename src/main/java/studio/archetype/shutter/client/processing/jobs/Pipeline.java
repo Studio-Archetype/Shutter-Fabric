@@ -3,15 +3,15 @@ package studio.archetype.shutter.client.processing.jobs;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 import studio.archetype.shutter.client.processing.capturing.DummyCapturer;
-import studio.archetype.shutter.client.processing.capturing.FrameCapturer;
 import studio.archetype.shutter.client.processing.capturing.EnforcedFramerateCapturer;
+import studio.archetype.shutter.client.processing.capturing.FrameCapturer;
 import studio.archetype.shutter.client.processing.converting.DummyConverter;
 import studio.archetype.shutter.client.processing.converting.FrameConverter;
 import studio.archetype.shutter.client.processing.converting.OpenGl2BitmapConverter;
-import studio.archetype.shutter.client.processing.frames.RgbaFrame;
 import studio.archetype.shutter.client.processing.frames.DummyFrame;
 import studio.archetype.shutter.client.processing.frames.Frame;
 import studio.archetype.shutter.client.processing.frames.OpenGlFrame;
+import studio.archetype.shutter.client.processing.frames.RgbaFrame;
 import studio.archetype.shutter.client.processing.processors.DummyProcessor;
 import studio.archetype.shutter.client.processing.processors.FfmpegVideoProcessor;
 import studio.archetype.shutter.client.processing.processors.FrameProcessor;
@@ -19,7 +19,10 @@ import studio.archetype.shutter.util.ScreenSize;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<I>, K extends FrameConverter<I, O>, P extends FrameProcessor<O>> implements Closeable {
 
