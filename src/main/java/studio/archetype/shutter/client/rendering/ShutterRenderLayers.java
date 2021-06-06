@@ -1,6 +1,7 @@
 package studio.archetype.shutter.client.rendering;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormatElement;
@@ -17,14 +18,9 @@ public class ShutterRenderLayers {
 
     private static class ShutterCubeRenderLayer extends RenderLayer {
 
-        private static final VertexFormat VERTEX_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
-                .add(VertexFormats.POSITION_ELEMENT)
-                .add(VertexFormats.COLOR_ELEMENT)
-                .build());
-
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_cube",
-                VERTEX_FORMAT,
+                VertexFormats.POSITION_COLOR,
                 GL11.GL_QUADS,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
@@ -42,15 +38,10 @@ public class ShutterRenderLayers {
 
     private static class ShutterLineRenderLayer extends RenderLayer {
 
-        private static final VertexFormat VERTEX_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
-                .add(VertexFormats.POSITION_ELEMENT)
-                .add(VertexFormats.COLOR_ELEMENT)
-                .build());
-
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_line",
-                VERTEX_FORMAT,
-                GL11.GL_LINES,
+                VertexFormats.POSITION_COLOR,
+                GL11.GL_LINE,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
                     .lineWidth(new LineWidth(OptionalDouble.of(2)))
@@ -67,15 +58,10 @@ public class ShutterRenderLayers {
 
     private static class ShutterDirectionalLineRenderLayer extends RenderLayer {
 
-        private static final VertexFormat VERTEX_FORMAT = new VertexFormat(ImmutableList.<VertexFormatElement>builder()
-                .add(VertexFormats.POSITION_ELEMENT)
-                .add(VertexFormats.COLOR_ELEMENT)
-                .build());
-
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_directional_line",
-                VERTEX_FORMAT,
-                GL11.GL_LINES,
+                VertexFormats.POSITION_COLOR,
+                GL11.GL_LINE,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
                         .lineWidth(new LineWidth(OptionalDouble.of(5)))

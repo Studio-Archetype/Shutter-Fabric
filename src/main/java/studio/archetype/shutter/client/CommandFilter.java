@@ -47,7 +47,6 @@ public final class CommandFilter {
                     return SURVIVAL;
                 case SPECTATOR:
                     return SPECTATOR;
-                case NOT_SET:
                 case CREATIVE:
                     return CREATIVE;
             }

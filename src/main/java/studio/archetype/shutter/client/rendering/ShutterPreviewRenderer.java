@@ -143,7 +143,7 @@ public class ShutterPreviewRenderer {
 
             this.modelPart.setTextureOffset(0, 0);
             this.modelPart.addCuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F);
-            this.modelPart.setTextureOffset(0, 32);
+            this.modelPart.setTextureOffset(32, 0);
             this.modelPart.addCuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, .25F);
         }
 
