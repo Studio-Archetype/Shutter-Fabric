@@ -1,11 +1,7 @@
 package studio.archetype.shutter.client.ui.widgets;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 

@@ -2,8 +2,6 @@ package studio.archetype.shutter.client.ui.widgets;
 
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
 
 import java.util.function.Consumer;
 

@@ -1,12 +1,8 @@
 package studio.archetype.shutter.client.rendering;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
-import org.lwjgl.opengl.GL11;
 
 import java.util.OptionalDouble;
 
@@ -25,7 +21,6 @@ public class ShutterRenderLayers {
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
                         .build(true));
-
 
         private ShutterCubeRenderLayer(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
             super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);

@@ -7,14 +7,17 @@ import studio.archetype.shutter.client.config.FfmpegRecordConfig;
 import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.config.enums.RecordingCodec;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
-import studio.archetype.shutter.util.cli.CommandProperty;
-import studio.archetype.shutter.util.cli.FfmpegProperties;
 import studio.archetype.shutter.client.processing.frames.RgbaFrame;
 import studio.archetype.shutter.util.ByteBufferPool;
-import studio.archetype.shutter.util.cli.CliUtils;
 import studio.archetype.shutter.util.ScreenSize;
+import studio.archetype.shutter.util.cli.CliUtils;
+import studio.archetype.shutter.util.cli.CommandProperty;
+import studio.archetype.shutter.util.cli.FfmpegProperties;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 

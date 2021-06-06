@@ -22,8 +22,8 @@
   "ui.shutter.pathList.entryName": "Camera Path Name",
   "ui.shutter.pathList.none": "No Paths available.",
 
-  "ui.shutter.recording.countdown1": "Preparing to record!",
-  "ui.shutter.recording.countdown2": "Starting in %d...",
+  "ui.shutter.recording.countdown1": "Starting in ",
+  "ui.shutter.recording.countdown2": "Preparing to record...",
   "ui.shutter.recording.title": "Recording Preparations",
   "ui.shutter.recording.filename": "Filename",
   "ui.shutter.recording.pathtime": "Path Time",

@@ -1,6 +1,5 @@
 package studio.archetype.shutter.client.processing.frames;
 
-import net.minecraft.server.integrated.IntegratedServer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.ByteBuffer;

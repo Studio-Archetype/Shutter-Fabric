@@ -2,15 +2,11 @@ package studio.archetype.shutter.client.ui.screens;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.ShutterClient;
@@ -144,15 +140,17 @@ public class RecordingScreen extends Screen {
     }
 
     private static void displayCountdownTitle(MinecraftClient c, int seconds) {
-        Text title = new TranslatableText("ui.shutter.recording.countdown1").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.GOLD));
-        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2", seconds).setStyle(Style.EMPTY.withItalic(true).withColor(switch (seconds) {
+
+        MutableText title = new TranslatableText("ui.shutter.recording.countdown1", seconds).formatted(Formatting.BOLD, Formatting.GOLD);
+        title.append(new LiteralText(String.valueOf(seconds)).formatted(Formatting.BOLD, switch (seconds) {
             case 3 -> Formatting.GREEN;
             case 2 -> Formatting.YELLOW;
             case 1 -> Formatting.RED;
             default -> Formatting.GRAY;
-        }));
-        c.inGameHud.setTitle(subtitle);
-        c.inGameHud.setSubtitle(title);
-        c.inGameHud.setTitleTicks(-1, 20, -1);
+        })).append(new LiteralText("...").formatted(Formatting.BOLD, Formatting.GOLD));
+        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2").setStyle(Style.EMPTY.withItalic(true).withColor(Formatting.GRAY));
+        c.inGameHud.setTitle(title);
+        c.inGameHud.setSubtitle(subtitle);
+        c.inGameHud.setTitleTicks(-1, 19, -1);
     }
 }

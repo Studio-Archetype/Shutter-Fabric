@@ -1,6 +1,5 @@
 package studio.archetype.shutter.client.rendering;
 
-import it.unimi.dsi.fastutil.ints.IntSets;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
