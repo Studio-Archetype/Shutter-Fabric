@@ -2,8 +2,8 @@ package studio.archetype.shutter.pathing;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import studio.archetype.shutter.util.SerializationUtils;
 
 public class PathNode {
@@ -21,7 +21,7 @@ public class PathNode {
         this.zoom = zoom;
     }
 
-    private PathNode(Vec3d pos, Vector3f rot, float zoom) {
+    private PathNode(Vec3d pos, Vec3f rot, float zoom) {
         this(pos, rot.getX(), rot.getY(), rot.getZ(), zoom);
     }
 
@@ -29,7 +29,7 @@ public class PathNode {
         return position;
     }
 
-    public Vector3f getRotation() { return new Vector3f(pitch, yaw, roll); }
+    public Vec3f getRotation() { return new Vec3f(pitch, yaw, roll); }
 
     public float getPitch() {
         return pitch;

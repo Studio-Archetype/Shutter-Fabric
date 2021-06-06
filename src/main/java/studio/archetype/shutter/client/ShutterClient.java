@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -17,6 +16,7 @@ import studio.archetype.shutter.client.cmd.*;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.entities.FreecamEntity;
+import studio.archetype.shutter.client.entities.FreecamEntityRenderer;
 import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
@@ -68,7 +68,7 @@ public class ShutterClient implements ClientModInitializer {
             DebugCommands.register(dis);
         }
 
-        EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, (disp, ctx) -> new PlayerEntityRenderer(disp));
+        EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, FreecamEntityRenderer::new);
 
         this.zoom = this.prevZoom = 0;
     }

@@ -1,6 +1,5 @@
 package studio.archetype.shutter.client.processing.capturing;
 
-import me.sargunvohra.mcmods.autoconfig1u.ConfigManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import org.lwjgl.opengl.GL11;

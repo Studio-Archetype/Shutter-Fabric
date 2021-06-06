@@ -99,8 +99,8 @@ public class PathFollower {
         entity.prevX = entity.getX();
         entity.prevY = entity.getY();
         entity.prevZ = entity.getZ();
-        entity.prevPitch = entity.pitch;
-        entity.prevYaw = entity.yaw;
+        entity.prevPitch = entity.getPitch();
+        entity.prevYaw = entity.getYaw();
         ShutterClient.INSTANCE.setZoom(zoom);
         entity.setPos(target.x, target.y, target.z);
         entity.setRotation(pitch, yaw, roll);

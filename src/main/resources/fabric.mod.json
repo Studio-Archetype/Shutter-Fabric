@@ -29,9 +29,11 @@
     "shutter.client.mixins.json"
   ],
 
+  "accessWidener": "shutter.accesswidener",
+
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
-    "minecraft": "1.16.x"
+    "minecraft": "1.17.x"
   }
 }

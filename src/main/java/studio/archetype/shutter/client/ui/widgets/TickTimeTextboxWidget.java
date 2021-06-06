@@ -1,13 +1,9 @@
 package studio.archetype.shutter.client.ui.widgets;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.text.LiteralText;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.math.NumberUtils;
 import studio.archetype.shutter.util.TimeUnits;
-
-import java.util.function.Predicate;
 
 public class TickTimeTextboxWidget extends PredicateTextboxWidget {
 
@@ -32,7 +28,7 @@ public class TickTimeTextboxWidget extends PredicateTextboxWidget {
         return (int)TimeUnits.convert(this.value, this.currentUnit, TimeUnits.TICKS);
     }
 
-    public AbstractButtonWidget getButton() {
+    public ButtonWidget getButton() {
         return unitButton;
     }
 

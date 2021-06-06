@@ -1,12 +1,10 @@
 package studio.archetype.shutter.client.ui.screens;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -16,9 +14,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.ShutterClient;
-import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.FfmpegRecordConfig;
-import studio.archetype.shutter.client.config.enums.RecordingCodec;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.ui.Messaging;
@@ -61,22 +57,23 @@ public class RecordingScreen extends Screen {
         filename.setTextFieldFocused(true);
         filename.setMaxLength(64);
         filename.setValidPredicate(s -> !s.contains(" ") && !s.isEmpty());
-        children.add(this.filename);
+        addSelectableChild(this.filename);
+        setInitialFocus(this.filename);
         this.pathTime = new TickTimeTextboxWidget(width / 2 + 25, height / 2 - 57, 150, 20, new TranslatableText("ui.shutter.recording.pathtime"), TimeUnits.convert(config.pathTimeTicks, TimeUnits.TICKS, TimeUnits.SECONDS), TimeUnits.SECONDS);
-        children.add(this.pathTime);
-        addButton(this.pathTime.getButton());
+        addSelectableChild(pathTime);
+        addDrawableChild(this.pathTime.getButton());
 
-        addButton(new EnumButtonWidget<>(I18n.translate("ui.shutter.recording.codec"), width / 2 - 175, height / 2 - 34, 150, 20, config.codec, (v) -> config.codec = v));
-        addButton(new EnumButtonWidget<>(I18n.translate("ui.shutter.recording.rendermode"), width / 2 + 25, height / 2 - 34, 150, 20, config.renderMode, (v) -> config.renderMode = v));
+        addDrawableChild(new EnumButtonWidget<>(I18n.translate("ui.shutter.recording.codec"), width / 2 - 175, height / 2 - 34, 150, 20, config.codec, (v) -> config.codec = v));
+        addDrawableChild(new EnumButtonWidget<>(I18n.translate("ui.shutter.recording.rendermode"), width / 2 + 25, height / 2 - 34, 150, 20, config.renderMode, (v) -> config.renderMode = v));
 
-        addButton(new EnumSliderWidget<>(I18n.translate("ui.shutter.recording.framerate"), width / 2 - 175, height / 2 - 10, 150, 20, config.framerate, (v) -> config.framerate = v));
-        addButton(new EnumSliderWidget<>(I18n.translate("ui.shutter.recording.preset"), width / 2 + 25, height / 2 - 10, 150, 20, config.preset, (v) -> config.preset = v));
+        addDrawableChild(new EnumSliderWidget<>(I18n.translate("ui.shutter.recording.framerate"), width / 2 - 175, height / 2 - 10, 150, 20, config.framerate, (v) -> config.framerate = v));
+        addDrawableChild(new EnumSliderWidget<>(I18n.translate("ui.shutter.recording.preset"), width / 2 + 25, height / 2 - 10, 150, 20, config.preset, (v) -> config.preset = v));
 
         Text skipText = new TranslatableText("ui.shutter.recording.skip");
         int x = (20 + 4 + textRenderer.getWidth(skipText)) / 2;
-        this.skipCountdown = addButton(new CheckboxWidget(width / 2 - x, height / 2 + 14, 20, 20, skipText, false));
+        this.skipCountdown = addDrawableChild(new CheckboxWidget(width / 2 - x, height / 2 + 14, 20, 20, skipText, false));
 
-        this.startButton = addButton(new ButtonWidget(width / 2 - 75, height / 2 + 38, 150, 20, new TranslatableText("ui.shutter.recording.start").formatted(Formatting.GREEN, Formatting.BOLD), (b) -> {
+        this.startButton = addDrawableChild(new ButtonWidget(width / 2 - 75, height / 2 + 38, 150, 20, new TranslatableText("ui.shutter.recording.start").formatted(Formatting.GREEN, Formatting.BOLD), (b) -> {
             this.config.pathTimeTicks = this.pathTime.getTicks();
             MinecraftClient.getInstance().currentScreen = null;
             this.name = this.filename.getText();
@@ -116,7 +113,7 @@ public class RecordingScreen extends Screen {
     private final Runnable onCountdownTick = () -> {
         MinecraftClient c = MinecraftClient.getInstance();
         if(ticks == 0) {
-            c.inGameHud.setTitles(null, null, -1, -1, -1);
+            c.inGameHud.clearTitle();
             dummyFuture.complete(null);
         } else {
             if(ticks == 60)
@@ -148,19 +145,14 @@ public class RecordingScreen extends Screen {
 
     private static void displayCountdownTitle(MinecraftClient c, int seconds) {
         Text title = new TranslatableText("ui.shutter.recording.countdown1").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.GOLD));
-        Formatting color = Formatting.GRAY;
-        switch(seconds) {
-            case 3:
-                color = Formatting.GREEN;
-                break;
-            case 2:
-                color = Formatting.YELLOW;
-                break;
-            case 1:
-                color = Formatting.RED;
-                break;
-        }
-        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2", seconds).setStyle(Style.EMPTY.withItalic(true).withColor(color));
-        c.inGameHud.setTitles(subtitle, title, -1, 20, -1);
+        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2", seconds).setStyle(Style.EMPTY.withItalic(true).withColor(switch (seconds) {
+            case 3 -> Formatting.GREEN;
+            case 2 -> Formatting.YELLOW;
+            case 1 -> Formatting.RED;
+            default -> Formatting.GRAY;
+        }));
+        c.inGameHud.setTitle(subtitle);
+        c.inGameHud.setSubtitle(title);
+        c.inGameHud.setTitleTicks(-1, 20, -1);
     }
 }

@@ -93,7 +93,7 @@ public class PathIterator {
         Vec3d position = node.getPosition();
         entity.setPos(position.getX(), position.getY(), position.getZ());
         entity.prevX = position.getX(); entity.prevY = position.getY(); entity.prevZ = position.getZ();
-        entity.pitch = node.getPitch(); entity.yaw = node.getYaw(); ((CameraExt)c.gameRenderer.getCamera()).setRoll(node.getRoll());
+        entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
         entity.prevPitch = node.getPitch(); entity.prevYaw = node.getYaw();
         ShutterClient.INSTANCE.setZoom(node.getZoom());
 

@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -43,8 +43,8 @@ public class FreecamEntity extends Entity{
         this.lastRenderX = this.getX();
         this.lastRenderY = this.getY();
         this.lastRenderZ = this.getZ();
-        this.prevPitch = this.pitch;
-        this.prevYaw = this.yaw;
+        this.prevPitch = this.getPitch();
+        this.prevYaw = this.getPitch();
     }
 
     public void setRotation(float pitch, float yaw, float roll) {
@@ -56,10 +56,10 @@ public class FreecamEntity extends Entity{
     protected void initDataTracker() { }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) { }
+    public void readCustomDataFromNbt(NbtCompound tag) { }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) { }
+    public void writeCustomDataToNbt(NbtCompound tag) { }
 
     @Override
     public Packet<?> createSpawnPacket() { return null; }

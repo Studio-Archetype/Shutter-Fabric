@@ -4,16 +4,18 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.SkullOverlayEntityModel;
+import net.minecraft.client.render.block.entity.SkullBlockEntityModel;
+import net.minecraft.client.render.entity.model.SkullEntityModel;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.pathing.CameraPath;
@@ -26,7 +28,7 @@ public class CameraNodeRenderer {
     public static final UUID CAMERA_UUID = UUID.fromString("bda14eb8-3246-4637-947f-d550e2f32387");
     public static final String CAMERA_TEX = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmZiNWVlZTQwYzNkZDY2ODNjZWM4ZGQxYzZjM2ZjMWIxZjAxMzcxNzg2NjNkNzYxMDljZmUxMmVkN2JmMjc4ZSJ9fX0=";
 
-    private static final SkullOverlayEntityModel model = new SkullOverlayEntityModel();
+    private static final CameraHeadModel model = new CameraHeadModel();
 
     private CameraPath path;
 
@@ -53,9 +55,9 @@ public class CameraNodeRenderer {
             stack.scale(-1.0F, -1.0F, -1.0F);
 
             stack.translate(0, -4F / 16, 0);
-            stack.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(n.getYaw()));
-            stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n.getPitch()));
-            stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(n.getRoll()));
+            stack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(n.getYaw()));
+            stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(n.getPitch()));
+            stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(n.getRoll()));
             stack.translate(0, 4F / 16, 0);
 
             VertexConsumer vertexConsumer = provider.getBuffer(getSkull());
