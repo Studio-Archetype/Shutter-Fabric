@@ -40,6 +40,10 @@ public class TickTimeTextboxWidget extends PredicateTextboxWidget {
         this.currentUnit = unit;
     }
 
+    public TimeUnits getCurrentUnit() {
+        return this.currentUnit;
+    }
+
     private boolean parseValue(String text) {
         if(NumberUtils.isParsable(text)) {
             if(currentUnit.isFloatingPoint) {
