@@ -1,6 +1,6 @@
 package studio.archetype.shutter.client.processing.frames;
 
-import studio.archetype.shutter.util.ScreenSize;
+import studio.archetype.shutter.client.util.ScreenSize;
 
 import java.nio.ByteBuffer;
 

@@ -1,6 +1,8 @@
 package studio.archetype.shutter.client.rendering;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.math.Color;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.OutlineVertexConsumerProvider;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,7 +14,7 @@ import studio.archetype.shutter.client.config.enums.PathStyle;
 import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.InterpolationData;
 import studio.archetype.shutter.pathing.PathNode;
-import studio.archetype.shutter.util.DrawUtils;
+import studio.archetype.shutter.client.util.DrawUtils;
 
 import java.util.LinkedList;
 import java.util.Map;

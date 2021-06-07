@@ -80,7 +80,7 @@ public class RecordingScreen extends Screen {
             this.config.pathTimeTicks = this.pathTime.getTicks();
             MinecraftClient.getInstance().currentScreen = null;
             this.name = this.filename.getText();
-            if(this.config.renderMode == RecordingMode.VIDEO && !CliUtils.isCommandAvailable("ffmpeg")) {
+            if(this.config.renderMode != RecordingMode.FRAMES && !CliUtils.isCommandAvailable("ffmpeg")) {
                 Messaging.sendMessage(
                         new TranslatableText("msg.shutter.headline.rec.failed"),
                         new TranslatableText("msg.shutter.error.no_ffmpeg"),

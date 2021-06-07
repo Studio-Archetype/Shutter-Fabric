@@ -1,4 +1,4 @@
-package studio.archetype.shutter.util;
+package studio.archetype.shutter.client.util;
 
 import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.pathing.PathNode;
