@@ -142,9 +142,9 @@ public class InputHandler {
 
             if(!shutter.getPathFollower().isFollowing() && !shutter.getPathIterator().isIterating()) {
                 if (rollLeft.isPressed())
-                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
-                if (rollRight.isPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
+                if (rollRight.isPressed())
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
                 if (zoomIn.isPressed())
                     shutter.setZoom(MathHelper.clamp(shutter.getZoom() - ZOOM_FACTOR * (actionKey.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
                 if (zoomOut.isPressed())
