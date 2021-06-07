@@ -2,7 +2,7 @@ package studio.archetype.shutter.client.processing.converting;
 
 import studio.archetype.shutter.client.processing.frames.OpenGlFrame;
 import studio.archetype.shutter.client.processing.frames.RgbaFrame;
-import studio.archetype.shutter.util.ScreenSize;
+import studio.archetype.shutter.client.util.ScreenSize;
 
 import java.nio.ByteBuffer;
 

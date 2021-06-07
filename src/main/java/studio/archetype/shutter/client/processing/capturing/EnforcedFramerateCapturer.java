@@ -8,7 +8,7 @@ import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.processing.frames.OpenGlFrame;
 import studio.archetype.shutter.util.ByteBufferPool;
-import studio.archetype.shutter.util.ScreenSize;
+import studio.archetype.shutter.client.util.ScreenSize;
 
 import java.nio.ByteBuffer;
 

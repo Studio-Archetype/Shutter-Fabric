@@ -15,7 +15,7 @@ import studio.archetype.shutter.client.processing.frames.RgbaFrame;
 import studio.archetype.shutter.client.processing.processors.DummyProcessor;
 import studio.archetype.shutter.client.processing.processors.FfmpegVideoProcessor;
 import studio.archetype.shutter.client.processing.processors.FrameProcessor;
-import studio.archetype.shutter.util.ScreenSize;
+import studio.archetype.shutter.client.util.ScreenSize;
 
 import java.io.Closeable;
 import java.io.IOException;
