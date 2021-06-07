@@ -31,7 +31,7 @@ public class InputHandler {
     private static KeyBinding zoomIn, zoomOut, zoomReset;
     private static KeyBinding actionKey;
     private static KeyBinding createNode, visualizePath, startPath, clearPath;
-    private static KeyBinding openScreen, openConfig;
+    private static KeyBinding openConfig;
     private static KeyBinding movePreviousNode, moveNextNode, toggleIterationMode;
 
     public static void setupKeybinds() {
@@ -87,12 +87,6 @@ public class InputHandler {
                 "key.shutter.cam.start_path",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_KP_ENTER,
-                "category.shutter.keybinds"
-        ));
-        openScreen = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.shutter.cam.open_screen",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_KP_DECIMAL,
                 "category.shutter.keybinds"
         ));
 
@@ -162,26 +156,26 @@ public class InputHandler {
 
             if(visualizePath.wasPressed()) {
                 try {
-                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(actionKey.isPressed()))
-                        if(!shutter.getPathFollower().isFollowing())
+                    if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(actionKey.isPressed())) {
+                        if (!shutter.getPathFollower().isFollowing())
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
                                     new TranslatableText("msg.shutter.ok.showing_path"),
                                     Messaging.MessageType.POSITIVE);
-                    else
-                        if(!shutter.getPathFollower().isFollowing())
+                    } else {
+                        if (!shutter.getPathFollower().isFollowing())
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
                                     new TranslatableText("msg.shutter.ok.hiding_path"),
                                     Messaging.MessageType.POSITIVE);
+                    }
                 } catch(PathTooSmallException e) {
                     Messaging.sendMessage(
                             new TranslatableText("msg.shutter.headline.cmd.failed"),
                             new TranslatableText("msg.shutter.error.not_enough_show"),
-                            Messaging.MessageType.NEGATIVE);                }
+                            Messaging.MessageType.NEGATIVE);
+                }
             }
-            if(openScreen.wasPressed())
-                c.openScreen(new RecordingScreen(ClientConfigManager.FFMPEG_CONFIG));
             if(openConfig.wasPressed()) {
                 ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, c.currentScreen);
                 provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());
