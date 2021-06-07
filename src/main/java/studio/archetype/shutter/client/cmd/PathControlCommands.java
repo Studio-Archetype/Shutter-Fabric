@@ -20,6 +20,7 @@ import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.ui.Messaging;
 import studio.archetype.shutter.client.ui.screens.RecordingScreen;
+import studio.archetype.shutter.client.util.TimingUtils;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathEmptyException;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
@@ -37,34 +38,31 @@ public final class PathControlCommands {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
-                    .requires(src -> src.hasPermissionLevel(4))
-                    .then(literal("help")
-                            .executes(PathControlCommands::printHelp))
-                    .then(literal("?")
-                            .executes(PathControlCommands::printHelp))
-                    .then(literal("record")
-                        .executes(ctx ->  {
-                            ctx.getSource().getClient().openScreen(new RecordingScreen(ClientConfigManager.FFMPEG_CONFIG));
-                            return 1;
-                        })
-                        .then(literal("abort")
-                            .executes(PathControlCommands::abortRecording)))
-                    .then(literal("start")
-                            .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false))
-                            .then(argument("loop", BoolArgumentType.bool())
-                                    .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, BoolArgumentType.getBool(ctx, "loop"))))
-                            .then(argument("time", PathTimeArgumentType.pathTime())
-                                    .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time"), false))
+                        .requires(src -> src.hasPermissionLevel(4))
+                        .then(literal("help")
+                                .executes(PathControlCommands::printHelp))
+                        .then(literal("?")
+                                .executes(PathControlCommands::printHelp))
+                        .then(literal("record")
+                                .executes(PathControlCommands::openRecording)
+                                .then(literal("abort")
+                                        .executes(PathControlCommands::abortRecording)))
+                        .then(literal("start")
+                                .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, false))
+                                .then(argument("loop", BoolArgumentType.bool())
+                                        .executes(ctx -> startPath(ctx, ClientConfigManager.CLIENT_CONFIG.genSettings.pathTime, BoolArgumentType.getBool(ctx, "loop"))))
+                                .then(argument("time", PathTimeArgumentType.pathTime())
+                                        .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time"), false))
                                         .then(argument("loop", BoolArgumentType.bool())
-                                            .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time"), BoolArgumentType.getBool(ctx, "loop"))))))
-                    .then(literal("offset")
-                            .executes(PathControlCommands::offsetPath))
-                    .then(literal("stop")
-                            .executes(PathControlCommands::stopPath))
-                    .then(literal("clear")
-                            .executes(PathControlCommands::clearPath))
-                    .then(literal("config")
-                            .executes(PathControlCommands::openConfig)));
+                                                .executes(ctx -> startPath(ctx, PathTimeArgumentType.getTicks(ctx, "time"), BoolArgumentType.getBool(ctx, "loop"))))))
+                        .then(literal("offset")
+                                .executes(PathControlCommands::offsetPath))
+                        .then(literal("stop")
+                                .executes(PathControlCommands::stopPath))
+                        .then(literal("clear")
+                                .executes(PathControlCommands::clearPath))
+                        .then(literal("config")
+                                .executes(PathControlCommands::openConfig)));
 
         dispatcher.register(
                 literal("shutter")
@@ -276,9 +274,16 @@ public final class PathControlCommands {
     }
 
     private static int openConfig(CommandContext<FabricClientCommandSource> ctx) {
-        ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, ctx.getSource().getClient().currentScreen);
-        provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());
-        ctx.getSource().getClient().openScreen(provider.get());
+        TimingUtils.schedule(1, () -> {
+            ConfigScreenProvider<ClientConfig> provider = (ConfigScreenProvider<ClientConfig>) AutoConfig.getConfigScreen(ClientConfig.class, ctx.getSource().getClient().currentScreen);
+            provider.setOptionFunction((gen, field) -> "config." + Shutter.MOD_ID + "." + field.getName());
+            ctx.getSource().getClient().openScreen(provider.get());
+        });
+        return 1;
+    }
+
+    private static int openRecording(CommandContext<FabricClientCommandSource> ctx) {
+        TimingUtils.schedule(1, () -> ctx.getSource().getClient().openScreen(new RecordingScreen(ClientConfigManager.FFMPEG_CONFIG)));
         return 1;
     }
 

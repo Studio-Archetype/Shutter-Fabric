@@ -20,6 +20,7 @@ import studio.archetype.shutter.client.entities.FreecamEntityRenderer;
 import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
 import studio.archetype.shutter.client.rendering.CameraPathRenderer;
+import studio.archetype.shutter.client.util.TimingUtils;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.util.AsyncUtils;
 
@@ -48,6 +49,7 @@ public class ShutterClient implements ClientModInitializer {
         ClientConfigManager.register();
         InputHandler.setupKeybinds();
         AsyncUtils.init();
+        TimingUtils.init();
         Jobs.init();
 
         this.commandFilter = new CommandFilter();
