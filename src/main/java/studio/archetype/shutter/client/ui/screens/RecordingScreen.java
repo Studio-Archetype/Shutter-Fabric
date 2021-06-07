@@ -1,6 +1,7 @@
 package studio.archetype.shutter.client.ui.screens;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.DirectConnectScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
@@ -88,6 +89,18 @@ public class RecordingScreen extends Screen {
                 AsyncUtils.queueAsync(this.dummyFuture, this.onCountdownDone, this.onCountdownTick);
             }
         }));
+    }
+
+    public void resize(MinecraftClient client, int width, int height) {
+        String filename = this.filename.getText();
+        String speed = this.pathTime.getText();
+        TimeUnits unit = this.pathTime.getCurrentUnit();
+
+        this.init(client, width, height);
+
+        this.filename.setText(filename);
+        this.pathTime.setText(speed);
+        this.pathTime.updateUnit(unit);
     }
 
     @Override
