@@ -6,12 +6,12 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
-archivesBaseName = project.archives_base_name
-version = project.mod_loader + "_" +
-          project.minecraft_version + "_" +
-          project.mod_version + "_" +
-          new Date().format('MMddyy')
 group = project.maven_group
+version = ""
+archivesBaseName =  project.mod_name + "-" + project.mod_loader + "_" +
+                    project.minecraft_version + "_" +
+                    project.mod_version
+
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
@@ -38,7 +38,7 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.mod_version
     }
 }
 
