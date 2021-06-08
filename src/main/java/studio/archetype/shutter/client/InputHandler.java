@@ -136,7 +136,7 @@ public class InputHandler {
 
             if(!shutter.getPathFollower().isFollowing() && !shutter.getPathIterator().isIterating()) {
                 if (rollLeft.isPressed())
-                    ((CameraExt) c.gameRenderer.getCamera()).addRoll(-ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
+                    ((CameraExt) c.gameRenderer.getCamera()).addRoll((-ROT_FACTOR) * (actionKey.isPressed() ? 10 : 1));
                 if (rollRight.isPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
                 if (zoomIn.isPressed())
