@@ -1,6 +1,7 @@
 package studio.archetype.shutter.client.util;
 
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.*;
 
 import java.util.stream.Stream;
@@ -44,16 +45,23 @@ public class DrawUtils {
                     .next();
     }
 
-    public static void renderCube(Vec3d pos, float radius, Vec3d colour, VertexConsumer consumer, Matrix4f model) {
-        Stream.of(Direction.values()).forEach(dir -> DrawUtils.quadOffsetAxis(pos, radius, dir, colour, consumer, model));
+    public static void renderCube(Vec3d pos, float radius, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack) {
+        Stream.of(Direction.values()).forEach(dir -> DrawUtils.quadOffsetAxis(pos, radius, dir, colour, consumer, stack.getModel()));
     }
 
-    public static void renderLine(Vec3d pos, Vec3d pos2, Vec3d colour, VertexConsumer consumer, Matrix4f model) {
-        consumer.vertex(model, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
+    public static void renderLine(Vec3d pos, Vec3d pos2, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack) {
+        consumer.vertex(stack.getModel(), (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
                 .next();
-        consumer.vertex(model, (float) pos2.getX(), (float) pos2.getY(), (float) pos2.getZ())
+        consumer.vertex(stack.getModel(), (float) pos2.getX(), (float) pos2.getY(), (float) pos2.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
+                .next();
+    }
+
+    public static void renderLineStrip(Vec3d pos, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack) {
+        consumer.vertex(stack.getModel(), (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
+                .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
+                .normal(stack.getNormal(), (float)pos.getX(), (float)pos.getY(), (float)pos.getZ())
                 .next();
     }
 

@@ -5,11 +5,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.*;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.camera.PathFollower;
 import studio.archetype.shutter.client.camera.PathIterator;
 import studio.archetype.shutter.client.cmd.*;
@@ -66,11 +70,13 @@ public class ShutterClient implements ClientModInitializer {
         PathNodeCommands.register(dis);
         PathVisualCommands.register(dis);
         PathManagementCommands.register(dis);
+
         if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
             DebugCommands.register(dis);
         }
 
         EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, FreecamEntityRenderer::new);
+        WorldRenderEvents.AFTER_ENTITIES.register(this::setupRenderer);
 
         this.zoom = this.prevZoom = 0;
     }
@@ -128,5 +134,16 @@ public class ShutterClient implements ClientModInitializer {
 
     public void resetZoom() {
         this.zoom = this.prevZoom = 0;
+    }
+
+    private void setupRenderer(WorldRenderContext ctx) {
+        ctx.world().getProfiler().swap(Shutter.id("path_render").toString());
+        VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(new BufferBuilder(256));
+        ShutterClient.INSTANCE.getPathRenderer().render(ctx.matrixStack(), provider, ctx.camera().getPos());
+        provider.draw();
+        if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showNodeHead) {
+            ShutterClient.INSTANCE.getNodeRenderer().render(ctx.matrixStack(), provider, ctx.camera().getPos(), 0x00F000F0);
+            provider.draw();
+        }
     }
 }

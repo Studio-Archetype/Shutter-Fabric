@@ -2,9 +2,7 @@ package studio.archetype.shutter.client.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.math.Color;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.OutlineVertexConsumerProvider;
-import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
@@ -33,7 +31,7 @@ public class CameraPathRenderer {
         this.loop = loop;
     }
 
-    public void render(MatrixStack stack, OutlineVertexConsumerProvider consume, Vec3d camera) {
+    public void render(MatrixStack stack, VertexConsumerProvider consume, Vec3d camera) {
         if(camPath == null)
             return;
 
@@ -45,8 +43,6 @@ public class CameraPathRenderer {
         Map<PathNode, LinkedList<InterpolationData>> pathData = camPath.getInterpolatedData(loop);
 
         pathData.forEach((node, points) -> {
-            Vec3d previous = points.get(0).getPosition();
-
             Color c = Color.ofOpaque(config.pathSettings.pathColour);
             Vec3d colour = new Vec3d(c.getRed() / 256F, c.getGreen() / 256F, c.getBlue() / 256F);
             if(node.equals(camPath.getNodes().getLast()))
@@ -54,26 +50,22 @@ public class CameraPathRenderer {
 
             for (InterpolationData point : points) {
                 Vec3d p = point.getPosition();
-                Matrix4f model = stack.peek().getModel();
-
                 switch (config.pathSettings.pathStyle) {
                     case CUBES:
                         VertexConsumer vert = consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE);
-                        DrawUtils.renderCube(p, .1F, colour, vert, model);
+                        DrawUtils.renderCube(p, .1F, colour, vert, stack.peek());
                         break;
                     case LINE:
-                        VertexConsumer line = consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE);
-                        DrawUtils.renderLine(previous, p, colour, line, model);
+                        VertexConsumer line = consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE_STRIP);
+                        DrawUtils.renderLineStrip(p, colour, line, stack.peek());
                         break;
                     case ADVANCED:
                         vert = consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE);
-                        DrawUtils.renderCube(p, .1F, colour, vert, model);
-                        line = consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE);
-                        DrawUtils.renderLine(previous, p, colour, line, model);
+                        DrawUtils.renderCube(p, .1F, colour, vert, stack.peek());
+                        line = consume.getBuffer(ShutterRenderLayers.SHUTTER_LINE_STRIP);
+                        DrawUtils.renderLineStrip(p, colour, line, stack.peek());
                         break;
                 }
-
-                previous = p;
             }
             if (config.pathSettings.pathStyle == PathStyle.ADVANCED && !config.pathSettings.showNodeHead)
                 DrawUtils.renderCube(
@@ -81,7 +73,7 @@ public class CameraPathRenderer {
                         .2F,
                         node.equals(camPath.getNodes().getFirst()) ? new Vec3d(0, 1F, 0) : colour,
                         consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE),
-                        stack.peek().getModel());
+                        stack.peek());
 
             if(config.pathSettings.showDirectionalBeam)
                 DrawUtils.renderLine(
@@ -89,7 +81,7 @@ public class CameraPathRenderer {
                         DrawUtils.getOffsetPoint(node.getPosition(), node.getPitch(), node.getYaw(), 2F),
                         node.equals(camPath.getNodes().getFirst()) ? new Vec3d(0, 1F, 0) : colour,
                         consume.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
-                        stack.peek().getModel());
+                        stack.peek());
         });
 
         PathNode last = camPath.getNodes().getLast();
@@ -100,7 +92,7 @@ public class CameraPathRenderer {
                     .2F,
                     new Vec3d(1F, 0F, 0F),
                     consume.getBuffer(ShutterRenderLayers.SHUTTER_CUBE),
-                    stack.peek().getModel());
+                    stack.peek());
 
         if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showDirectionalBeam)
             DrawUtils.renderLine(
@@ -108,7 +100,7 @@ public class CameraPathRenderer {
                     DrawUtils.getOffsetPoint(last.getPosition(), last.getPitch(), last.getYaw(), 2F),
                     new Vec3d(1F, 0, 0),
                     consume.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
-                    stack.peek().getModel());
+                    stack.peek());
 
         stack.pop();
     }
