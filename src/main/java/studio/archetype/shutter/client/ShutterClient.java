@@ -22,8 +22,7 @@ import studio.archetype.shutter.client.config.SaveFile;
 import studio.archetype.shutter.client.entities.FreecamEntity;
 import studio.archetype.shutter.client.entities.FreecamEntityRenderer;
 import studio.archetype.shutter.client.processing.jobs.Jobs;
-import studio.archetype.shutter.client.rendering.CameraNodeRenderer;
-import studio.archetype.shutter.client.rendering.CameraPathRenderer;
+import studio.archetype.shutter.client.rendering.ShutterPreviewRenderer;
 import studio.archetype.shutter.client.util.TimingUtils;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.util.AsyncUtils;
@@ -34,8 +33,7 @@ public class ShutterClient implements ClientModInitializer {
 
     private CommandFilter commandFilter;
 
-    private CameraPathRenderer pathRenderer;
-    private CameraNodeRenderer nodeRenderer;
+    private ShutterPreviewRenderer previewRenderer;
 
     private PathFollower follower;
     private PathIterator iterator;
@@ -57,8 +55,7 @@ public class ShutterClient implements ClientModInitializer {
         Jobs.init();
 
         this.commandFilter = new CommandFilter();
-        this.pathRenderer = new CameraPathRenderer();
-        this.nodeRenderer = new CameraNodeRenderer();
+        this.previewRenderer = new ShutterPreviewRenderer();
         this.follower = new PathFollower();
         this.iterator = new PathIterator();
 
@@ -102,9 +99,7 @@ public class ShutterClient implements ClientModInitializer {
 
     public CommandFilter getCommandFilter() { return commandFilter; }
 
-    public CameraPathRenderer getPathRenderer() { return pathRenderer; }
-
-    public CameraNodeRenderer getNodeRenderer() { return nodeRenderer; }
+    public ShutterPreviewRenderer getPreviewRenderer() { return previewRenderer; }
 
     public PathFollower getPathFollower() { return follower; }
 
@@ -139,11 +134,7 @@ public class ShutterClient implements ClientModInitializer {
     private void setupRenderer(WorldRenderContext ctx) {
         ctx.world().getProfiler().swap(Shutter.id("path_render").toString());
         VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(new BufferBuilder(256));
-        ShutterClient.INSTANCE.getPathRenderer().render(ctx.matrixStack(), provider, ctx.camera().getPos());
+        ShutterClient.INSTANCE.getPreviewRenderer().render(ctx.matrixStack(), provider, ctx.camera(), 0x00F000F0);
         provider.draw();
-        if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showNodeHead) {
-            ShutterClient.INSTANCE.getNodeRenderer().render(ctx.matrixStack(), provider, ctx.camera().getPos(), 0x00F000F0);
-            provider.draw();
-        }
     }
 }

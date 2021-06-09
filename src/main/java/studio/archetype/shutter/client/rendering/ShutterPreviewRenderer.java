@@ -13,7 +13,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
-import org.lwjgl.system.CallbackI;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.enums.PathStyle;
@@ -29,7 +28,7 @@ import java.util.UUID;
 
 public class ShutterPreviewRenderer {
 
-    private static final CameraHeadModel NODE_MODEL = new CameraHeadModel();
+    private static final NodeModel NODE_MODEL = new NodeModel();
 
     private CameraPath path;
     private boolean shouldLoop;
@@ -55,13 +54,16 @@ public class ShutterPreviewRenderer {
         PathStyle style = ClientConfigManager.CLIENT_CONFIG.pathSettings.pathStyle;
         boolean directionalBeam = ClientConfigManager.CLIENT_CONFIG.pathSettings.showDirectionalBeam;
 
-        pathData.forEach((node, points) -> {
-            for (InterpolationData point : points) {
-                Vec3d p = point.getPosition();
-                if(style == PathStyle.LINE || style == PathStyle.ADVANCED)
-                    DrawUtils.renderLineStrip(p, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE_STRIP), stack.peek());
-                if(style == PathStyle.CUBES || style == PathStyle.ADVANCED)
-                    DrawUtils.renderCube(p, .1F, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
+        path.getNodes().forEach(node -> {
+            LinkedList<InterpolationData> steps = pathData.get(node);
+            if(steps != null) {
+                for (InterpolationData point : steps) {
+                    Vec3d p = point.getPosition();
+                    if (style == PathStyle.LINE || style == PathStyle.ADVANCED)
+                        DrawUtils.renderLineStrip(p, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE_STRIP), stack.peek());
+                    if (style == PathStyle.CUBES || style == PathStyle.ADVANCED)
+                        DrawUtils.renderCube(p, .1F, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
+                }
             }
 
             if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showNodeHead)
@@ -125,7 +127,7 @@ public class ShutterPreviewRenderer {
                 : RenderLayer.getEntityCutoutNoCull(DefaultSkinHelper.getTexture(PlayerEntity.getUuidFromProfile(profile)));
     }
 
-    private class NodeModel extends Model {
+    private static class NodeModel extends Model {
 
         private static final UUID ID = UUID.fromString("bda14eb8-3246-4637-947f-d550e2f32387");
         private static final String TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmZiNWVlZTQwYzNkZDY2ODNjZWM4ZGQxYzZjM2ZjMWIxZjAxMzcxNzg2NjNkNzYxMDljZmUxMmVkN2JmMjc4ZSJ9fX0=";
