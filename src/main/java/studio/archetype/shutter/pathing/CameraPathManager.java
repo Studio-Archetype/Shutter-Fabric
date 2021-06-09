@@ -81,12 +81,10 @@ public class CameraPathManager {
         this.currentSelection = id;
         if(isVisualizing) {
             if(path.getNodes().size() < 2) {
-                ShutterClient.INSTANCE.getPathRenderer().disable();
-                ShutterClient.INSTANCE.getNodeRenderer().disable();
+                ShutterClient.INSTANCE.getPreviewRenderer().disable();
                 this.isVisualizing = false;
             } else {
-                ShutterClient.INSTANCE.getPathRenderer().setPath(path, visualizeLooped);
-                ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
+                ShutterClient.INSTANCE.getPreviewRenderer().enable(path, visualizeLooped);
             }
         }
 
@@ -156,8 +154,7 @@ public class CameraPathManager {
 
         if(isVisualizing) {
             this.isVisualizing = false;
-            ShutterClient.INSTANCE.getPathRenderer().disable();
-            ShutterClient.INSTANCE.getNodeRenderer().disable();
+            ShutterClient.INSTANCE.getPreviewRenderer().disable();
         }
 
         if(remove) {
@@ -177,14 +174,12 @@ public class CameraPathManager {
         if(isVisualizing) {
             isVisualizing = false;
             visualizeLooped = false;
-            ShutterClient.INSTANCE.getPathRenderer().disable();
-            ShutterClient.INSTANCE.getNodeRenderer().disable();
+            ShutterClient.INSTANCE.getPreviewRenderer().disable();
             return false;
         } else {
             isVisualizing = true;
             visualizeLooped = loop;
-            ShutterClient.INSTANCE.getPathRenderer().setPath(path, loop);
-            ShutterClient.INSTANCE.getNodeRenderer().setPath(path);
+            ShutterClient.INSTANCE.getPreviewRenderer().enable(path, visualizeLooped);
             return true;
         }
     }

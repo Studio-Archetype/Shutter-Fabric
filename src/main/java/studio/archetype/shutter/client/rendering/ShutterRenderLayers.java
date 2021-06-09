@@ -21,7 +21,7 @@ public class ShutterRenderLayers {
                 VertexFormat.DrawMode.QUADS,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
-                        .shader(RenderPhase.POSITION_SHADER)
+                        .shader(RenderPhase.COLOR_SHADER)
                         .build(true));
 
         private ShutterCubeRenderLayer(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
