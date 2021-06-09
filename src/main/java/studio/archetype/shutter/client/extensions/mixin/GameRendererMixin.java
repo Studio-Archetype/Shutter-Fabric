@@ -37,7 +37,7 @@ public abstract class GameRendererMixin {
 
     @ModifyVariable(method = "getFov", at = @At("STORE"), index = 4)
     public double injectZoom(double d) {
-        return this.client.options.fov + ShutterClient.INSTANCE.getZoom(this.client.getTickDelta());
+        return d + ShutterClient.INSTANCE.getZoom(this.client.getTickDelta());
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/Framebuffer;beginWrite(Z)V", shift = At.Shift.BEFORE))
