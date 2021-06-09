@@ -52,9 +52,11 @@ public class DrawUtils {
     public static void renderLine(Vec3d pos, Vec3d pos2, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack) {
         consumer.vertex(stack.getModel(), (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
+                .normal(stack.getNormal(), (float)pos.getX(), (float)pos.getY(), (float)pos.getZ())
                 .next();
         consumer.vertex(stack.getModel(), (float) pos2.getX(), (float) pos2.getY(), (float) pos2.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
+                .normal(stack.getNormal(), (float)pos.getX(), (float)pos.getY(), (float)pos.getZ())
                 .next();
     }
 
