@@ -10,7 +10,7 @@ import java.util.OptionalDouble;
 public class ShutterRenderLayers {
 
     public static RenderLayer SHUTTER_CUBE = ShutterCubeRenderLayer.getLayer();
-    public static RenderLayer SHUTTER_LINE_STRIP = ShutterLineStripRenderLayer.getLayer();
+    public static RenderLayer SHUTTER_LINE = ShutterLineRenderLayer.getLayer();
     public static RenderLayer SHUTTER_DIR = ShutterDirectionalLineRenderLayer.getLayer();
 
     private static class ShutterCubeRenderLayer extends RenderLayer {
@@ -33,19 +33,19 @@ public class ShutterRenderLayers {
         }
     }
 
-    private static class ShutterLineStripRenderLayer extends RenderLayer {
+    private static class ShutterLineRenderLayer extends RenderLayer {
 
         private static final RenderLayer LAYER = RenderLayer.of(
-                "shutter_line_strip",
+                "shutter_line",
                 VertexFormats.LINES,
-                VertexFormat.DrawMode.LINE_STRIP,
+                VertexFormat.DrawMode.LINES,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
                         .shader(RenderPhase.LINES_SHADER)
                         .lineWidth(new LineWidth(OptionalDouble.of(2)))
                         .build(true));
 
-        private ShutterLineStripRenderLayer(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
+        private ShutterLineRenderLayer(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
             super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
         }
 
@@ -58,11 +58,11 @@ public class ShutterRenderLayers {
 
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_directional_line",
-                VertexFormats.POSITION_COLOR,
+                VertexFormats.LINES,
                 VertexFormat.DrawMode.LINES,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
-                        .shader(RenderPhase.POSITION_SHADER)
+                        .shader(RenderPhase.LINES_SHADER)
                         .lineWidth(new LineWidth(OptionalDouble.of(5)))
                         .build(true));
 

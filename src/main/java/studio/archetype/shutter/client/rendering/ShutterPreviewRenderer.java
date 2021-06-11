@@ -57,10 +57,13 @@ public class ShutterPreviewRenderer {
         path.getNodes().forEach(node -> {
             LinkedList<InterpolationData> steps = pathData.get(node);
             if(steps != null) {
+                Vec3d previous = steps.getFirst().getPosition();
                 for (InterpolationData point : steps) {
                     Vec3d p = point.getPosition();
-                    if (style == PathStyle.LINE || style == PathStyle.ADVANCED)
-                        DrawUtils.renderLineStrip(p, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE_STRIP), stack.peek());
+                    if ((style == PathStyle.LINE || style == PathStyle.ADVANCED) && !point.equals(steps.getFirst())) {
+                        DrawUtils.renderLine(p, previous, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE), stack.peek(), camera.getPos());
+                        previous = point.getPosition();
+                    }
                     if (style == PathStyle.CUBES || style == PathStyle.ADVANCED)
                         DrawUtils.renderCube(p, .1F, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
                 }
@@ -71,14 +74,13 @@ public class ShutterPreviewRenderer {
             else if(style == PathStyle.ADVANCED)
                 DrawUtils.renderCube(node.getPosition(),.2F, getColour(node, true), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
 
-            if(directionalBeam) {
+            if(directionalBeam)
                 DrawUtils.renderLine(
                         node.getPosition(),
                         DrawUtils.getOffsetPoint(node.getPosition(), node.getPitch(), node.getYaw(), 2F),
                         getColour(node, true),
                         provider.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
-                        stack.peek());
-            }
+                        stack.peek(), camera.getPos());
         });
 
         stack.pop();
