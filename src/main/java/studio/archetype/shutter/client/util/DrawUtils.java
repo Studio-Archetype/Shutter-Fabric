@@ -61,11 +61,11 @@ public class DrawUtils {
         dz /= t;
         consumer.vertex(stack.getModel(), (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                .normal(stack.getNormal(), (float)dx, (float)dy, (float)dz)
+                //.normal(stack.getNormal(), (float)dx, (float)dy, (float)dz)
                 .next();
         consumer.vertex(stack.getModel(), (float) pos2.getX(), (float) pos2.getY(), (float) pos2.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                .normal(stack.getNormal(), (float)dx, (float)dy, (float)dz)
+                //.normal(stack.getNormal(), (float)dx, (float)dy, (float)dz)
                 .next();
     }
 

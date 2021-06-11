@@ -37,11 +37,11 @@ public class ShutterRenderLayers {
 
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_line",
-                VertexFormats.LINES,
-                VertexFormat.DrawMode.LINES,
+                VertexFormats.POSITION_COLOR,
+                VertexFormat.DrawMode.DEBUG_LINES,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
-                        .shader(RenderPhase.LINES_SHADER)
+                        .shader(RenderPhase.COLOR_SHADER)
                         .lineWidth(new LineWidth(OptionalDouble.of(2)))
                         .build(true));
 
@@ -58,11 +58,11 @@ public class ShutterRenderLayers {
 
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_directional_line",
-                VertexFormats.LINES,
-                VertexFormat.DrawMode.LINES,
+                VertexFormats.POSITION_COLOR,
+                VertexFormat.DrawMode.DEBUG_LINES,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
-                        .shader(RenderPhase.LINES_SHADER)
+                        .shader(RenderPhase.COLOR_SHADER)
                         .lineWidth(new LineWidth(OptionalDouble.of(5)))
                         .build(true));
 
