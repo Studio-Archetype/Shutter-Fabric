@@ -50,29 +50,18 @@ public class DrawUtils {
         Stream.of(Direction.values()).forEach(dir -> DrawUtils.quadOffsetAxis(pos, radius, dir, colour, consumer, stack.getModel()));
     }
 
-    public static void renderLine(Vec3d pos, Vec3d pos2, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack, Vec3d cam) {
-        Vec3d middle = pos.add(pos2);
-        double dx = middle.getX() / 2 - cam.getX();
-        double dy = middle.getY() / 2 - cam.getY();
-        double dz = middle.getZ() / 2 - cam.getZ();
-        double t = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        dx /= t;
-        dy /= t;
-        dz /= t;
+    public static void renderLine(Vec3d pos, Vec3d pos2, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack) {
         consumer.vertex(stack.getModel(), (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                //.normal(stack.getNormal(), (float)dx, (float)dy, (float)dz)
                 .next();
         consumer.vertex(stack.getModel(), (float) pos2.getX(), (float) pos2.getY(), (float) pos2.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                //.normal(stack.getNormal(), (float)dx, (float)dy, (float)dz)
                 .next();
     }
 
     public static void renderLineStrip(Vec3d pos, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack) {
         consumer.vertex(stack.getModel(), (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                .normal(stack.getNormal(), (float)pos.getX(), (float)pos.getY(), (float)pos.getZ())
                 .next();
     }
 

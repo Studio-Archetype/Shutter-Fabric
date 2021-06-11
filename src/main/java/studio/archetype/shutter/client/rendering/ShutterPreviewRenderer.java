@@ -61,7 +61,7 @@ public class ShutterPreviewRenderer {
                 for (InterpolationData point : steps) {
                     Vec3d p = point.getPosition();
                     if ((style == PathStyle.LINE || style == PathStyle.ADVANCED) && !point.equals(steps.getFirst())) {
-                        DrawUtils.renderLine(p, previous, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE), stack.peek(), camera.getPos());
+                        DrawUtils.renderLine(p, previous, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE), stack.peek());
                         previous = point.getPosition();
                     }
                     if (style == PathStyle.CUBES || style == PathStyle.ADVANCED)
@@ -80,7 +80,7 @@ public class ShutterPreviewRenderer {
                         DrawUtils.getOffsetPoint(node.getPosition(), node.getPitch(), node.getYaw(), 2F),
                         getColour(node, true),
                         provider.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
-                        stack.peek(), camera.getPos());
+                        stack.peek());
         });
 
         stack.pop();
