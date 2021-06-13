@@ -10,8 +10,8 @@ import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
-import studio.archetype.shutter.pathing.exceptions.PathSerializationException;
 import studio.archetype.shutter.client.util.InterpolationMath;
+import studio.archetype.shutter.pathing.exceptions.PathSerializationException;
 import studio.archetype.shutter.util.SerializationUtils;
 import studio.archetype.shutter.util.WebUtils;
 

@@ -3,9 +3,9 @@ package studio.archetype.shutter.client.processing.jobs;
 import net.minecraft.client.MinecraftClient;
 import studio.archetype.shutter.client.events.WorldRenderedCallback;
 import studio.archetype.shutter.client.processing.processors.FfmpegVideoProcessor;
+import studio.archetype.shutter.client.util.ScreenSize;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.pathing.exceptions.PathNotFollowingException;
-import studio.archetype.shutter.client.util.ScreenSize;
 
 import java.io.IOException;
 
