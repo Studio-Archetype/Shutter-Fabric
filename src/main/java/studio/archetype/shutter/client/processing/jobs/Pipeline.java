@@ -2,6 +2,7 @@ package studio.archetype.shutter.client.processing.jobs;
 
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
+import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.processing.capturing.DummyCapturer;
 import studio.archetype.shutter.client.processing.capturing.EnforcedFramerateCapturer;
 import studio.archetype.shutter.client.processing.capturing.FrameCapturer;
@@ -46,11 +47,11 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
     public void setup() {
         this.nextFrameId = 0;
         int availableThreads = Math.max(Runtime.getRuntime().availableProcessors() - 2, 1);
-        this.convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(2) {
+        this.convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(2) {
             public boolean offer(Runnable runnable) {
                 try {
                     this.put(runnable);
-                } catch(InterruptedException ex) {
+                } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     return false;
                 }
@@ -122,6 +123,8 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
                     System.out.println("Unable to process Frame#" + outputFrame.getFrameId() + "!");
                     System.out.println("-> " + e.getMessage());
                     cancel();
+                    ShutterClient.INSTANCE.getFramerateController().stopControlling();
+                    ShutterClient.INSTANCE.getPathFollower().end();
                 }
                 nextFrameId++;
                 processorLock.notifyAll();

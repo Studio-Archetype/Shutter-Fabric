@@ -1,7 +1,6 @@
 package studio.archetype.shutter.client.ui.screens;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.DirectConnectScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;

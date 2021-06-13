@@ -1,6 +1,5 @@
 package studio.archetype.shutter.client.util;
 
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.*;
@@ -13,25 +12,25 @@ public class DrawUtils {
         Vec3i dirVector = dir.getVector();
         Vec3d offset = pos.add(new Vec3d(dirVector.getX() * radius, dirVector.getY() * radius, dirVector.getZ() * radius));
         Vec3d[] points = new Vec3d[4];
-        switch(dir.getAxis()) {
-            case X:
+        switch (dir.getAxis()) {
+            case X -> {
                 points[0] = offset.add(new Vec3d(0, radius, radius));
                 points[1] = offset.add(new Vec3d(0, -radius, radius));
                 points[2] = offset.add(new Vec3d(0, -radius, -radius));
                 points[3] = offset.add(new Vec3d(0, radius, -radius));
-                break;
-            case Y:
+            }
+            case Y -> {
                 points[0] = offset.add(new Vec3d(radius, 0, radius));
                 points[1] = offset.add(new Vec3d(radius, 0, -radius));
                 points[2] = offset.add(new Vec3d(-radius, 0, -radius));
                 points[3] = offset.add(new Vec3d(-radius, 0, radius));
-                break;
-            case Z:
+            }
+            case Z -> {
                 points[0] = offset.add(new Vec3d(radius, radius, 0));
                 points[1] = offset.add(new Vec3d(-radius, radius, 0));
                 points[2] = offset.add(new Vec3d(-radius, -radius, 0));
                 points[3] = offset.add(new Vec3d(radius, -radius, 0));
-                break;
+            }
         }
 
         if(dir.getDirection().offset() < 0) {
@@ -55,12 +54,6 @@ public class DrawUtils {
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
                 .next();
         consumer.vertex(stack.getModel(), (float) pos2.getX(), (float) pos2.getY(), (float) pos2.getZ())
-                .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
-                .next();
-    }
-
-    public static void renderLineStrip(Vec3d pos, Vec3d colour, VertexConsumer consumer, MatrixStack.Entry stack) {
-        consumer.vertex(stack.getModel(), (float) pos.getX(), (float) pos.getY(), (float) pos.getZ())
                 .color((float) colour.x, (float) colour.y, (float) colour.z, 1.0F)
                 .next();
     }
