@@ -138,9 +138,13 @@ public class ShutterPreviewRenderer {
 
         public NodeModel() {
             super(RenderLayer::getEntityTranslucent);
-            ModelPart.Cuboid head = new ModelPart.Cuboid(0, 0, -4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0, 0,0, false, 64, 64);
-            ModelPart.Cuboid hat = new ModelPart.Cuboid(32, 0, -4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, .25F, .25F,.25F, false, 64, 64);
-            this.modelPart = new ModelPart(Collections.singletonList(head), Collections.singletonMap("hat", new ModelPart(Collections.singletonList(hat), Collections.emptyMap())));
+            this.modelPart = new ModelPart(this);
+            this.modelPart.setTextureSize(64, 64);
+
+            this.modelPart.setTextureOffset(0, 0);
+            this.modelPart.addCuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F);
+            this.modelPart.setTextureOffset(0, 32);
+            this.modelPart.addCuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, .25F);
         }
 
         @Override

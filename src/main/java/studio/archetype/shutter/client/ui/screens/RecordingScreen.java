@@ -9,10 +9,7 @@ import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.ShutterClient;
@@ -147,7 +144,7 @@ public class RecordingScreen extends Screen {
     }
 
     private static void displayCountdownTitle(MinecraftClient c, int seconds) {
-        Text title = new TranslatableText("ui.shutter.recording.countdown1").setStyle(Style.EMPTY.withBold(true).withColor(Formatting.GOLD));
+        MutableText title = new TranslatableText("ui.shutter.recording.countdown1", seconds).formatted(Formatting.BOLD, Formatting.GOLD);
         Formatting color = Formatting.GRAY;
         switch(seconds) {
             case 3:
@@ -160,7 +157,8 @@ public class RecordingScreen extends Screen {
                 color = Formatting.RED;
                 break;
         }
-        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2", seconds).setStyle(Style.EMPTY.withItalic(true).withColor(color));
+        title.append(new LiteralText("...").formatted(Formatting.BOLD, Formatting.GOLD));
+        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2").setStyle(Style.EMPTY.withItalic(true).withColor(Formatting.GRAY));
         c.inGameHud.setTitles(subtitle, title, -1, 20, -1);
     }
 }
