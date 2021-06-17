@@ -118,10 +118,9 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
                 FfmpegProperties.INPUT,
 
                 FfmpegProperties.CODEC.get(RecordingCodec.Hx264.value),
-                FfmpegProperties.PROPS_X264.get("opencl=true"),
                 FfmpegProperties.PRESET.get(config.preset.value),
                 FfmpegProperties.QUALITY.get(23),
-                FfmpegProperties.PIXEL_FORMAT.get("yuv420p"),
+                FfmpegProperties.PIXEL_FORMAT.get("yuv444p"),
 
                 FfmpegProperties.OUTPUT.get(filename + ".mp4")};
     }
@@ -140,10 +139,9 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
                 FfmpegProperties.INPUT,
 
                 FfmpegProperties.CODEC.get(RecordingCodec.Hx265.value),
-                FfmpegProperties.PROPS_X265.get("opencl=true"),
                 FfmpegProperties.PRESET.get(config.preset.value),
                 FfmpegProperties.QUALITY.get(28),
-                FfmpegProperties.PIXEL_FORMAT.get("yuv420p"),
+                FfmpegProperties.PIXEL_FORMAT.get("yuv444p"),
 
                 FfmpegProperties.OUTPUT.get(filename + ".mp4")};
     }
