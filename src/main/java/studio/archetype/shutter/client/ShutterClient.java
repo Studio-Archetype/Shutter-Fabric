@@ -73,7 +73,7 @@ public class ShutterClient implements ClientModInitializer {
             DebugCommands.register(dis);
         }
 
-        EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, FreecamEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(FreecamEntity.TYPE, (dise, ctx) -> new FreecamEntityRenderer(dise));
         WorldRenderEvents.AFTER_ENTITIES.register(this::setupRenderer);
 
         this.zoom = this.prevZoom = 0;

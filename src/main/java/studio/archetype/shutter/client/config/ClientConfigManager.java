@@ -1,7 +1,7 @@
 package studio.archetype.shutter.client.config;
 
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.ActionResult;
 import studio.archetype.shutter.client.ShutterClient;

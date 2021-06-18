@@ -13,24 +13,24 @@ public class DrawUtils {
         Vec3d offset = pos.add(new Vec3d(dirVector.getX() * radius, dirVector.getY() * radius, dirVector.getZ() * radius));
         Vec3d[] points = new Vec3d[4];
         switch (dir.getAxis()) {
-            case X -> {
+            case X:
                 points[0] = offset.add(new Vec3d(0, radius, radius));
                 points[1] = offset.add(new Vec3d(0, -radius, radius));
                 points[2] = offset.add(new Vec3d(0, -radius, -radius));
                 points[3] = offset.add(new Vec3d(0, radius, -radius));
-            }
-            case Y -> {
+                break;
+            case Y:
                 points[0] = offset.add(new Vec3d(radius, 0, radius));
                 points[1] = offset.add(new Vec3d(radius, 0, -radius));
                 points[2] = offset.add(new Vec3d(-radius, 0, -radius));
                 points[3] = offset.add(new Vec3d(-radius, 0, radius));
-            }
-            case Z -> {
+                break;
+            case Z:
                 points[0] = offset.add(new Vec3d(radius, radius, 0));
                 points[1] = offset.add(new Vec3d(-radius, radius, 0));
                 points[2] = offset.add(new Vec3d(-radius, -radius, 0));
                 points[3] = offset.add(new Vec3d(radius, -radius, 0));
-            }
+            break;
         }
 
         if(dir.getDirection().offset() < 0) {

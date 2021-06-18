@@ -47,7 +47,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
     public void setup() {
         this.nextFrameId = 0;
         int availableThreads = Math.max(Runtime.getRuntime().availableProcessors() - 2, 1);
-        this.convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(2) {
+        this.convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue(2) {
             public boolean offer(Runnable runnable) {
                 try {
                     this.put(runnable);

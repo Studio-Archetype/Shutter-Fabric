@@ -157,7 +157,7 @@ public class RecordingScreen extends Screen {
                 color = Formatting.RED;
                 break;
         }
-        title.append(new LiteralText("...").formatted(Formatting.BOLD, Formatting.GOLD));
+        title.append(new LiteralText(String.valueOf(seconds)).formatted(Formatting.BOLD, color)).append(new LiteralText("...").formatted(Formatting.BOLD, Formatting.GOLD));
         Text subtitle = new TranslatableText("ui.shutter.recording.countdown2").setStyle(Style.EMPTY.withItalic(true).withColor(Formatting.GRAY));
         c.inGameHud.setTitles(subtitle, title, -1, 20, -1);
     }

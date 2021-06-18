@@ -6,10 +6,11 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.IOUtils;
 import studio.archetype.shutter.pathing.CameraPathManager;
@@ -39,8 +40,8 @@ public class SaveFile {
                 return new SaveFile();
             }
 
-            Tag shutter = NbtIo.readCompressed(PATH_FILE).get("Shutter");
-            return NbtOps.INSTANCE.withDecoder(CODEC).apply(shutter).result().orElse(new Pair<>(new SaveFile(), new CompoundTag())).getFirst();
+            NbtElement shutter = NbtIo.readCompressed(PATH_FILE).get("Shutter");
+            return NbtOps.INSTANCE.withDecoder(CODEC).apply(shutter).result().orElse(new Pair<>(new SaveFile(), new NbtCompound())).getFirst();
         } catch(IOException e) {
             System.out.println("Shutter: Failed to read save data!");
             e.printStackTrace();
@@ -88,9 +89,9 @@ public class SaveFile {
 
     public void save() {
         try {
-            Optional<Tag> nbt = NbtOps.INSTANCE.withEncoder(CODEC).apply(this).resultOrPartial(System.out::println);
+            Optional<NbtElement> nbt = NbtOps.INSTANCE.withEncoder(CODEC).apply(this).resultOrPartial(System.out::println);
             if(nbt.isPresent()) {
-                CompoundTag tag = new CompoundTag();
+                NbtCompound tag = new NbtCompound();
                 tag.put("Shutter", nbt.get());
                 NbtIo.writeCompressed(tag, PATH_FILE);
             } else {

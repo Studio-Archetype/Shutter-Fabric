@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -55,11 +55,12 @@ public class FreecamEntity extends Entity{
     @Override
     protected void initDataTracker() { }
 
-    @Override
-    public void readCustomDataFromTag(CompoundTag tag) { }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) { }
+    protected void readCustomDataFromNbt(NbtCompound nbt) { }
+
+    @Override
+    protected void writeCustomDataToNbt(NbtCompound nbt) { }
 
     @Override
     public Packet<?> createSpawnPacket() { return null; }

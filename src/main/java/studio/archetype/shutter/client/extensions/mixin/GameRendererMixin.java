@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,7 +31,7 @@ public abstract class GameRendererMixin {
                     target = "Lnet/minecraft/client/render/Camera;update(Lnet/minecraft/world/BlockView;Lnet/minecraft/entity/Entity;ZZF)V"))
     public void addRollMatrixMult(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo info) {
         float roll = ((CameraExt)getCamera()).getRoll(tickDelta);
-        matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(roll));
+        matrix.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(roll));
         ((CameraExt)getCamera()).setPreviousRoll(roll);
     }
 

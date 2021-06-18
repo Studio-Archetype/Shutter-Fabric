@@ -1,7 +1,7 @@
 package studio.archetype.shutter.client.config;
 
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.config.enums.EncoderPreset;
 import studio.archetype.shutter.client.config.enums.RecordingCodec;

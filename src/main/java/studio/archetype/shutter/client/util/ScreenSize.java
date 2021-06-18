@@ -1,6 +1,13 @@
 package studio.archetype.shutter.client.util;
 
-public record ScreenSize(int width, int height) {
+public final class ScreenSize {
+
+    private final int width, height;
+
+    public ScreenSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 
     public int getWidth() {
         return width;

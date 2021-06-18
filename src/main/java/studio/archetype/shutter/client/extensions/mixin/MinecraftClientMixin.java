@@ -3,6 +3,7 @@ package studio.archetype.shutter.client.extensions.mixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.ClientConnection;
@@ -22,9 +23,10 @@ import studio.archetype.shutter.util.AsyncUtils;
 abstract class MinecraftClientMixin {
 
     @Shadow @Nullable public ClientWorld world;
-    @Shadow @Nullable private ClientConnection connection;
 
     @Shadow public abstract boolean isIntegratedServerRunning();
+
+    @Shadow @Nullable public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderTickCounter;beginRenderTick(J)I"))
     private int modifyScheduledTicks(RenderTickCounter renderTickCounter, long timeMillis) {
@@ -35,7 +37,7 @@ abstract class MinecraftClientMixin {
     private void onDisconnect(Screen screen, CallbackInfo info) {
         try {
             ShutterClient client = ShutterClient.INSTANCE;
-            if((isIntegratedServerRunning() || connection != null) && this.world != null) {
+            if((isIntegratedServerRunning() || getNetworkHandler() != null) && this.world != null) {
                 if (client.getPathManager(this.world).isVisualizing())
                     client.getPathManager(this.world).togglePathVisualization(false);
                 if (client.getPathFollower().isFollowing())
@@ -53,7 +55,7 @@ abstract class MinecraftClientMixin {
     private void onWorldChange(ClientWorld w, CallbackInfo info) {
         try {
             ShutterClient client = ShutterClient.INSTANCE;
-            if((isIntegratedServerRunning() || connection != null) && this.world != null) {
+            if((isIntegratedServerRunning() || getNetworkHandler() != null) && this.world != null) {
                 if (client.getPathManager(this.world).isVisualizing())
                     client.getPathManager(this.world).togglePathVisualization(false);
                 if (client.getPathFollower().isFollowing())
