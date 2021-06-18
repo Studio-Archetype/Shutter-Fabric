@@ -10,7 +10,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.IOUtils;
 import studio.archetype.shutter.pathing.CameraPathManager;

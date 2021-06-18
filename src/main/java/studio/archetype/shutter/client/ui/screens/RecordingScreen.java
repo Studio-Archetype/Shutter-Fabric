@@ -1,21 +1,16 @@
 package studio.archetype.shutter.client.ui.screens;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.ShutterClient;
-import studio.archetype.shutter.client.config.ClientConfigManager;
 import studio.archetype.shutter.client.config.FfmpegRecordConfig;
-import studio.archetype.shutter.client.config.enums.RecordingCodec;
 import studio.archetype.shutter.client.config.enums.RecordingMode;
 import studio.archetype.shutter.client.processing.jobs.Jobs;
 import studio.archetype.shutter.client.ui.Messaging;
@@ -92,6 +87,18 @@ public class RecordingScreen extends Screen {
                 AsyncUtils.queueAsync(this.dummyFuture, this.onCountdownDone, this.onCountdownTick);
             }
         }));
+    }
+
+    public void resize(MinecraftClient client, int width, int height) {
+        String filename = this.filename.getText();
+        String speed = this.pathTime.getText();
+        TimeUnits unit = this.pathTime.getCurrentUnit();
+
+        this.init(client, width, height);
+
+        this.filename.setText(filename);
+        this.pathTime.setText(speed);
+        this.pathTime.updateUnit(unit);
     }
 
     @Override

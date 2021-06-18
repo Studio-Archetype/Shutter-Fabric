@@ -1,6 +1,5 @@
 package studio.archetype.shutter.client.ui.toasts;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;

@@ -21,7 +21,6 @@ import studio.archetype.shutter.pathing.CameraPath;
 import studio.archetype.shutter.pathing.InterpolationData;
 import studio.archetype.shutter.pathing.PathNode;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
