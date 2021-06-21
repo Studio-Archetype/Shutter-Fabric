@@ -3,6 +3,11 @@ package studio.archetype.shutter.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.util.math.Vec3d;
+import studio.archetype.shutter.client.cmd.DebugCommands;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public final class CommandFilter {
 
@@ -18,10 +23,13 @@ public final class CommandFilter {
 
     public void teleportClient(Vec3d position, double pitch, double yaw) {
         queuedTeleportMessageFilter++;
+        NumberFormat format = NumberFormat.getNumberInstance(Locale.UK);
+        DecimalFormat f = new DecimalFormat();
+        format.setMaximumFractionDigits(6);
         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new ChatMessageC2SPacket(String.format(
-                "/tp @s %.6f %.6f %.6f %.6f %.6f",
-                position.getX(), position.getY(), position.getZ(),
-                yaw, pitch)));
+                "/tp @s %s %s %s %s %s",
+                format.format(position.getX()), format.format(position.getY()), format.format(position.getZ()),
+                format.format(yaw), format.format(pitch))));
     }
 
     public void changeGameMode(GameMode mode) {

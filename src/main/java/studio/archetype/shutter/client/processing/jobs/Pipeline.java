@@ -94,6 +94,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
 
     public void cancel() {
         abort = true;
+        ShutterClient.INSTANCE.getPathFollower().end();
         this.close();
     }
 
@@ -123,8 +124,6 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
                     System.out.println("Unable to process Frame#" + outputFrame.getFrameId() + "!");
                     System.out.println("-> " + e.getMessage());
                     cancel();
-                    ShutterClient.INSTANCE.getFramerateController().stopControlling();
-                    ShutterClient.INSTANCE.getPathFollower().end();
                 }
                 nextFrameId++;
                 processorLock.notifyAll();
