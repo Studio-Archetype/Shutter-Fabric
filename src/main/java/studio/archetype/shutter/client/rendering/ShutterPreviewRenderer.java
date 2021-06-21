@@ -59,10 +59,9 @@ public class ShutterPreviewRenderer {
                 Vec3d previous = steps.getFirst().getPosition();
                 for (InterpolationData point : steps) {
                     Vec3d p = point.getPosition();
-                    if ((style == PathStyle.LINE || style == PathStyle.ADVANCED) && !point.equals(steps.getFirst())) {
+                    if ((style == PathStyle.LINE || style == PathStyle.ADVANCED) && !point.equals(steps.getFirst()))
                         DrawUtils.renderLine(p, previous, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE), stack.peek());
-                        previous = point.getPosition();
-                    }
+                    previous = point.getPosition();
                     if (style == PathStyle.CUBES || style == PathStyle.ADVANCED)
                         DrawUtils.renderCube(p, .1F, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
                 }

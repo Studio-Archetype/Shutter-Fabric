@@ -65,8 +65,6 @@ public class PathFollower {
         entity = new FreecamEntity(currentNode.getPosition(), 0, 0, currentNode.getRoll(), c.world);
         c.setCameraEntity(entity);
         c.player.teleport(currentNode.getPosition().getX(), currentNode.getPosition().getY(), currentNode.getPosition().getZ());
-
-
     }
 
     public void end() {

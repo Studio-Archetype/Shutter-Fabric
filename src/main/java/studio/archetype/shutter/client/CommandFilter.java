@@ -19,7 +19,7 @@ public final class CommandFilter {
     public void teleportClient(Vec3d position, double pitch, double yaw) {
         queuedTeleportMessageFilter++;
         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new ChatMessageC2SPacket(String.format(
-                "/tp @s %f %f %f %f %f",
+                "/tp @s %.6f %.6f %.6f %.6f %.6f",
                 position.getX(), position.getY(), position.getZ(),
                 yaw, pitch)));
     }

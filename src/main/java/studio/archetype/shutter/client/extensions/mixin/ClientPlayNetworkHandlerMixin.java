@@ -36,7 +36,6 @@ abstract class ClientPlayNetworkHandlerMixin {
             if(packet.getMessage().equals(gamemodeText) && filter.queuedGamemodeMessageFilter > 0) {
                 --filter.queuedGamemodeMessageFilter;
                 info.cancel();
-                return;
             }
         }
     }

@@ -38,7 +38,7 @@ public class ShutterRenderLayers {
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_line",
                 VertexFormats.POSITION_COLOR,
-                GL11.GL_LINE,
+                GL11.GL_LINES,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
                     .lineWidth(new LineWidth(OptionalDouble.of(2)))
@@ -58,7 +58,7 @@ public class ShutterRenderLayers {
         private static final RenderLayer LAYER = RenderLayer.of(
                 "shutter_directional_line",
                 VertexFormats.POSITION_COLOR,
-                GL11.GL_LINE,
+                GL11.GL_LINES,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
                         .lineWidth(new LineWidth(OptionalDouble.of(5)))
