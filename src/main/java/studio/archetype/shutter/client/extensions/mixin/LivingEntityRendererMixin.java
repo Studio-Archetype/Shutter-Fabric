@@ -1,5 +1,6 @@
 package studio.archetype.shutter.client.extensions.mixin;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.ArmorStandEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -20,9 +21,12 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     @ModifyVariable(method = "render", at = @At("STORE"), ordinal = 1)
     private boolean hideArmorstands(boolean bl2) {
-        if((Object)this instanceof ArmorStandEntityRenderer)
-            if (ShutterClient.INSTANCE.getPathFollower().isFollowing())
+        if((Object)this instanceof ArmorStandEntityRenderer) {
+            if (ShutterClient.INSTANCE.getPathFollower().isFollowing() ||
+                    ShutterClient.INSTANCE.getPathIterator().isIterating() ||
+                    MinecraftClient.getInstance().options.hudHidden)
                 return !ClientConfigManager.CLIENT_CONFIG.genSettings.hideArmorStands;
+        }
 
         return bl2;
     }
