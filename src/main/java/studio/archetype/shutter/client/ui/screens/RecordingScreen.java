@@ -104,12 +104,15 @@ public class RecordingScreen extends Screen {
         String filename = this.filename.getText();
         String speed = this.pathTime.getText();
         TimeUnits unit = this.pathTime.getCurrentUnit();
+        boolean toggleSkip = this.skipCountdown.isChecked();
 
         this.init(client, width, height);
 
         this.filename.setText(filename);
         this.pathTime.setText(speed);
         this.pathTime.updateUnit(unit);
+        if(toggleSkip)
+            this.skipCountdown.onPress();
     }
 
     @Override
