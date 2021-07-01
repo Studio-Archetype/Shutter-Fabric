@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -174,6 +175,9 @@ public class RecordingScreen extends Screen {
             color = Formatting.RED;
         Text title = new TranslatableText("ui.shutter.recording.countdown1", new LiteralText(String.valueOf(seconds)).formatted(Formatting.BOLD, color)).formatted(Formatting.BOLD, Formatting.GOLD);
         Text subtitle = new TranslatableText("ui.shutter.recording.countdown2").formatted(Formatting.ITALIC, Formatting.GRAY);
-        c.inGameHud.setTitles(title, subtitle, -1, 20, -1);
+        c.inGameHud.setTitles(null, null, seconds == 3 ? 5 : 0, 21, 0);
+        c.inGameHud.setTitles(title, null, 0, 0, 0);
+        c.inGameHud.setTitles(null, subtitle, 0, 0, 0);
+        c.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
     }
 }
