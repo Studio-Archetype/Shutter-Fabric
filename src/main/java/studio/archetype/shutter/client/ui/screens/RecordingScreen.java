@@ -6,7 +6,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.ShutterClient;
@@ -53,7 +55,7 @@ public class RecordingScreen extends Screen {
     @Override
     protected void init() {
         this.filename = new PredicateTextboxWidget(width / 2 - 175, height / 2 - 57, 150, 20, new TranslatableText("ui.shutter.recording.filename"));
-        filename.setTextFieldFocused(true);
+        setInitialFocus(this.filename);
         filename.setMaxLength(64);
         filename.setValidPredicate(s -> !s.contains(" ") && !s.isEmpty());
         children.add(this.filename);
@@ -160,21 +162,15 @@ public class RecordingScreen extends Screen {
     }
 
     private static void displayCountdownTitle(MinecraftClient c, int seconds) {
-        MutableText title = new TranslatableText("ui.shutter.recording.countdown1", seconds).formatted(Formatting.BOLD, Formatting.GOLD);
         Formatting color = Formatting.GRAY;
-        switch(seconds) {
-            case 3:
-                color = Formatting.GREEN;
-                break;
-            case 2:
-                color = Formatting.YELLOW;
-                break;
-            case 1:
-                color = Formatting.RED;
-                break;
-        }
-        title.append(new LiteralText(String.valueOf(seconds)).formatted(Formatting.BOLD, color)).append(new LiteralText("...").formatted(Formatting.BOLD, Formatting.GOLD));
-        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2").setStyle(Style.EMPTY.withItalic(true).withColor(Formatting.GRAY));
-        c.inGameHud.setTitles(subtitle, title, -1, 20, -1);
+        if(seconds == 3)
+            color = Formatting.GREEN;
+        else if(seconds == 2)
+            color = Formatting.YELLOW;
+        else if(seconds == 1)
+            color = Formatting.RED;
+        Text title = new TranslatableText("ui.shutter.recording.countdown1", new LiteralText(String.valueOf(seconds)).formatted(Formatting.BOLD, color)).formatted(Formatting.BOLD, Formatting.GOLD);
+        Text subtitle = new TranslatableText("ui.shutter.recording.countdown2").formatted(Formatting.ITALIC, Formatting.GRAY);
+        c.inGameHud.setTitles(title, subtitle, -1, 20, -1);
     }
 }
