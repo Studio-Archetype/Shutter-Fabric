@@ -25,6 +25,7 @@ import studio.archetype.shutter.util.TimeUnits;
 import studio.archetype.shutter.util.cli.CliUtils;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class RecordingScreen extends Screen {
@@ -41,6 +42,8 @@ public class RecordingScreen extends Screen {
     private int ticks;
     private String name;
     private CompletableFuture<Void> dummyFuture;
+
+    private CompletableFuture<Boolean> ffmpegAvailable;
 
     public RecordingScreen(FfmpegRecordConfig config) {
         super(new LiteralText("shutter_recording"));
@@ -72,12 +75,16 @@ public class RecordingScreen extends Screen {
             this.config.pathTimeTicks = this.pathTime.getTicks();
             MinecraftClient.getInstance().currentScreen = null;
             this.name = this.filename.getText();
-            if(this.config.renderMode != RecordingMode.FRAMES && !CliUtils.isCommandAvailable("ffmpeg")) {
-                Messaging.sendMessage(
-                        new TranslatableText("msg.shutter.headline.rec.failed"),
-                        new TranslatableText("msg.shutter.error.no_ffmpeg"),
-                        Messaging.MessageType.NEGATIVE);
-                return;
+            try {
+                if(this.config.renderMode != RecordingMode.FRAMES && !this.ffmpegAvailable.get()) {
+                    Messaging.sendMessage(
+                            new TranslatableText("msg.shutter.headline.rec.failed"),
+                            new TranslatableText("msg.shutter.error.no_ffmpeg"),
+                            Messaging.MessageType.NEGATIVE);
+                    return;
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
             if(this.skipCountdown.isChecked()) {
                 this.onCountdownDone.accept(null);
@@ -87,6 +94,8 @@ public class RecordingScreen extends Screen {
                 AsyncUtils.queueAsync(this.dummyFuture, this.onCountdownDone, this.onCountdownTick);
             }
         }));
+
+        this.ffmpegAvailable = CliUtils.isCommandAvailableAsync("ffmpeg");
     }
 
     public void resize(MinecraftClient client, int width, int height) {
