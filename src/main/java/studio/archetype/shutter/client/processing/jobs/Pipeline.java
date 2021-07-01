@@ -47,7 +47,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
     public void setup() {
         this.nextFrameId = 0;
         int availableThreads = Math.max(Runtime.getRuntime().availableProcessors() - 2, 1);
-        this.convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue(2) {
+        this.convertService = new ThreadPoolExecutor(availableThreads, availableThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(2) {
             public boolean offer(Runnable runnable) {
                 try {
                     this.put(runnable);
@@ -64,7 +64,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
         MinecraftClient client = MinecraftClient.getInstance();
         if(!frameCapturer.isDone() && !abort) {
             if (GLFW.glfwWindowShouldClose(client.getWindow().getHandle())) {
-                convertService.shutdown();
+                this.close();
                 return true;
             }
             I inputFrame = this.frameCapturer.capture();
@@ -72,7 +72,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
                 convertService.submit(new ConvertTask(inputFrame));
             return false;
         }
-            return true;
+        return true;
     }
 
     @Override
@@ -85,6 +85,8 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
         }
 
         try {
+            if(ShutterClient.INSTANCE.getPathFollower().isFollowing())
+                ShutterClient.INSTANCE.getPathFollower().end();
             frameCapturer.close();
             frameProcessor.close();
         } catch(IOException e) {
@@ -94,8 +96,6 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
 
     public void cancel() {
         abort = true;
-        ShutterClient.INSTANCE.getPathFollower().end();
-        this.close();
     }
 
     private class ConvertTask implements Runnable {
