@@ -3,7 +3,6 @@ package studio.archetype.shutter.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.util.math.Vec3d;
-import studio.archetype.shutter.client.cmd.DebugCommands;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

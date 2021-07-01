@@ -24,11 +24,15 @@ public class CliUtils {
     public static boolean isCommandAvailable(String command) {
         for(CommandProperty p : versionFlags) {
             try {
-                if(runBlockingCommand(command,SaveFile.SHUTTER_DIR.toFile(), false, p) == 0)
+                if(runBlockingCommand(command, SaveFile.SHUTTER_DIR.toFile(), false, p) == 0)
                     return true;
             } catch(IOException | InterruptedException ignored) { }
         }
         return false;
+    }
+
+    public static CompletableFuture<Boolean> isCommandAvailableAsync(String command) {
+        return CompletableFuture.supplyAsync(() -> isCommandAvailable(command));
     }
 
     public static Process createCommandProcess(String command, File directory, boolean redirectError, CommandProperty... properties) throws IOException {
