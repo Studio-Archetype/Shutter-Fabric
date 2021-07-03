@@ -5,12 +5,18 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.properties.Property;
 import me.shedaniel.math.Color;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringVisitable;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import studio.archetype.shutter.client.ShutterClient;
@@ -53,7 +59,8 @@ public class ShutterPreviewRenderer {
         PathStyle style = ClientConfigManager.CLIENT_CONFIG.pathSettings.pathStyle;
         boolean directionalBeam = ClientConfigManager.CLIENT_CONFIG.pathSettings.showDirectionalBeam;
 
-        path.getNodes().forEach(node -> {
+        for(int i = 0; i < path.getNodes().size(); i++) {
+            PathNode node = path.getNodes().get(i);
             LinkedList<InterpolationData> steps = pathData.get(node);
             if(steps != null) {
                 Vec3d previous = steps.getFirst().getPosition();
@@ -67,9 +74,10 @@ public class ShutterPreviewRenderer {
                 }
             }
 
-            if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showNodeHead)
+            if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showNodeHead) {
                 renderNodeHead(node, stack, provider, light);
-            else if(style == PathStyle.ADVANCED)
+                renderTextLabel(stack, provider, node.getPosition(), new LiteralText("#" + i), camera, light);
+            } else if(style == PathStyle.ADVANCED)
                 DrawUtils.renderCube(node.getPosition(),.2F, getColour(node, true), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
 
             if(directionalBeam)
@@ -79,7 +87,28 @@ public class ShutterPreviewRenderer {
                         getColour(node, true),
                         provider.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
                         stack.peek());
-        });
+        }
+
+        stack.pop();
+    }
+
+    private void renderTextLabel(MatrixStack stack, VertexConsumerProvider providers, Vec3d position, Text t, Camera c, int light) {
+        if(c.getPos().squaredDistanceTo(position) > 4096.0D)
+            return;
+
+        stack.push();
+
+        stack.translate(position.getX(), position.getY() + 0.7D, position.getZ());
+        stack.multiply(c.getRotation());
+        stack.scale(-0.025F, -0.025F, 0.025F);
+
+        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+        float xOffset = (float)(-renderer.getWidth(t) / 2);
+        int opacity = (int)(MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F) * 255.0F) << 24;
+        Matrix4f matrix4f = stack.peek().getModel();
+
+        renderer.draw(t, xOffset, 0, 553648127, false, matrix4f, providers, true, opacity, light);
+        renderer.draw(t, xOffset, 0, -1, false, matrix4f, providers, false, 0, light);
 
         stack.pop();
     }
