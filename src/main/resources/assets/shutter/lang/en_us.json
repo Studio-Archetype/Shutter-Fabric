@@ -76,6 +76,10 @@
   "config.shutter.pathStyle.cubes": "Cubes",
   "config.shutter.pathStyle.debug": "Advanced",
 
+  "config.shutter.directional.hide": "Hide",
+  "config.shutter.directional.show": "Show",
+  "config.shutter.directional.advanced": "Advanced",
+
   "config.shutter.pathDetail.ultra_low": "Ultra Low",
   "config.shutter.pathDetail.low": "Low",
   "config.shutter.pathDetail.medium": "Medium",

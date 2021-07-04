@@ -9,18 +9,17 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
+import studio.archetype.shutter.client.config.enums.DirectionalBeamStyle;
 import studio.archetype.shutter.client.config.enums.PathStyle;
 import studio.archetype.shutter.client.util.DrawUtils;
 import studio.archetype.shutter.pathing.CameraPath;
@@ -57,7 +56,7 @@ public class ShutterPreviewRenderer {
 
         Map<PathNode, LinkedList<InterpolationData>> pathData = path.getInterpolatedData(shouldLoop);
         PathStyle style = ClientConfigManager.CLIENT_CONFIG.pathSettings.pathStyle;
-        boolean directionalBeam = ClientConfigManager.CLIENT_CONFIG.pathSettings.showDirectionalBeam;
+        DirectionalBeamStyle directionalBeam = ClientConfigManager.CLIENT_CONFIG.pathSettings.showDirectionalBeam;
 
         for(int i = 0; i < path.getNodes().size(); i++) {
             PathNode node = path.getNodes().get(i);
@@ -71,6 +70,13 @@ public class ShutterPreviewRenderer {
                     previous = point.getPosition();
                     if (style == PathStyle.CUBES || style == PathStyle.ADVANCED)
                         DrawUtils.renderCube(p, .1F, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
+                    if(directionalBeam == DirectionalBeamStyle.ADVANCED)
+                        DrawUtils.renderLine(
+                                p,
+                                DrawUtils.getOffsetPoint(p, (float)point.getRotation().getX(), (float)point.getRotation().getY(), 2F),
+                                getColour(node, true),
+                                provider.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
+                                stack.peek());
                 }
             }
 
@@ -80,7 +86,7 @@ public class ShutterPreviewRenderer {
             } else if(style == PathStyle.ADVANCED)
                 DrawUtils.renderCube(node.getPosition(),.2F, getColour(node, true), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
 
-            if(directionalBeam)
+            if(directionalBeam != DirectionalBeamStyle.HIDE)
                 DrawUtils.renderLine(
                         node.getPosition(),
                         DrawUtils.getOffsetPoint(node.getPosition(), node.getPitch(), node.getYaw(), 2F),
