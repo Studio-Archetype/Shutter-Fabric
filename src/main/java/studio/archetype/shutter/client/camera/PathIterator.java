@@ -45,8 +45,10 @@ public class PathIterator {
         PathNode node = this.currentPath.getNodes().get(index);
         this.oldGamemode = CommandFilter.GameMode.getFromVanilla(c.interactionManager.getCurrentGameMode());
         this.oldPos = p.getPos();
-        this.oldFov = c.options.fov; this.oldPitch = p.getPitch(1.0F); this.oldYaw = p.getYaw(1.0F);
-        this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
+        this.oldFov = c.options.fov;
+        this.oldPitch = p.getPitch(1.0F);
+        this.oldYaw = p.getYaw(1.0F);
+        this.oldRoll = ((CameraExt) c.gameRenderer.getCamera()).getRoll(1.0F);
 
         entity = new FreecamEntity(node.getPosition(), node.getPitch(), node.getYaw(), node.getRoll(), c.world);
         ShutterClient.INSTANCE.setZoom(node.getZoom());
@@ -79,7 +81,7 @@ public class PathIterator {
 
         ShutterClient.INSTANCE.getCommandFilter().teleportClient(oldPos, oldPitch, oldYaw);
         c.options.fov = oldFov;
-        ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
+        ((CameraExt) c.gameRenderer.getCamera()).setRoll(oldRoll);
         ShutterClient.INSTANCE.getCommandFilter().changeGameMode(oldGamemode);
 
         c.setCameraEntity(p);
@@ -92,9 +94,12 @@ public class PathIterator {
 
         Vec3d position = node.getPosition();
         entity.setPos(position.getX(), position.getY(), position.getZ());
-        entity.prevX = position.getX(); entity.prevY = position.getY(); entity.prevZ = position.getZ();
+        entity.prevX = position.getX();
+        entity.prevY = position.getY();
+        entity.prevZ = position.getZ();
         entity.setRotation(node.getPitch(), node.getYaw(), node.getRoll());
-        entity.prevPitch = node.getPitch(); entity.prevYaw = node.getYaw();
+        entity.prevPitch = node.getPitch();
+        entity.prevYaw = node.getYaw();
         ShutterClient.INSTANCE.setZoom(node.getZoom());
 
         ShutterClient.INSTANCE.getCommandFilter().teleportClient(node.getPosition(), node.getPitch(), node.getYaw());

@@ -14,7 +14,7 @@ public class OpenGl2BitmapConverter implements FrameConverter<OpenGlFrame, RgbaF
     public RgbaFrame convert(OpenGlFrame rawFrame) {
         ScreenSize size = rawFrame.getSize();
         int rowSize = size.getWidth() * 4;
-        if (row == null || row.length < rowSize) {
+        if(row == null || row.length < rowSize) {
             row = new byte[rowSize];
             rowSwap = new byte[rowSize];
         }
@@ -22,7 +22,7 @@ public class OpenGl2BitmapConverter implements FrameConverter<OpenGlFrame, RgbaF
         int rows = size.getHeight();
         byte[] row = this.row;
         byte[] rowSwap = this.rowSwap;
-        for (int i = 0; i < rows / 2; i++) {
+        for(int i = 0; i < rows / 2; i++) {
             int from = rowSize * i;
             int to = rowSize * (rows - i - 1);
             buffer.position(from);

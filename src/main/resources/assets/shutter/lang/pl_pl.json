@@ -1,6 +1,5 @@
 {
   "category.shutter.keybinds": "Sterowanie Shutterem",
-
   "key.shutter.cam.roll_left": "Przechyl w lewo",
   "key.shutter.cam.roll_right": "Przechyl w prawo",
   "key.shutter.cam.roll_reset": "Zresetuj przechylenie",
@@ -17,11 +16,9 @@
   "key.shutter.cam.next_node": "Przeglądaj do przodu",
   "key.shutter.cam.previous_node": "Przeglądaj do tyłu",
   "key.shutter.cam.clear_path": "Wyczyść ścieżkę",
-
   "ui.shutter.pathList.entry": "Ścieżka kamery #%s",
   "ui.shutter.pathList.entryName": "Nowa ścieżka kamery",
   "ui.shutter.pathList.none": "Brak dostępnych ścieżek.",
-
   "text.autoconfig.shutter.title": "Konfiguracja Shuttera",
   "config.shutter.notificationTarget": "Powiadomienia",
   "config.shutter.notificationTarget.@Tooltip": "Określa, gdzie wyświetlają się powiadomienia.",
@@ -45,24 +42,19 @@
   "config.shutter.pathSettings.pathStyle.@Tooltip": "Ustawia sposób, w którym ścieżka pomiędzy punktami jest renderowana podczas wizualizacji.",
   "config.shutter.pathSettings.pathColour": "Kolor Ścieżki",
   "config.shutter.pathSettings.pathColour.@Tooltip": "Ustawia kolor, w którym ścieżka pomiędzy punktami jest renderowana podczas wizualizacji.",
-
   "config.shutter.pathStyle.line": "Linie",
   "config.shutter.pathStyle.cubes": "Sześciany",
   "config.shutter.pathStyle.debug": "Zaawansowany",
-
   "config.shutter.pathDetail.ultra_low": "Bardzo Niski",
   "config.shutter.pathDetail.low": "Niski",
   "config.shutter.pathDetail.medium": "Domyślny",
   "config.shutter.pathDetail.high": "Wysoki",
   "config.shutter.pathDetail.absurd": "Absurdalny",
-
   "config.shutter.notification.action_bar": "Pasek akcji",
   "config.shutter.notification.toasts": "Okienko osiągnięć",
   "config.shutter.notification.chat": "Wiadomość na czacie",
-
   "msg.shutter.headline.cmd.failed": "Komenda nieudana",
   "msg.shutter.headline.cmd.success": "Komenda udana",
-
   "msg.shutter.error.not_enough_start": "Potrzeba przynajmniej 2 punktów aby użyć ścieżki!",
   "msg.shutter.error.not_enough_show": "Potrzeba przynajmniej 2 punktów aby wyświetlić ścieżkę!",
   "msg.shutter.error.not_following": "Kamera nie podąża za ścieżką!",
@@ -80,16 +72,13 @@
   "msg.shutter.ok.remove_node": "Usunięto punkt #%d.",
   "msg.shutter.ok.hiding_path": "Ukrywanie wizualizacji ścieżki.",
   "msg.shutter.ok.showing_path": "Pokazywanie wizualizacji ścieżki.",
-
   "msg.shutter.help.header": "§8+----------------- §2Pomoc Shuttera §r§8--------------------+",
   "msg.shutter.help.line": "§8+---------------------------------------------------+",
-
   "msg.shutter.help.arg.none": "Argumenty niepotrzebne.",
   "msg.shutter.help.arg.time": "czas",
   "msg.shutter.help.arg.time.desc": "Czas trwania ścieżki.",
   "msg.shutter.help.arg.index": "indeks",
   "msg.shutter.help.arg.index.desc": "Indeks docelowego punktu, licząc od 0.",
-
   "msg.shutter.help.cmd.start": "Zaczyna podążanie wyznaczoną ścieżką kamery.",
   "msg.shutter.help.cmd.stop": "Zatrzymuje obecne podążanie ścieżką.",
   "msg.shutter.help.cmd.clear": "Wyczyszcza oraz resetuje obecną ścieżkę kamery.",
@@ -101,5 +90,4 @@
   "msg.shutter.help.cmd.hide": "Schowa wizualizację obecnej ścieżki.",
   "msg.shutter.help.cmd.toggle": "Przełącza wizualizację ścieżki",
   "msg.shutter.help.cmd.config": "Otwiera ekran konfiguracji Shuttera."
-
 }

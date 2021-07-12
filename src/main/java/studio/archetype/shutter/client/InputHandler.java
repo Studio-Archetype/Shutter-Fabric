@@ -128,27 +128,27 @@ public class InputHandler {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
-            if (c.player == null)
+            if(c.player == null)
                 return;
 
             ShutterClient shutter = ShutterClient.INSTANCE;
 
             if(!shutter.getPathFollower().isFollowing() && !shutter.getPathIterator().isIterating()) {
-                if (rollLeft.isPressed())
+                if(rollLeft.isPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).addRoll((-ROT_FACTOR) * (actionKey.isPressed() ? 10 : 1));
-                if (rollRight.isPressed())
+                if(rollRight.isPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).addRoll(ROT_FACTOR * (actionKey.isPressed() ? 10 : 1));
-                if (zoomIn.isPressed())
+                if(zoomIn.isPressed())
                     shutter.setZoom(MathHelper.clamp(shutter.getZoom() - ZOOM_FACTOR * (actionKey.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
-                if (zoomOut.isPressed())
+                if(zoomOut.isPressed())
                     shutter.setZoom(MathHelper.clamp(shutter.getZoom() + ZOOM_FACTOR * (actionKey.isPressed() ? 10 : 1), -c.options.fov + 0.1, 179.9 - c.options.fov));
-                if (rollReset.wasPressed())
+                if(rollReset.wasPressed())
                     ((CameraExt) c.gameRenderer.getCamera()).setRoll(0);
-                if (zoomReset.wasPressed())
+                if(zoomReset.wasPressed())
                     shutter.resetZoom();
                 if(createNode.wasPressed()) {
                     Camera cam = c.gameRenderer.getCamera();
-                    PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw(), ((CameraExt)cam).getRoll(1.0F), (float)shutter.getZoom());
+                    PathNode node = new PathNode(cam.getPos(), cam.getPitch(), cam.getYaw() % 360, ((CameraExt) cam).getRoll(1.0F), (float) shutter.getZoom());
                     shutter.getPathManager(c.world).addNode(node);
                 }
             }
@@ -156,13 +156,13 @@ public class InputHandler {
             if(visualizePath.wasPressed()) {
                 try {
                     if(ShutterClient.INSTANCE.getPathManager(c.world).togglePathVisualization(actionKey.isPressed())) {
-                        if (!shutter.getPathFollower().isFollowing())
+                        if(!shutter.getPathFollower().isFollowing())
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
                                     new TranslatableText("msg.shutter.ok.showing_path"),
                                     Messaging.MessageType.POSITIVE);
                     } else {
-                        if (!shutter.getPathFollower().isFollowing())
+                        if(!shutter.getPathFollower().isFollowing())
                             Messaging.sendMessage(
                                     new TranslatableText("msg.shutter.headline.cmd.success"),
                                     new TranslatableText("msg.shutter.ok.hiding_path"),

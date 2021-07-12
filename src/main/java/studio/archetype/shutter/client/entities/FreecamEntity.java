@@ -13,17 +13,18 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import studio.archetype.shutter.client.extensions.CameraExt;
 
-public class FreecamEntity extends Entity{
+public class FreecamEntity extends Entity {
 
     public static final EntityType<FreecamEntity> TYPE = new EntityType<>((i, d) -> {
-        throw new RuntimeException("Can't construct freecam entity type!");},
+        throw new RuntimeException("Can't construct freecam entity type!");
+    },
             SpawnGroup.MISC,
             false,
             false,
             false,
             false,
             ImmutableSet.of(Blocks.AIR),
-            EntityDimensions.fixed(0f,0f),
+            EntityDimensions.fixed(0f, 0f),
             0,
             0);
 
@@ -49,19 +50,24 @@ public class FreecamEntity extends Entity{
 
     public void setRotation(float pitch, float yaw, float roll) {
         setRotation(yaw, pitch);
-        ((CameraExt)MinecraftClient.getInstance().gameRenderer.getCamera()).setRoll(roll % 360);
+        ((CameraExt) MinecraftClient.getInstance().gameRenderer.getCamera()).setRoll(roll % 360);
     }
 
     @Override
-    protected void initDataTracker() { }
+    protected void initDataTracker() {
+    }
 
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) { }
+    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) { }
+    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    }
 
     @Override
-    public Packet<?> createSpawnPacket() { return null; }
+    public Packet<?> createSpawnPacket() {
+        return null;
+    }
 }

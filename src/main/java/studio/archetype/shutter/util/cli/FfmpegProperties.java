@@ -4,7 +4,7 @@ import studio.archetype.shutter.client.config.enums.EncoderPreset;
 
 public final class FfmpegProperties {
 
-    public static CommandProperty FRAMERATE  = CommandProperty.property("-r", 60);
+    public static CommandProperty FRAMERATE = CommandProperty.property("-r", 60);
     public static CommandProperty QUALITY = CommandProperty.property("-crf", 25);
     public static CommandProperty RESOLUTION = CommandProperty.property("-s", "800x600");
     public static CommandProperty PIXEL_FORMAT = CommandProperty.property("-pix_fmt", "yuv420p");

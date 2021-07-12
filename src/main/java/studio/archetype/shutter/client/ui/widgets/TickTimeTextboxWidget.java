@@ -25,7 +25,7 @@ public class TickTimeTextboxWidget extends PredicateTextboxWidget {
     }
 
     public int getTicks() {
-        return (int)TimeUnits.convert(this.value, this.currentUnit, TimeUnits.TICKS);
+        return (int) TimeUnits.convert(this.value, this.currentUnit, TimeUnits.TICKS);
     }
 
     public ButtonWidget getButton() {

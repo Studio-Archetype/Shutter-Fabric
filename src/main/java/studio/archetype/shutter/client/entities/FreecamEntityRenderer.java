@@ -19,5 +19,6 @@ public class FreecamEntityRenderer extends EntityRenderer<FreecamEntity> {
     }
 
     @Override
-    public void render(FreecamEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) { }
+    public void render(FreecamEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    }
 }

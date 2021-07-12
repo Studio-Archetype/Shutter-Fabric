@@ -69,7 +69,9 @@ public class CameraPathManager {
         return Lists.newArrayList(cameraPaths.values());
     }
 
-    public CameraPath getCurrentPath() { return getPath(currentSelection); }
+    public CameraPath getCurrentPath() {
+        return getPath(currentSelection);
+    }
 
     public boolean setCurrentPath(Identifier id) {
         CameraPath path = getPath(id);
@@ -103,7 +105,9 @@ public class CameraPathManager {
         return cameraPaths.computeIfAbsent(id, CameraPath::new);
     }
 
-    public boolean isVisualizing() { return isVisualizing; }
+    public boolean isVisualizing() {
+        return isVisualizing;
+    }
 
     public void addNode(PathNode node) {
         CameraPath path = getCurrentPath();
@@ -112,11 +116,11 @@ public class CameraPathManager {
                 new TranslatableText("msg.shutter.headline.cmd.success"),
                 new TranslatableText("msg.shutter.ok.add_node", path.getNodes().indexOf(node)),
                 new LiteralText("x").formatted(Formatting.DARK_RED)
-                    .append(new LiteralText(String.format("%.2f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
-                    .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
-                    .append(new LiteralText(String.format("%.2f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
-                    .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
-                    .append(new LiteralText(String.format("%.2f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE)),
+                        .append(new LiteralText(String.format("%.2f", node.getPosition().x)).formatted(Formatting.RED, Formatting.UNDERLINE))
+                        .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
+                        .append(new LiteralText(String.format("%.2f", node.getPosition().y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
+                        .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
+                        .append(new LiteralText(String.format("%.2f", node.getPosition().z)).formatted(Formatting.BLUE, Formatting.UNDERLINE)),
                 Messaging.MessageType.POSITIVE);
     }
 
@@ -186,7 +190,7 @@ public class CameraPathManager {
 
     public static Codec<CameraPathManager> CODEC = RecordCodecBuilder.create(i ->
             i.group(
-                Codec.unboundedMap(SerializationUtils.CODEC_IDENTIFIER, CameraPath.CODEC).fieldOf("paths").forGetter((CameraPathManager o) -> o.cameraPaths),
-                SerializationUtils.CODEC_IDENTIFIER.fieldOf("selection").forGetter((CameraPathManager o) -> o.currentSelection)
+                    Codec.unboundedMap(SerializationUtils.CODEC_IDENTIFIER, CameraPath.CODEC).fieldOf("paths").forGetter((CameraPathManager o) -> o.cameraPaths),
+                    SerializationUtils.CODEC_IDENTIFIER.fieldOf("selection").forGetter((CameraPathManager o) -> o.currentSelection)
             ).apply(i, CameraPathManager::new));
- }
+}

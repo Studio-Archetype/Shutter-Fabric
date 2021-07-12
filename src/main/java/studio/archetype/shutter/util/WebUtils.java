@@ -42,7 +42,7 @@ public class WebUtils {
                 post.setEntity(new StringEntity(json.toString(), StandardCharsets.UTF_8));
                 ResponseHandler<String> handler = r -> {
                     int status = r.getStatusLine().getStatusCode();
-                    if ((status >= 200 && status <= 300) && r.getEntity() != null) {
+                    if((status >= 200 && status <= 300) && r.getEntity() != null) {
                         JsonObject obj = new JsonParser().parse(EntityUtils.toString(r.getEntity())).getAsJsonObject();
                         return obj.toString();
                     } else

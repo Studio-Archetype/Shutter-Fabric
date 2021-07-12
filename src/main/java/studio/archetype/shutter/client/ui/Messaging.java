@@ -31,7 +31,7 @@ public final class Messaging {
     }
 
 
-        private static MutableText formatText(MutableText text, MessageType type) {
+    private static MutableText formatText(MutableText text, MessageType type) {
         switch(type) {
             case NEGATIVE:
                 return Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.RED));

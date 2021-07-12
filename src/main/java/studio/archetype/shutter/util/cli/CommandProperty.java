@@ -9,7 +9,9 @@ public class CommandProperty {
         return new CommandProperty(flag, null);
     }
 
-    public static CommandProperty value(String value) { return new CommandProperty(null, value); }
+    public static CommandProperty value(String value) {
+        return new CommandProperty(null, value);
+    }
 
     public static CommandProperty property(String key, Object defaultValue) {
         return new CommandProperty(key, defaultValue);

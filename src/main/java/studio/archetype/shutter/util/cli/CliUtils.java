@@ -26,7 +26,8 @@ public class CliUtils {
             try {
                 if(runBlockingCommand(command, SaveFile.SHUTTER_DIR.toFile(), false, p) == 0)
                     return true;
-            } catch(IOException | InterruptedException ignored) { }
+            } catch(IOException | InterruptedException ignored) {
+            }
         }
         return false;
     }
@@ -43,8 +44,8 @@ public class CliUtils {
 
     public static int runBlockingCommand(String command, File directory, boolean redirectError, CommandProperty... properties) throws IOException, InterruptedException {
         Process process = createCommandProcess(command, directory, redirectError, properties);
-        try(BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()))) {
-            while (process.isAlive())
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            while(process.isAlive())
                 reader.readLine();
         }
 
@@ -55,7 +56,7 @@ public class CliUtils {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 return runBlockingCommand(command, directory, redirectError, properties);
-            } catch (IOException | InterruptedException e) {
+            } catch(IOException | InterruptedException e) {
                 e.printStackTrace();
                 return -1;
             }

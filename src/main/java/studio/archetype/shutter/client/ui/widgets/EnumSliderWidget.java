@@ -31,7 +31,7 @@ public class EnumSliderWidget<E extends Enum<E>> extends SliderWidget {
 
     @Override
     protected void applyValue() {
-        int index = (int)(this.value / this.stepSize);
+        int index = (int) (this.value / this.stepSize);
         this.currentValue = values[index];
         this.value = getProgress(this.currentValue);
         updateMessage();

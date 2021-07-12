@@ -17,7 +17,8 @@ import studio.archetype.shutter.client.ShutterClient;
 @Mixin(ClientPlayNetworkHandler.class)
 abstract class ClientPlayNetworkHandlerMixin {
 
-    @Shadow private MinecraftClient client;
+    @Shadow
+    private MinecraftClient client;
 
     @Inject(method = "onGameMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;addChatMessage(Lnet/minecraft/network/MessageType;Lnet/minecraft/text/Text;Ljava/util/UUID;)V", shift = At.Shift.BEFORE), cancellable = true)
     private void filterTeleportMessage(GameMessageS2CPacket packet, CallbackInfo info) {

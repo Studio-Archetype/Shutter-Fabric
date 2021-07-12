@@ -15,5 +15,6 @@ public class DummyCapturer implements FrameCapturer<DummyFrame> {
     }
 
     @Override
-    public void close() { }
+    public void close() {
+    }
 }

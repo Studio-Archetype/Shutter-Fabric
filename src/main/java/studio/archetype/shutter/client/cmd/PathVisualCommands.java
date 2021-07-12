@@ -21,16 +21,16 @@ public final class PathVisualCommands {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
                         .requires(src -> src.hasPermissionLevel(4))
-                            .then(literal("show")
+                        .then(literal("show")
                                 .executes(ctx -> showPath(ctx, false))
                                 .then(argument("loop", BoolArgumentType.bool())
-                                    .executes(ctx -> showPath(ctx, BoolArgumentType.getBool(ctx, "loop")))))
-                            .then(literal("hide")
+                                        .executes(ctx -> showPath(ctx, BoolArgumentType.getBool(ctx, "loop")))))
+                        .then(literal("hide")
                                 .executes(PathVisualCommands::hidePath))
-                            .then(literal("toggle")
+                        .then(literal("toggle")
                                 .executes(ctx -> togglePath(ctx, false))
                                 .then(argument("loop", BoolArgumentType.bool())
-                                    .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop"))))));
+                                        .executes(ctx -> togglePath(ctx, BoolArgumentType.getBool(ctx, "loop"))))));
 
         dispatcher.register(literal("shutter").redirect(node));
     }
@@ -78,7 +78,8 @@ public final class PathVisualCommands {
                         new TranslatableText("msg.shutter.error.hiding_path"),
                         Messaging.MessageType.NEUTRAL);
             return 1;
-        } catch(PathTooSmallException ignored) { }
+        } catch(PathTooSmallException ignored) {
+        }
 
         return 0;
     }

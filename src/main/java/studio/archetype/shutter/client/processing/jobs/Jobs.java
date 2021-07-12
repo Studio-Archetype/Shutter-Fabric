@@ -24,7 +24,7 @@ public final class Jobs {
             try {
                 currentPipeline = Pipeline.getDefaultPipeline(framerate, size, new FfmpegVideoProcessor(name, size));
                 currentPipeline.setup();
-            } catch (IOException e) {
+            } catch(IOException e) {
                 e.printStackTrace();
             }
         }

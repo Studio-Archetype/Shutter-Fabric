@@ -10,8 +10,10 @@ import net.minecraft.util.math.Vec3d;
 import studio.archetype.shutter.Shutter;
 import studio.archetype.shutter.client.ShutterClient;
 import studio.archetype.shutter.client.config.ClientConfigManager;
-import studio.archetype.shutter.client.util.InterpolationMath;
 import studio.archetype.shutter.pathing.exceptions.PathSerializationException;
+import studio.archetype.shutter.pathing.interpolation.HermiteInterpolator;
+import studio.archetype.shutter.pathing.interpolation.Interpolator;
+import studio.archetype.shutter.pathing.interpolation.LinearInterpolator;
 import studio.archetype.shutter.util.SerializationUtils;
 import studio.archetype.shutter.util.WebUtils;
 
@@ -89,75 +91,18 @@ public class CameraPath {
         else
             interpolation.clear();
 
-        boolean wasWrapped = false;
-        float wrapEnd = 0;
+        LinkedList<PathNode> fixedNodes = fixYaw();
+        Interpolator interpolator = new LinearInterpolator(fixedNodes, looped);
+        if(nodes.size() > 2)
+            interpolator = new HermiteInterpolator(fixedNodes, looped);
 
-        for (int i = 0; i < nodes.size() - (looped ? 0 : 1); i++) {
-            PathNode start = getWrapped(i, 0);
-            PathNode end = getWrapped(i, 1);
-            PathNode c1 = getWrapped(i, -1);
-            PathNode c2 = getWrapped(i, 2);
-            if(!looped && i == 0) {
-                c1 = getWrapped(i, 0);
-                c2 = getWrapped(i, 1);
-            }
-
+        for(int i = 0; i < nodes.size() - (looped ? 0 : 1); i++) {
             LinkedList<InterpolationData> splinePoints = new LinkedList<>();
 
-            float startYaw = start.getYaw();
-            float endYaw = end.getYaw();
-
-            if(wasWrapped) {
-                startYaw = wrapEnd;
-                wasWrapped = false;
-            }
-
-            while(Math.abs(startYaw - endYaw) > 180) {
-                if(endYaw > startYaw) {
-                    float newEnd = startYaw + 360;
-                    startYaw  = endYaw;
-                    endYaw = newEnd;
-                } else if(endYaw < startYaw) {
-                    endYaw += 360;
-                }
-
-                wasWrapped = true;
-                wrapEnd = endYaw;
-            }
-
-            for(float ii = 0; ii <= 1; ii += ClientConfigManager.CLIENT_CONFIG.genSettings.curveDetail.detail) {
-                Vec3d spline, rotation;
-                float zoom;
-                if(nodes.size() == 2) {
-                    spline = new Vec3d(
-                            InterpolationMath.interpolateLinear(start.getPosition().getX(), end.getPosition().getX(), ii),
-                            InterpolationMath.interpolateLinear(start.getPosition().getY(), end.getPosition().getY(), ii),
-                            InterpolationMath.interpolateLinear(start.getPosition().getZ(), end.getPosition().getZ(), ii));
-
-                    rotation = new Vec3d(
-                            InterpolationMath.interpolateLinear(start.getPitch(), end.getPitch(), ii),
-                            InterpolationMath.interpolateLinear(startYaw, endYaw, ii),
-                            InterpolationMath.interpolateLinear(start.getRoll(), end.getRoll(), ii));
-
-                    zoom = (float)InterpolationMath.interpolateLinear(start.getZoom(), end.getZoom(), ii);
-
-                } else {
-                    spline = new Vec3d(
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getX(), start.getPosition().getX(), end.getPosition().getX(), c2.getPosition().getX()}, ii, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getY(), start.getPosition().getY(), end.getPosition().getY(), c2.getPosition().getY()}, ii, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPosition().getZ(), start.getPosition().getZ(), end.getPosition().getZ(), c2.getPosition().getZ()}, ii, 0, 1));
-
-                    rotation = new Vec3d(
-                            InterpolationMath.interpolateHermite(new double[]{c1.getPitch(), start.getPitch(), end.getPitch(), c2.getPitch()}, ii, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getYaw(), startYaw, endYaw, c2.getYaw()}, ii, 0, 1),
-                            InterpolationMath.interpolateHermite(new double[]{c1.getRoll(), start.getRoll(), end.getRoll(), c2.getRoll()}, ii, 0, 1));
-
-                    zoom = (float)InterpolationMath.interpolateHermite(new double[]{c1.getZoom(), start.getZoom(), end.getZoom(), c2.getZoom()}, ii, 0, 1);
-                }
-                splinePoints.add(new InterpolationData(spline, rotation, zoom));
-            }
-
-            splinePoints.add(new InterpolationData(end.getPosition(), new Vec3d(end.getPitch(), endYaw, end.getRoll()), end.getZoom()));
+            for(float ii = 0; ii < 1; ii += ClientConfigManager.CLIENT_CONFIG.genSettings.curveDetail.detail)
+                splinePoints.add(interpolator.interpolate(i, ii));
+            if(i != nodes.size() - 1)
+                splinePoints.add(new InterpolationData(fixedNodes.get(i + 1)));
 
             if(looped)
                 loopedInterpolation.put(nodes.get(i), splinePoints);
@@ -194,7 +139,7 @@ public class CameraPath {
             return false;
         }
     }
-    
+
     public void offset(Vec3d origin) {
         LinkedList<PathNode> newNodes = new LinkedList<>();
         PathNode previous = nodes.get(0);
@@ -214,6 +159,28 @@ public class CameraPath {
         this.needsInterpolationRebuilt = this.needsLoopedRebuilt = true;
     }
 
+    private LinkedList<PathNode> fixYaw() {
+        LinkedList<PathNode> fixedNodes = new LinkedList<>();
+        fixedNodes.add(nodes.get(0));
+
+        for(int i = 0; i < nodes.size() - 1; i++) {
+            PathNode end = nodes.get(i + 1);
+            float startYaw = fixedNodes.get(i).getYaw();
+            float endYaw = end.getYaw();
+            float invertedEnd = endYaw < 0 ? endYaw + 360 : endYaw - 360;
+
+            float upwards = Math.abs(Math.abs(endYaw) - Math.abs(startYaw));
+            float downwards = Math.abs(invertedEnd - startYaw);
+
+            if(downwards < upwards)
+                endYaw = invertedEnd;
+
+            fixedNodes.add(new PathNode(end.getPosition(), end.getPitch(), endYaw, end.getRoll(), end.getZoom()));
+        }
+
+        return fixedNodes;
+    }
+
     private JsonElement toJson(String filename) throws PathSerializationException {
         Optional<JsonElement> json = JsonOps.INSTANCE.withEncoder(CODEC).apply(this).resultOrPartial(System.out::println);
         if(json.isPresent()) {
@@ -224,13 +191,9 @@ public class CameraPath {
             throw new PathSerializationException("");
     }
 
-    private PathNode getWrapped(int cur, int offset) {
-        return nodes.get((cur + offset + nodes.size()) % nodes.size());
-    }
-
     public static final Codec<CameraPath> CODEC = RecordCodecBuilder.create(i ->
             i.group(
-                SerializationUtils.CODEC_IDENTIFIER.fieldOf("Id").forGetter(CameraPath::getId),
-                PathNode.CODEC.listOf().fieldOf("Nodes").forGetter(CameraPath::getNodes))
-            .apply(i, (id, nodes) -> new CameraPath(id, new LinkedList<>(nodes))));
+                    SerializationUtils.CODEC_IDENTIFIER.fieldOf("Id").forGetter(CameraPath::getId),
+                    PathNode.CODEC.listOf().fieldOf("Nodes").forGetter(CameraPath::getNodes))
+                    .apply(i, (id, nodes) -> new CameraPath(id, new LinkedList<>(nodes))));
 }

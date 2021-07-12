@@ -41,8 +41,8 @@ public class ShutterRenderLayers {
                 GL11.GL_LINES,
                 256,
                 RenderLayer.MultiPhaseParameters.builder()
-                    .lineWidth(new LineWidth(OptionalDouble.of(2)))
-                    .build(true));
+                        .lineWidth(new LineWidth(OptionalDouble.of(2)))
+                        .build(true));
 
         private ShutterLineRenderLayer(String name, VertexFormat vertexFormat, int drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
             super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);

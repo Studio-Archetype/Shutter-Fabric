@@ -16,17 +16,19 @@ import java.util.List;
 @Mixin(DebugHud.class)
 public abstract class DebugHudMixin {
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(at = @At("RETURN"), method = "getLeftText")
     protected void getLeftText(CallbackInfoReturnable<List<String>> info) {
         List<String> strings = info.getReturnValue();
-        for (int i = 0; i < strings.size(); i++) {
+        for(int i = 0; i < strings.size(); i++) {
             if(strings.get(i).startsWith("Facing:")) {
                 StringBuilder builder = new StringBuilder(strings.get(i));
                 builder.insert(builder.length() - 1, String.format(
                         " / %.1f / %.1f",
-                        ((CameraExt)this.client.gameRenderer.getCamera()).getRoll(client.getTickDelta()),
+                        ((CameraExt) this.client.gameRenderer.getCamera()).getRoll(client.getTickDelta()),
                         ShutterClient.INSTANCE.getCurrentZoomModifier()));
                 strings.set(i, builder.toString());
                 break;

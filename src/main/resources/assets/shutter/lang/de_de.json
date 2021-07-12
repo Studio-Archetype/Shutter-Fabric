@@ -1,6 +1,5 @@
 {
   "category.shutter.keybinds": "Shutter Controls",
-
   "key.shutter.cam.roll_left": "Roll Left",
   "key.shutter.cam.roll_right": "Roll Right",
   "key.shutter.cam.roll_reset": "Roll zurücksetzen",
@@ -17,11 +16,9 @@
   "key.shutter.cam.next_node": "Scrub Forward",
   "key.shutter.cam.previous_node": "Scrub Back",
   "key.shutter.cam.clear_path": "Pfad löschen",
-
   "ui.shutter.pathList.entry": "Kamerapfad #%s",
   "ui.shutter.pathList.entryName": "Kamerapfad Name",
   "ui.shutter.pathList.none": "Keine Pfade gefunden.",
-
   "text.autoconfig.shutter.title": "Shutter Configuration",
   "config.shutter.notificationTarget": "Notifications",
   "config.shutter.notificationTarget.@Tooltip": "Set where notifications are displayed.",
@@ -47,24 +44,19 @@
   "config.shutter.pathSettings.pathStyle.@Tooltip": "Set the style in which the path between nodes is rendered during visualization.",
   "config.shutter.pathSettings.pathColour": "Path Colour",
   "config.shutter.pathSettings.pathColour.@Tooltip": "Set the colour in which the path between nodes is rendered during visualization.",
-
   "config.shutter.pathStyle.line": "Lines",
   "config.shutter.pathStyle.cubes": "Cubes",
   "config.shutter.pathStyle.debug": "Advanced",
-
   "config.shutter.pathDetail.ultra_low": "Ultra Low",
   "config.shutter.pathDetail.low": "Low",
   "config.shutter.pathDetail.medium": "Medium",
   "config.shutter.pathDetail.high": "High",
   "config.shutter.pathDetail.absurd": "Absurd",
-
   "config.shutter.notification.action_bar": "Action Bar",
   "config.shutter.notification.toasts": "Toast Popups",
   "config.shutter.notification.chat": "Chat Messages",
-
   "msg.shutter.headline.cmd.failed": "Command failed",
   "msg.shutter.headline.cmd.success": "Command succeeded",
-
   "msg.shutter.error.not_enough_start": "At least 2 nodes are required to preview the path!",
   "msg.shutter.error.not_enough_show": "At least 2 nodes are required to visualize the path!",
   "msg.shutter.error.not_following": "Not previewing a path!",
@@ -97,10 +89,8 @@
   "msg.shutter.ok.pastebin": "Upload Successful! URL: %s",
   "msg.shutter.ok.import": "Successfully imported path \"%s\".",
   "msg.shutter.ok.offset": "Offset Path.",
-
   "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",
   "msg.shutter.help.line": "§8+---------------------------------------------------+",
-
   "msg.shutter.help.arg.none": "No arguments required.",
   "msg.shutter.help.arg.time": "time",
   "msg.shutter.help.arg.time.desc": "Path duration time.",
@@ -116,7 +106,6 @@
   "msg.shutter.help.arg.loop.desc": "Whether or not the command should account for looping.",
   "msg.shutter.help.arg.relative": "relative",
   "msg.shutter.help.arg.relative.desc": "Whether or not to import the path at the current position.",
-
   "msg.shutter.help.cmd.select": "Sets or creates the desired path as current path.",
   "msg.shutter.help.cmd.start": "Begin following the defined camera path.",
   "msg.shutter.help.cmd.stop": "End following the defined camera path.",

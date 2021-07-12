@@ -18,19 +18,34 @@ import java.util.function.BooleanSupplier;
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
 
-    @Shadow @Final static Logger LOGGER;
+    @Shadow
+    @Final
+    static Logger LOGGER;
 
-    @Shadow private long timeReference;
-    @Shadow private long lastTimeReference;
-    @Shadow private Profiler profiler;
-    @Shadow private long field_19248;
-    @Shadow private boolean waitingForNextTick;
-    @Shadow private volatile boolean loading;
+    @Shadow
+    private long timeReference;
+    @Shadow
+    private long lastTimeReference;
+    @Shadow
+    private Profiler profiler;
+    @Shadow
+    private long field_19248;
+    @Shadow
+    private boolean waitingForNextTick;
+    @Shadow
+    private volatile boolean loading;
 
-    @Shadow public abstract boolean isRunning();
-    @Shadow public abstract void tick(BooleanSupplier shouldKeepTicking);
-    @Shadow protected abstract boolean shouldKeepTicking();
-    @Shadow protected abstract void method_16208();
+    @Shadow
+    public abstract boolean isRunning();
+
+    @Shadow
+    public abstract void tick(BooleanSupplier shouldKeepTicking);
+
+    @Shadow
+    protected abstract boolean shouldKeepTicking();
+
+    @Shadow
+    protected abstract void method_16208();
 
 
     @Redirect(method = "runServer", at = @At(value = "FIELD", target = "Lnet/minecraft/server/MinecraftServer;running:Z"))
@@ -48,7 +63,7 @@ public abstract class MinecraftServerMixin {
 
             long l = Util.getMeasuringTimeMs() - this.timeReference;
 
-            if (l > 2000L && this.timeReference - this.lastTimeReference >= 15000L) {
+            if(l > 2000L && this.timeReference - this.lastTimeReference >= 15000L) {
                 long m = l / 50L;
                 LOGGER.warn("Can't keep up! Is the server overloaded? Running {}ms or {} ticks behind", l, m);
                 this.timeReference += m * 50L;

@@ -13,7 +13,8 @@ public abstract class ShutterToast implements Toast {
     private final long visibilityTime;
 
     public ShutterToast(int width, int height, long visibilityTime) {
-        this.width = width; this.height = height;
+        this.width = width;
+        this.height = height;
         this.visibilityTime = visibilityTime;
     }
 
@@ -35,10 +36,14 @@ public abstract class ShutterToast implements Toast {
     }
 
     @Override
-    public int getWidth() { return this.width; }
+    public int getWidth() {
+        return this.width;
+    }
 
     @Override
-    public int getHeight() { return this.height; }
+    public int getHeight() {
+        return this.height;
+    }
 
     protected enum ToastGraphics {
         BACKGROUND(0, 0, 160, 48),
@@ -51,8 +56,10 @@ public abstract class ShutterToast implements Toast {
         private final int u, v, width, height;
 
         ToastGraphics(int u, int v, int width, int height) {
-            this.u = u; this.v = v;
-            this.width = width; this.height = height;
+            this.u = u;
+            this.v = v;
+            this.width = width;
+            this.height = height;
         }
 
         public void draw(MatrixStack matrix, int x, int y, ToastManager man) {

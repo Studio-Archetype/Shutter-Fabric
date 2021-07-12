@@ -43,7 +43,7 @@ public class EnumButtonWidget<E extends Enum<E>> extends ButtonWidget {
 
     private E nextValue() {
         for(int i = 0; i < values.length; i++) {
-            if (values[i] == currentValue) {
+            if(values[i] == currentValue) {
                 int index = i;
                 if(++index >= values.length)
                     index = 0;

@@ -60,7 +60,7 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
                         args = createX265Properties();
                         break;
                     default:
-                        args = new CommandProperty[] { null };
+                        args = new CommandProperty[]{null};
                 }
                 ffmpegProcess = CliUtils.createCommandProcess(CMD, this.directory, true, args);
             } catch(IOException ex) {
@@ -72,9 +72,10 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
             this.dataChannel = Channels.newChannel(this.toFfmpeg);
 
             new Thread(() -> {
-                try (FileOutputStream out = new FileOutputStream(new File(this.directory,"ffmpeg.log"))){
+                try(FileOutputStream out = new FileOutputStream(new File(this.directory, "ffmpeg.log"))) {
                     IOUtils.copy(ffmpegProcess.getInputStream(), out);
-                } catch(IOException ignored) { }
+                } catch(IOException ignored) {
+                }
             }).start();
         }
     }
@@ -106,7 +107,7 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
 
     private CommandProperty[] createX264Properties() {
         FfmpegRecordConfig config = ClientConfigManager.FFMPEG_CONFIG;
-        return new CommandProperty[] {
+        return new CommandProperty[]{
                 FfmpegProperties.OVERWRITE,
                 FfmpegProperties.HIDE_BANNER,
                 CommandProperty.property("-loglevel", "+verbose"),
@@ -127,7 +128,7 @@ public class FfmpegVideoProcessor implements FrameProcessor<RgbaFrame> {
 
     private CommandProperty[] createX265Properties() {
         FfmpegRecordConfig config = ClientConfigManager.FFMPEG_CONFIG;
-        return new CommandProperty[] {
+        return new CommandProperty[]{
                 FfmpegProperties.OVERWRITE,
                 FfmpegProperties.HIDE_BANNER,
                 CommandProperty.property("-loglevel", "+verbose"),

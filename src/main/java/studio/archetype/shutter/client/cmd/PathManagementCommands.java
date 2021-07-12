@@ -26,24 +26,24 @@ public final class PathManagementCommands {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(
                 literal("s")
-                    .requires(src -> src.hasPermissionLevel(4))
-                    .then(literal("select")
-                        .executes(ctx -> selectPath(ctx, CameraPathManager.DEFAULT_PATH))
-                        .then(argument("path", StringArgumentType.word())
-                            .executes(ctx -> selectPath(ctx, Shutter.id(StringArgumentType.getString(ctx, "path"))))))
-                    .then(literal("export")
-                        .executes(ctx -> exportFile(ctx, null))
-                        .then(argument("filename", StringArgumentType.word())
-                            .executes(ctx -> exportFile(ctx, StringArgumentType.getString(ctx, "filename")))))
-                    /*.then(literal("upload")
-                        .executes(ctx -> uploadFile(ctx, null))
-                        .then(argument("filename", StringArgumentType.word())
-                            .executes(ctx -> uploadFile(ctx, StringArgumentType.getString(ctx, "filename")))))*/
-                    .then(literal("import")
-                        .then(argument("filename", StringArgumentType.word())
-                            .executes(ctx -> importFile(ctx, StringArgumentType.getString(ctx, "filename"), false))
-                            .then(argument("relative", BoolArgumentType.bool())
-                                .executes(ctx -> importFile(ctx, StringArgumentType.getString(ctx, "filename"), BoolArgumentType.getBool(ctx, "relative")))))));
+                        .requires(src -> src.hasPermissionLevel(4))
+                        .then(literal("select")
+                                .executes(ctx -> selectPath(ctx, CameraPathManager.DEFAULT_PATH))
+                                .then(argument("path", StringArgumentType.word())
+                                        .executes(ctx -> selectPath(ctx, Shutter.id(StringArgumentType.getString(ctx, "path"))))))
+                        .then(literal("export")
+                                .executes(ctx -> exportFile(ctx, null))
+                                .then(argument("filename", StringArgumentType.word())
+                                        .executes(ctx -> exportFile(ctx, StringArgumentType.getString(ctx, "filename")))))
+                        /*.then(literal("upload")
+                            .executes(ctx -> uploadFile(ctx, null))
+                            .then(argument("filename", StringArgumentType.word())
+                                .executes(ctx -> uploadFile(ctx, StringArgumentType.getString(ctx, "filename")))))*/
+                        .then(literal("import")
+                                .then(argument("filename", StringArgumentType.word())
+                                        .executes(ctx -> importFile(ctx, StringArgumentType.getString(ctx, "filename"), false))
+                                        .then(argument("relative", BoolArgumentType.bool())
+                                                .executes(ctx -> importFile(ctx, StringArgumentType.getString(ctx, "filename"), BoolArgumentType.getBool(ctx, "relative")))))));
 
         dispatcher.register(
                 literal("shutter")

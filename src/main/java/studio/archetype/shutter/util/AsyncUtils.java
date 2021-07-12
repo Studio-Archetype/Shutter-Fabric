@@ -38,7 +38,7 @@ public final class AsyncUtils {
     public static <T> TickJob<T> queueAsync(CompletableFuture<T> future, Consumer<T> onFinish, Consumer<Exception> onError, Runnable onTick) {
         TickJob<T> job = new TickJob<>(future, onFinish, onError, onTick);
         jobs.add(job);
-        return  job;
+        return job;
     }
 
     public static void cancelAll() {
@@ -81,7 +81,7 @@ public final class AsyncUtils {
                         this.onTick.run();
                     return false;
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch(InterruptedException | ExecutionException e) {
                 this.onError.accept(e);
                 return true;
             }

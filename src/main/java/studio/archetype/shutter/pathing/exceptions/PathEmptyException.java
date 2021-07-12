@@ -1,3 +1,4 @@
 package studio.archetype.shutter.pathing.exceptions;
 
-public class PathEmptyException extends PathException { }
+public class PathEmptyException extends PathException {
+}

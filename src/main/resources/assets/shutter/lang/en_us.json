@@ -1,6 +1,5 @@
 {
   "category.shutter.keybinds": "Shutter Controls",
-
   "key.shutter.cam.roll_left": "Roll Left",
   "key.shutter.cam.roll_right": "Roll Right",
   "key.shutter.cam.roll_reset": "Reset Roll",
@@ -17,11 +16,9 @@
   "key.shutter.cam.next_node": "Scrub Forward",
   "key.shutter.cam.previous_node": "Scrub Back",
   "key.shutter.cam.clear_path": "Clear Path",
-
   "ui.shutter.pathList.entry": "Camera Path #%s",
   "ui.shutter.pathList.entryName": "Camera Path Name",
   "ui.shutter.pathList.none": "No Paths available.",
-
   "ui.shutter.recording.countdown1": "Starting in %s...",
   "ui.shutter.recording.countdown2": "Preparing to record!",
   "ui.shutter.recording.title": "Recording Preparations",
@@ -33,7 +30,6 @@
   "ui.shutter.recording.preset": "Quality",
   "ui.shutter.recording.skip": "Skip Countdown",
   "ui.shutter.recording.start": "Start!",
-
   "text.autoconfig.shutter.title": "Shutter Configuration",
   "config.shutter.notificationTarget": "Notifications",
   "config.shutter.notificationTarget.@Tooltip": "Set where notifications are displayed.",
@@ -71,39 +67,31 @@
   "config.shutter.recSettings.skipCountdown.@Tooltip": "Whether or not to skip the countdown when starting a recording.",
   "config.shutter.recSettings.codec": "Video Codec",
   "config.shutter.recSettings.codec.@Tooltip": "Determines what video codec is used for recording a path.",
-
   "config.shutter.pathStyle.line": "Lines",
   "config.shutter.pathStyle.cubes": "Cubes",
   "config.shutter.pathStyle.debug": "Advanced",
-
   "config.shutter.directional.hide": "Hide",
   "config.shutter.directional.show": "Show",
   "config.shutter.directional.advanced": "Advanced",
-
   "config.shutter.pathDetail.ultra_low": "Ultra Low",
   "config.shutter.pathDetail.low": "Low",
   "config.shutter.pathDetail.medium": "Medium",
   "config.shutter.pathDetail.high": "High",
   "config.shutter.pathDetail.absurd": "Absurd",
-
   "config.shutter.notification.action_bar": "Action Bar",
   "config.shutter.notification.toasts": "Toast Popups",
   "config.shutter.notification.chat": "Chat Messages",
-
   "config.shutter.framerate.20": "20 FPS",
   "config.shutter.framerate.40": "40 FPS",
   "config.shutter.framerate.60": "60 FPS",
   "config.shutter.framerate.80": "80 FPS",
   "config.shutter.framerate.100": "100 FPS",
   "config.shutter.framerate.120": "120 FPS",
-
   "config.shutter.recording.frames": "Frames",
   "config.shutter.recording.video": "Video",
   "config.shutter.recording.both": "Both",
-
   "config.shutter.recording.hx264": "Hx264",
   "config.shutter.recording.hx265": "Hx265",
-
   "config.shutter.recording.preset.ultrafast": "Potato",
   "config.shutter.recording.preset.superfast": "Not quite Potato",
   "config.shutter.recording.preset.veryfast": "Sub-Par",
@@ -113,11 +101,9 @@
   "config.shutter.recording.preset.slow": "Better",
   "config.shutter.recording.preset.slower": "Best",
   "config.shutter.recording.preset.veryslow": "Highest",
-
   "msg.shutter.headline.cmd.failed": "Command failed!",
   "msg.shutter.headline.rec.failed": "Recording failed!",
   "msg.shutter.headline.cmd.success": "Command succeeded!",
-
   "msg.shutter.error.not_enough_start": "At least 2 nodes are required to preview the path!",
   "msg.shutter.error.not_enough_show": "At least 2 nodes are required to visualize the path!",
   "msg.shutter.error.not_following": "Not previewing a path!",
@@ -154,10 +140,8 @@
   "msg.shutter.ok.import": "Successfully imported path \"%s\".",
   "msg.shutter.ok.offset": "Offset Path.",
   "msg.shutter.ok.abort_rec": "Recording aborted.",
-
   "msg.shutter.help.header": "§8+------------------ §2Shutter Help §r§8---------------------+",
   "msg.shutter.help.line": "§8+---------------------------------------------------+",
-
   "msg.shutter.help.arg.none": "No arguments required.",
   "msg.shutter.help.arg.time": "time",
   "msg.shutter.help.arg.time.desc": "Path duration time.",
@@ -173,7 +157,6 @@
   "msg.shutter.help.arg.loop.desc": "Whether or not the command should account for looping.",
   "msg.shutter.help.arg.relative": "relative",
   "msg.shutter.help.arg.relative.desc": "Whether or not to import the path at the current position.",
-
   "msg.shutter.help.cmd.select": "Sets or creates the desired path as current path.",
   "msg.shutter.help.cmd.start": "Begin following the defined camera path.",
   "msg.shutter.help.cmd.stop": "End following the defined camera path.",

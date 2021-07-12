@@ -44,7 +44,9 @@ public final class CommandFilter {
 
         private String command;
 
-        GameMode(String cmd) { this.command = cmd; }
+        GameMode(String cmd) {
+            this.command = cmd;
+        }
 
         public static GameMode getFromVanilla(net.minecraft.world.GameMode mode) {
             switch(mode) {

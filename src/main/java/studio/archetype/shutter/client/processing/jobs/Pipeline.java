@@ -51,7 +51,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
             public boolean offer(Runnable runnable) {
                 try {
                     this.put(runnable);
-                } catch (InterruptedException ex) {
+                } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                     return false;
                 }
@@ -63,7 +63,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
     public boolean onRender() {
         MinecraftClient client = MinecraftClient.getInstance();
         if(!frameCapturer.isDone() && !abort) {
-            if (GLFW.glfwWindowShouldClose(client.getWindow().getHandle())) {
+            if(GLFW.glfwWindowShouldClose(client.getWindow().getHandle())) {
                 this.close();
                 return true;
             }
@@ -80,7 +80,7 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
         this.convertService.shutdown();
         try {
             this.convertService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
+        } catch(InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
@@ -109,11 +109,11 @@ public class Pipeline<I extends Frame, O extends Frame, C extends FrameCapturer<
         @Override
         public void run() {
             O outputFrame = frameConverter.convert(this.inputFrame);
-            synchronized (processorLock) {
+            synchronized(processorLock) {
                 while(nextFrameId != outputFrame.getFrameId()) {
                     try {
                         processorLock.wait();
-                    } catch (InterruptedException e) {
+                    } catch(InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                 }

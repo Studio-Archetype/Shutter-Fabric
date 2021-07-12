@@ -28,6 +28,8 @@ import studio.archetype.shutter.client.util.TimingUtils;
 import studio.archetype.shutter.pathing.CameraPathManager;
 import studio.archetype.shutter.util.AsyncUtils;
 
+import java.util.concurrent.CompletableFuture;
+
 public class ShutterClient implements ClientModInitializer {
 
     public static ShutterClient INSTANCE;
@@ -98,15 +100,25 @@ public class ShutterClient implements ClientModInitializer {
         }
     }
 
-    public CommandFilter getCommandFilter() { return commandFilter; }
+    public CommandFilter getCommandFilter() {
+        return commandFilter;
+    }
 
-    public ShutterPreviewRenderer getPreviewRenderer() { return previewRenderer; }
+    public ShutterPreviewRenderer getPreviewRenderer() {
+        return previewRenderer;
+    }
 
-    public PathFollower getPathFollower() { return follower; }
+    public PathFollower getPathFollower() {
+        return follower;
+    }
 
-    public PathIterator getPathIterator() { return iterator; }
+    public PathIterator getPathIterator() {
+        return iterator;
+    }
 
-    public SaveFile getSaveFile() { return saveFile; }
+    public SaveFile getSaveFile() {
+        return saveFile;
+    }
 
     public FramerateController getFramerateController() {
         return framerateController;

@@ -86,7 +86,7 @@ public class RecordingScreen extends Screen {
                             Messaging.MessageType.NEGATIVE);
                     return;
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch(InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
             if(this.skipCountdown.isChecked()) {

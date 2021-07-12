@@ -63,17 +63,17 @@ public class ShutterPreviewRenderer {
             LinkedList<InterpolationData> steps = pathData.get(node);
             if(steps != null) {
                 Vec3d previous = steps.getFirst().getPosition();
-                for (InterpolationData point : steps) {
+                for(InterpolationData point : steps) {
                     Vec3d p = point.getPosition();
-                    if ((style == PathStyle.LINE || style == PathStyle.ADVANCED) && !point.equals(steps.getFirst()))
+                    if((style == PathStyle.LINE || style == PathStyle.ADVANCED) && !point.equals(steps.getFirst()))
                         DrawUtils.renderLine(p, previous, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_LINE), stack.peek());
                     previous = point.getPosition();
-                    if (style == PathStyle.CUBES || style == PathStyle.ADVANCED)
+                    if(style == PathStyle.CUBES || style == PathStyle.ADVANCED)
                         DrawUtils.renderCube(p, .1F, getColour(node, false), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
                     if(directionalBeam == DirectionalBeamStyle.ADVANCED)
                         DrawUtils.renderLine(
                                 p,
-                                DrawUtils.getOffsetPoint(p, (float)point.getRotation().getX(), (float)point.getRotation().getY(), 2F),
+                                DrawUtils.getOffsetPoint(p, (float) point.getRotation().getX(), (float) point.getRotation().getY(), 2F),
                                 getColour(node, true),
                                 provider.getBuffer(ShutterRenderLayers.SHUTTER_DIR),
                                 stack.peek());
@@ -83,8 +83,11 @@ public class ShutterPreviewRenderer {
             if(ClientConfigManager.CLIENT_CONFIG.pathSettings.showNodeHead) {
                 renderNodeHead(node, stack, provider, light);
                 renderTextLabel(stack, provider, node.getPosition(), new LiteralText("#" + i), camera, light);
+                renderTextLabel(stack, provider, node.getPosition().add(0, .5, 0), new LiteralText("Y: " + node.getYaw()), camera, light);
+                if(steps != null)
+                    renderTextLabel(stack, provider, node.getPosition().add(0, 1, 0), new LiteralText("Y: " + steps.getFirst().getRotation().getY()), camera, light);
             } else if(style == PathStyle.ADVANCED)
-                DrawUtils.renderCube(node.getPosition(),.2F, getColour(node, true), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
+                DrawUtils.renderCube(node.getPosition(), .2F, getColour(node, true), provider.getBuffer(ShutterRenderLayers.SHUTTER_CUBE), stack.peek());
 
             if(directionalBeam != DirectionalBeamStyle.HIDE)
                 DrawUtils.renderLine(
@@ -109,8 +112,8 @@ public class ShutterPreviewRenderer {
         stack.scale(-0.025F, -0.025F, 0.025F);
 
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-        float xOffset = (float)(-renderer.getWidth(t) / 2);
-        int opacity = (int)(MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F) * 255.0F) << 24;
+        float xOffset = (float) (-renderer.getWidth(t) / 2);
+        int opacity = (int) (MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F) * 255.0F) << 24;
         Matrix4f matrix4f = stack.peek().getModel();
 
         renderer.draw(t, xOffset, 0, 553648127, false, matrix4f, providers, true, opacity, light);

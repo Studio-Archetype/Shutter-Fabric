@@ -19,11 +19,16 @@ import studio.archetype.shutter.util.AsyncUtils;
 @Mixin(MinecraftClient.class)
 abstract class MinecraftClientMixin {
 
-    @Shadow @Nullable public ClientWorld world;
+    @Shadow
+    @Nullable
+    public ClientWorld world;
 
-    @Shadow public abstract boolean isIntegratedServerRunning();
+    @Shadow
+    public abstract boolean isIntegratedServerRunning();
 
-    @Shadow @Nullable public abstract ClientPlayNetworkHandler getNetworkHandler();
+    @Shadow
+    @Nullable
+    public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderTickCounter;beginRenderTick(J)I"))
     private int modifyScheduledTicks(RenderTickCounter renderTickCounter, long timeMillis) {
@@ -35,17 +40,18 @@ abstract class MinecraftClientMixin {
         try {
             ShutterClient client = ShutterClient.INSTANCE;
             if((isIntegratedServerRunning() || getNetworkHandler() != null) && this.world != null) {
-                if (client.getPathManager(this.world).isVisualizing())
+                if(client.getPathManager(this.world).isVisualizing())
                     client.getPathManager(this.world).togglePathVisualization(false);
-                if (client.getPathFollower().isFollowing())
+                if(client.getPathFollower().isFollowing())
                     client.getPathFollower().end();
-                if (client.getPathIterator().isIterating())
+                if(client.getPathIterator().isIterating())
                     client.getPathIterator().end();
                 ShutterClient.INSTANCE.getFramerateController().stopControlling();
                 AsyncUtils.cancelAll();
             }
             client.getSaveFile().save();
-        } catch(PathTooSmallException ignored) { }
+        } catch(PathTooSmallException ignored) {
+        }
     }
 
     @Inject(method = "joinWorld", at = @At("HEAD"))
@@ -53,16 +59,17 @@ abstract class MinecraftClientMixin {
         try {
             ShutterClient client = ShutterClient.INSTANCE;
             if((isIntegratedServerRunning() || getNetworkHandler() != null) && this.world != null) {
-                if (client.getPathManager(this.world).isVisualizing())
+                if(client.getPathManager(this.world).isVisualizing())
                     client.getPathManager(this.world).togglePathVisualization(false);
-                if (client.getPathFollower().isFollowing())
+                if(client.getPathFollower().isFollowing())
                     client.getPathFollower().end();
-                if (client.getPathIterator().isIterating())
+                if(client.getPathIterator().isIterating())
                     client.getPathIterator().end();
                 ShutterClient.INSTANCE.getFramerateController().stopControlling();
                 AsyncUtils.cancelAll();
             }
             client.getSaveFile().save();
-        } catch(PathTooSmallException ignored) { }
+        } catch(PathTooSmallException ignored) {
+        }
     }
 }

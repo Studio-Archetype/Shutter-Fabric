@@ -2,10 +2,8 @@
   "schemaVersion": 1,
   "id": "shutter",
   "version": "${version}",
-
   "name": "Shutter",
   "description": "Real time cinematography and recording mod.",
-
   "authors": [
     "Studio Archetype",
     "Vatuu"
@@ -14,21 +12,23 @@
     "homepage": "https://studioarchetype.net/shutter",
     "issues": "https://github.com/Studio-Archetype/Shutter-Fabric/issues/new/choose"
   },
-
   "license": "All Rights Reserved",
   "icon": "assets/shutter/icon.png",
-
   "environment": "client",
   "entrypoints": {
-    "main": ["studio.archetype.shutter.Shutter"],
-    "client": ["studio.archetype.shutter.client.ShutterClient"],
-    "modmenu": ["studio.archetype.shutter.client.config.ModMenuEntryPoint"]
+    "main": [
+      "studio.archetype.shutter.Shutter"
+    ],
+    "client": [
+      "studio.archetype.shutter.client.ShutterClient"
+    ],
+    "modmenu": [
+      "studio.archetype.shutter.client.config.ModMenuEntryPoint"
+    ]
   },
-
   "mixins": [
     "shutter.client.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",

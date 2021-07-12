@@ -5,8 +5,10 @@ import studio.archetype.shutter.client.processing.frames.DummyFrame;
 public class DummyProcessor implements FrameProcessor<DummyFrame> {
 
     @Override
-    public void processFrame(DummyFrame frame) { }
+    public void processFrame(DummyFrame frame) {
+    }
 
     @Override
-    public void close() { }
+    public void close() {
+    }
 }

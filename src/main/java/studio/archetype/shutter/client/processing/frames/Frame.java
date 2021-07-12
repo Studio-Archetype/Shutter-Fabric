@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 
 public interface Frame {
     int getFrameId();
+
     ByteBuffer getData();
 
     default void printBuffer(boolean metaOnly, int rowSize) {

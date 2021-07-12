@@ -13,6 +13,10 @@ public class InterpolationData {
         this.zoom = zoom;
     }
 
+    public InterpolationData(PathNode node) {
+        this(node.getPosition(), new Vec3d(node.getPitch(), node.getYaw(), node.getRoll()), node.getZoom());
+    }
+
     public Vec3d getPosition() {
         return position;
     }
@@ -23,5 +27,12 @@ public class InterpolationData {
 
     public float getZoom() {
         return zoom;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[X=%.2f|Y=%.2f|Z=%.2f||P=%.2f|Y=%.2f|R=%.2f||Z=%.2f]",
+                this.position.getX(), this.position.getY(), this.position.getZ(),
+                this.getRotation().getX(), this.getRotation().getY(), this.getRotation().getZ(), this.getZoom());
     }
 }

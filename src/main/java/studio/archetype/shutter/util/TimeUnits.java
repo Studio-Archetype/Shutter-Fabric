@@ -3,10 +3,10 @@ package studio.archetype.shutter.util;
 import java.util.function.Function;
 
 public enum TimeUnits {
-    TICKS(false, t -> (float)t, t -> (int)(t * 1), "T", "Ticks"),
-    SECONDS(true, t -> t / 20F, t -> (int)(t * 20), "S", "Seconds"),
-    MINUTES(true, t -> t / (20F * 60F), t -> (int)(t * 20 * 60), "M", "Minutes"),
-    HOURS(true, t -> t / (20F * 60F * 60F), t -> (int)(t * 20 * 60 * 60), "H", "Hours");
+    TICKS(false, t -> (float) t, t -> (int) (t * 1), "T", "Ticks"),
+    SECONDS(true, t -> t / 20F, t -> (int) (t * 20), "S", "Seconds"),
+    MINUTES(true, t -> t / (20F * 60F), t -> (int) (t * 20 * 60), "M", "Minutes"),
+    HOURS(true, t -> t / (20F * 60F * 60F), t -> (int) (t * 20 * 60 * 60), "H", "Hours");
 
     public final boolean isFloatingPoint;
     private final Function<Integer, Float> fromTicks;

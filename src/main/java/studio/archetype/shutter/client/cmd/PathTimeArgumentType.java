@@ -12,7 +12,8 @@ public class PathTimeArgumentType implements ArgumentType<Double> {
 
     private static final ImmutableList<String> EXAMPLES = ImmutableList.of("77.9", "22.2t", "5.25s", "3.75m", "1.0025h");
 
-    private PathTimeArgumentType() { }
+    private PathTimeArgumentType() {
+    }
 
     public static PathTimeArgumentType pathTime() {
         return new PathTimeArgumentType();

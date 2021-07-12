@@ -49,7 +49,7 @@ public class PathFollower {
         this.oldGamemode = CommandFilter.GameMode.getFromVanilla(c.interactionManager.getCurrentGameMode());
         this.oldPos = c.player.getPos();
         this.oldFov = ShutterClient.INSTANCE.getZoom();
-        this.oldRoll = ((CameraExt)c.gameRenderer.getCamera()).getRoll(1.0F);
+        this.oldRoll = ((CameraExt) c.gameRenderer.getCamera()).getRoll(1.0F);
         this.oldHideHud = c.options.hudHidden;
 
         nodeIndex = 0;
@@ -77,11 +77,11 @@ public class PathFollower {
         c.options.hudHidden = this.oldHideHud;
         ShutterClient.INSTANCE.getCommandFilter().changeGameMode(oldGamemode);
         ShutterClient.INSTANCE.setZoom(this.oldFov);
-        ((CameraExt)c.gameRenderer.getCamera()).setRoll(oldRoll);
+        ((CameraExt) c.gameRenderer.getCamera()).setRoll(oldRoll);
     }
 
     public void tick(float tickDelta) {
-        float delta = (float)Math.min((float)tickCounter / segmentTime, 1);
+        float delta = (float) Math.min((float) tickCounter / segmentTime, 1);
         InterpolationData cur = currentSegmentData.get(segmentIndex);
         InterpolationData prev = currentSegmentData.get(segmentIndex - 1);
 
@@ -89,9 +89,9 @@ public class PathFollower {
                 MathHelper.lerp(delta, prev.getPosition().getX(), cur.getPosition().getX()),
                 MathHelper.lerp(delta, prev.getPosition().getY(), cur.getPosition().getY()),
                 MathHelper.lerp(delta, prev.getPosition().getZ(), cur.getPosition().getZ()));
-        float pitch = MathHelper.lerp(delta, (float)prev.getRotation().getX(), (float)cur.getRotation().getX());
-        float yaw = MathHelper.lerp(delta, (float)prev.getRotation().getY(), (float)cur.getRotation().getY()) % 360;
-        float roll = MathHelper.lerp(delta, (float)prev.getRotation().getZ(), (float)cur.getRotation().getZ());
+        float pitch = MathHelper.lerp(delta, (float) prev.getRotation().getX(), (float) cur.getRotation().getX());
+        float yaw = MathHelper.lerp(delta, (float) prev.getRotation().getY(), (float) cur.getRotation().getY()) % 360;
+        float roll = MathHelper.lerp(delta, (float) prev.getRotation().getZ(), (float) cur.getRotation().getZ());
         double zoom = MathHelper.lerp(delta, prev.getZoom(), cur.getZoom());
 
         entity.prevX = entity.getX();

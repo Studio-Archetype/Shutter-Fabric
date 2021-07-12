@@ -66,7 +66,7 @@ public final class PathControlCommands {
 
         dispatcher.register(
                 literal("shutter")
-                    .redirect(node));
+                        .redirect(node));
 
     }
 
@@ -149,7 +149,7 @@ public final class PathControlCommands {
         sendCommandHelpLine(ctx.getSource(),
                 "/s import",
                 "msg.shutter.help.cmd.import",
-                 ImmutableMap.of("file", false, "relative", true));
+                ImmutableMap.of("file", false, "relative", true));
         /*sendCommandHelpLine(ctx.getSource(),
                 "/s download",
                 "msg.shutter.help.cmd.download",
@@ -231,7 +231,7 @@ public final class PathControlCommands {
                 new TranslatableText("msg.shutter.headline.cmd.success"),
                 new TranslatableText("msg.shutter.ok.offset"),
                 new LiteralText("x").formatted(Formatting.DARK_RED)
-                        .append(new LiteralText(String.format("%.2f",pos.x)).formatted(Formatting.RED, Formatting.UNDERLINE))
+                        .append(new LiteralText(String.format("%.2f", pos.x)).formatted(Formatting.RED, Formatting.UNDERLINE))
                         .append(new LiteralText(" y").formatted(Formatting.DARK_GREEN))
                         .append(new LiteralText(String.format("%.2f", pos.y)).formatted(Formatting.GREEN, Formatting.UNDERLINE))
                         .append(new LiteralText(" z").formatted(Formatting.DARK_BLUE))
@@ -252,9 +252,9 @@ public final class PathControlCommands {
                         .append(new TranslatableText(arg + ".desc")));
             });
             Iterator<Text> argsIt = args.listIterator();
-            while (argsIt.hasNext()) {
+            while(argsIt.hasNext()) {
                 hover.append(argsIt.next());
-                if (argsIt.hasNext())
+                if(argsIt.hasNext())
                     hover.append(new LiteralText("\n"));
             }
             argsIt.remove();
@@ -299,7 +299,8 @@ public final class PathControlCommands {
                         new TranslatableText("msg.shutter.headline.cmd.failed"),
                         new TranslatableText("msg.shutter.error.abort_fail"),
                         Messaging.MessageType.NEUTRAL);
-        } catch (PathNotFollowingException ignored) { }
+        } catch(PathNotFollowingException ignored) {
+        }
         return 1;
     }
 }

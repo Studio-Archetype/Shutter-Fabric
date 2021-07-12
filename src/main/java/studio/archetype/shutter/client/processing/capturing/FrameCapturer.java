@@ -7,5 +7,6 @@ import java.io.Closeable;
 public interface FrameCapturer<T extends Frame> extends Closeable {
 
     boolean isDone();
+
     T capture();
 }

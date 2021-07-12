@@ -10,8 +10,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(targets = "shadersmod/client/Shaders", remap = false)
 public abstract class OptifineShaderBullshitMixin {
 
-    @Shadow static long systemTime;
-    @Shadow static float frameTimeCounter;
+    @Shadow
+    static long systemTime;
+    @Shadow
+    static float frameTimeCounter;
 
     @Redirect(method = "beginRender", at = @At(value = "INVOKE", target = "Ljava/lang/System;currentTimeMillis()J"))
     private static long shadermodCounter() {

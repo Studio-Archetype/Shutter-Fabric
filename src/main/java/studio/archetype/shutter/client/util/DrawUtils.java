@@ -12,7 +12,7 @@ public class DrawUtils {
         Vec3i dirVector = dir.getVector();
         Vec3d offset = pos.add(new Vec3d(dirVector.getX() * radius, dirVector.getY() * radius, dirVector.getZ() * radius));
         Vec3d[] points = new Vec3d[4];
-        switch (dir.getAxis()) {
+        switch(dir.getAxis()) {
             case X:
                 points[0] = offset.add(new Vec3d(0, radius, radius));
                 points[1] = offset.add(new Vec3d(0, -radius, radius));
@@ -30,7 +30,7 @@ public class DrawUtils {
                 points[1] = offset.add(new Vec3d(-radius, radius, 0));
                 points[2] = offset.add(new Vec3d(-radius, -radius, 0));
                 points[3] = offset.add(new Vec3d(radius, -radius, 0));
-            break;
+                break;
         }
 
         if(dir.getDirection().offset() < 0) {
@@ -39,9 +39,9 @@ public class DrawUtils {
             points[3] = t;
         }
 
-        for (Vec3d point : points)
+        for(Vec3d point : points)
             consumer.vertex(model, (float) point.x, (float) point.y, (float) point.z)
-                    .color((float)colour.x, (float)colour.y, (float)colour.z, 1f)
+                    .color((float) colour.x, (float) colour.y, (float) colour.z, 1f)
                     .next();
     }
 

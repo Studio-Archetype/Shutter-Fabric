@@ -15,8 +15,7 @@ public class PathNode {
     public PathNode(Vec3d pos, float pitch, float yaw, float roll, float zoom) {
         this.position = pos;
         this.pitch = pitch;
-        float yawAdj = yaw % 360;
-        this.yaw = yawAdj < 0 ? 360 + yawAdj : yawAdj;
+        this.yaw = yaw;
         this.roll = roll;
         this.zoom = zoom;
     }
@@ -29,7 +28,9 @@ public class PathNode {
         return position;
     }
 
-    public Vec3f getRotation() { return new Vec3f(pitch, yaw, roll); }
+    public Vec3f getRotation() {
+        return new Vec3f(pitch, yaw, roll);
+    }
 
     public float getPitch() {
         return pitch;
@@ -47,10 +48,17 @@ public class PathNode {
         return zoom;
     }
 
+    @Override
+    public String toString() {
+        return String.format("[X=%.2f|Y=%.2f|Z=%.2f||P=%.2f|Y=%.2f|R=%.2f||Z=%.2f]",
+                this.position.getX(), this.position.getY(), this.position.getZ(),
+                this.getPitch(), this.getYaw(), this.getRoll(), this.getZoom());
+    }
+
     public static final Codec<PathNode> CODEC = RecordCodecBuilder.create(i ->
             i.group(
-                Codec.DOUBLE.listOf().fieldOf("Position").forGetter((PathNode o) -> SerializationUtils.vec3dToList(o.getPosition())),
-                Codec.FLOAT.listOf().fieldOf("Rotation").forGetter((PathNode o) -> SerializationUtils.vector3fToList(o.getRotation())),
-                Codec.FLOAT.fieldOf("Zoom").forGetter(PathNode::getZoom))
-            .apply(i, (pos, rot, zoom) -> new PathNode(SerializationUtils.listToVec3d(pos), SerializationUtils.listToVector3f(rot), zoom)));
+                    Codec.DOUBLE.listOf().fieldOf("Position").forGetter((PathNode o) -> SerializationUtils.vec3dToList(o.getPosition())),
+                    Codec.FLOAT.listOf().fieldOf("Rotation").forGetter((PathNode o) -> SerializationUtils.vector3fToList(o.getRotation())),
+                    Codec.FLOAT.fieldOf("Zoom").forGetter(PathNode::getZoom))
+                    .apply(i, (pos, rot, zoom) -> new PathNode(SerializationUtils.listToVec3d(pos), SerializationUtils.listToVector3f(rot), zoom)));
 }

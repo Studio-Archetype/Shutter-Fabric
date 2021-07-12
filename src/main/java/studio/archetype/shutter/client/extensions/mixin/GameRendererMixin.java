@@ -19,9 +19,12 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 
-    @Shadow public abstract Camera getCamera();
+    @Shadow
+    public abstract Camera getCamera();
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(
             method = "renderWorld",
@@ -30,9 +33,9 @@ public abstract class GameRendererMixin {
                     shift = At.Shift.AFTER,
                     target = "Lnet/minecraft/client/render/Camera;update(Lnet/minecraft/world/BlockView;Lnet/minecraft/entity/Entity;ZZF)V"))
     public void addRollMatrixMult(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo info) {
-        float roll = ((CameraExt)getCamera()).getRoll(tickDelta);
+        float roll = ((CameraExt) getCamera()).getRoll(tickDelta);
         matrix.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(roll));
-        ((CameraExt)getCamera()).setPreviousRoll(roll);
+        ((CameraExt) getCamera()).setPreviousRoll(roll);
     }
 
     @ModifyVariable(method = "getFov", at = @At("STORE"), index = 4)

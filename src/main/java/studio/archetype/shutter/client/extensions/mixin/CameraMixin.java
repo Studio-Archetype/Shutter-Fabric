@@ -16,13 +16,19 @@ import studio.archetype.shutter.client.extensions.CameraExt;
 @Mixin(Camera.class)
 public abstract class CameraMixin implements CameraExt {
 
-    @Unique public float roll, prevRoll;
+    @Unique
+    public float roll, prevRoll;
 
-    @Shadow @Final private Quaternion rotation;
-    @Shadow private float yaw;
-    @Shadow private float pitch;
+    @Shadow
+    @Final
+    private Quaternion rotation;
+    @Shadow
+    private float yaw;
+    @Shadow
+    private float pitch;
 
-    @Shadow protected abstract void setRotation(float yaw, float pitch);
+    @Shadow
+    protected abstract void setRotation(float yaw, float pitch);
 
     @Inject(
             method = "setRotation",
@@ -35,25 +41,29 @@ public abstract class CameraMixin implements CameraExt {
         this.rotation.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(this.roll));
     }
 
-    @Unique @Override
+    @Unique
+    @Override
     public void addRoll(float roll) {
         this.prevRoll = this.roll;
         this.roll = (this.roll + roll) % 360;
     }
 
-    @Unique @Override
+    @Unique
+    @Override
     public float getRoll(float tickDelta) {
         return tickDelta == 1.0F ? this.roll : MathHelper.lerpAngleDegrees(tickDelta, prevRoll, roll);
     }
 
-    @Unique @Override
+    @Unique
+    @Override
     public void setRoll(float roll) {
         this.prevRoll = this.roll;
         this.roll = roll % 360;
         setRotation(this.yaw, this.pitch);
     }
 
-    @Unique @Override
+    @Unique
+    @Override
     public void setPreviousRoll(float roll) {
         this.prevRoll = roll;
     }
