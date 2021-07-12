@@ -93,11 +93,11 @@ public class CameraPath {
 
         LinkedList<PathNode> fixedNodes = fixYaw();
         Interpolator interpolator = new LinearInterpolator(fixedNodes, looped);
-        if(nodes.size() > 2)
-            interpolator = new HermiteInterpolator(fixedNodes, looped);
 
         for(int i = 0; i < nodes.size() - (looped ? 0 : 1); i++) {
             LinkedList<InterpolationData> splinePoints = new LinkedList<>();
+            if(i == 1)
+                interpolator = new HermiteInterpolator(fixedNodes, looped);
 
             for(float ii = 0; ii < 1; ii += ClientConfigManager.CLIENT_CONFIG.genSettings.curveDetail.detail)
                 splinePoints.add(interpolator.interpolate(i, ii));
